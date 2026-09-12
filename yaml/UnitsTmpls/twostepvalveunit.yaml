@@ -1041,7 +1041,7 @@ data:
     - out_bOpen
     - ''
     - '|Comment|. |$Valve|. Открытие'
-    - '0'
+    - ''
     - ''
     - ''
     - ''
@@ -1052,7 +1052,7 @@ data:
     - out_bClose
     - ''
     - '|Comment|. |$Valve|. Закрытие'
-    - '0'
+    - ''
     - ''
     - ''
     - ''
@@ -1063,7 +1063,7 @@ data:
     - out_bExternalFault
     - ''
     - '|Comment|. |$Valve|. Внешняя авария'
-    - '0'
+    - ''
     - ''
     - ''
     - ''
@@ -1074,7 +1074,7 @@ data:
     - out_bFullTimeFault
     - ''
     - '|Comment|. |$Valve|. Авария полного хода'
-    - '0'
+    - ''
     - ''
     - ''
     - ''
@@ -1085,7 +1085,7 @@ data:
     - out_bOpenFault
     - ''
     - '|Comment|. |$Valve|. Авария открытия'
-    - '0'
+    - ''
     - 'true'
     - ''
     - ''
@@ -1096,7 +1096,7 @@ data:
     - out_bCloseFault
     - ''
     - '|Comment|. |$Valve|. Авария закрытия'
-    - '0'
+    - ''
     - 'true'
     - ''
     - ''

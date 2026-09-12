@@ -78,7 +78,7 @@ data:
     - out_bCond
     - ''
     - '|CondRecCtrlComment|. |$CondRecCtrl|. Условие зафиксировано'
-    - '0'
+    - ''
     - ''
     - 'true'
     - ''
@@ -89,7 +89,7 @@ data:
     - out_bRecovery
     - ''
     - '|CondRecCtrlComment|. |$CondRecCtrl|. Восстановление после условия'
-    - '0'
+    - ''
     - ''
     - 'true'
     - ''

@@ -169,7 +169,7 @@ data:
     - out_bOpen
     - ''
     - '|ValComment|. |$Val|. Открытие'
-    - '0'
+    - ''
     - ''
     - ''
     - ''
@@ -180,7 +180,7 @@ data:
     - out_bClose
     - ''
     - '|ValComment|. |$Val|. Закрытие'
-    - '0'
+    - ''
     - ''
     - ''
     - ''
@@ -191,7 +191,7 @@ data:
     - out_bExternalFault
     - ''
     - '|ValComment|. |$Val|. Внешняя авария'
-    - '0'
+    - ''
     - ''
     - ''
     - ''
@@ -202,7 +202,7 @@ data:
     - out_bFullTimeFault
     - ''
     - '|ValComment|. |$Val|. Авария полного хода'
-    - '0'
+    - ''
     - ''
     - ''
     - ''
@@ -213,7 +213,7 @@ data:
     - out_bOpenFault
     - ''
     - '|ValComment|. |$Val|. Авария открытия'
-    - '0'
+    - ''
     - 'true'
     - ''
     - ''
@@ -224,7 +224,7 @@ data:
     - out_bCloseFault
     - ''
     - '|ValComment|. |$Val|. Авария закрытия'
-    - '0'
+    - ''
     - 'true'
     - ''
     - ''
