@@ -14,6 +14,7 @@ from metakitlib import (
     is_blank_row,
     iter_strings,
     load_catalog,
+    load_component_guide,
     load_config,
     parameter_groups,
     parameter_keys,
@@ -126,6 +127,64 @@ def validate_component(validation: Validation, component: Any) -> None:
     )
 
 
+def validate_component_guide(validation: Validation, component: Any) -> None:
+    guide = load_component_guide(component.slug)
+    if guide is None:
+        return
+    path = f"docs/components/{component.slug}.yaml"
+    validation.require(guide.get("component") == component.name, f"{path}: неверное имя component")
+    for key in (
+        "intro",
+        "use_cases",
+        "not_for",
+        "how_it_works",
+        "quick_start",
+        "examples",
+        "parameters",
+        "hmi",
+        "diagnostics",
+        "common_mistakes",
+    ):
+        validation.require(bool(guide.get(key)), f"{path}: пустое поле {key}")
+
+    documented = set(guide.get("parameters", {})) if isinstance(guide.get("parameters"), dict) else set()
+    actual = parameter_keys(component.document)
+    missing = sorted(actual - documented)
+    extra = sorted(documented - actual)
+    validation.require(not missing, f"{path}: нет описания параметров: {', '.join(missing)}")
+    validation.require(not extra, f"{path}: описаны неизвестные параметры: {', '.join(extra)}")
+
+    for example_index, example in enumerate(guide.get("examples", []), start=1):
+        if not isinstance(example, dict):
+            validation.errors.append(f"{path}: пример {example_index} должен быть объектом")
+            continue
+        for row_index, row in enumerate(example.get("parameters", []), start=1):
+            validation.require(
+                isinstance(row, list) and len(row) == 3,
+                f"{path}: пример {example_index}, строка {row_index}: ожидаются параметр, значение и пояснение",
+            )
+            if isinstance(row, list) and row:
+                validation.require(str(row[0]) in actual, f"{path}: пример использует неизвестный параметр {row[0]!r}")
+
+    data_tags: set[str] = set()
+    for row in component.document.get("data", {}).get("rows", []):
+        if not isinstance(row, list) or len(row) <= 2 or not str(row[2] or "").strip():
+            continue
+        block = str(row[1] or "").strip()
+        tag = str(row[2] or "").strip()
+        data_tags.add(tag)
+        if block and block != "Conf":
+            data_tags.add(f"{block}.{tag}")
+    hmi = guide.get("hmi", {})
+    if isinstance(hmi, dict):
+        for item in hmi.get("default", []):
+            if not isinstance(item, dict):
+                validation.errors.append(f"{path}: строка hmi.default должна быть объектом")
+                continue
+            source = str(item.get("source", ""))
+            validation.require(source in data_tags, f"{path}: HMI-источник {source!r} отсутствует в Data")
+
+
 def main() -> int:
     validation = Validation()
     try:
@@ -148,6 +207,7 @@ def main() -> int:
     slugs: dict[str, str] = {}
     for component in components:
         validate_component(validation, component)
+        validate_component_guide(validation, component)
         for value, owner, label in (
             (component.name, names, "имя"),
             (component.component_id, ids, "UUID"),
@@ -181,6 +241,11 @@ def main() -> int:
     ]
     for relative in required_docs:
         validation.require((REPOSITORY_ROOT / relative).is_file(), f"Отсутствует {relative}")
+
+    guide_slugs = {path.stem for path in (REPOSITORY_ROOT / "docs" / "components").glob("*.yaml")}
+    component_slugs = {component.slug for component in components}
+    for slug in sorted(guide_slugs - component_slugs):
+        validation.errors.append(f"docs/components/{slug}.yaml: нет соответствующего компонента")
 
     if validation.errors:
         for error in validation.errors:

@@ -66,6 +66,13 @@ def load_catalog(root: Path = REPOSITORY_ROOT) -> dict[str, dict[str, Any]]:
     return {str(key): item for key, item in value.items() if isinstance(item, dict)}
 
 
+def load_component_guide(slug: str, root: Path = REPOSITORY_ROOT) -> dict[str, Any] | None:
+    path = root / "docs" / "components" / f"{slug}.yaml"
+    if not path.is_file():
+        return None
+    return load_yaml(path)
+
+
 def discover_components(root: Path = REPOSITORY_ROOT) -> list[ComponentSource]:
     config = load_config(root)
     components: list[ComponentSource] = []
@@ -110,6 +117,20 @@ def parameter_keys(document: dict[str, Any]) -> set[str]:
             if key.strip():
                 keys.add(key.strip())
     return keys
+
+
+def parameter_defaults(document: dict[str, Any]) -> list[tuple[str, str, int]]:
+    """Return parameter key, first-row default and group index in source order."""
+    result: list[tuple[str, str, int]] = []
+    for group_index, group in enumerate(parameter_groups(document), start=1):
+        keys = group[0]
+        values = group[1] if len(group) > 1 else []
+        for index, key in enumerate(keys):
+            if not key.strip():
+                continue
+            default = values[index] if index < len(values) else ""
+            result.append((key.strip(), default, group_index))
+    return result
 
 
 def iter_strings(value: Any) -> Iterable[str]:

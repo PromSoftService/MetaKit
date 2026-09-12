@@ -8,7 +8,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
-from metakitlib import discover_components
+from metakitlib import discover_components, load_component_guide
 
 
 class LinkParser(HTMLParser):
@@ -84,6 +84,28 @@ def main() -> int:
     component_pages = list((output / "components").glob("*/index.html"))
     if len(component_pages) != len(sources):
         errors.append(f"component pages: {len(component_pages)} instead of {len(sources)}")
+
+    guide_headings = (
+        "Когда использовать",
+        "Быстрый старт",
+        "Примеры использования",
+        "Параметры компонента",
+        "Что появится на HMI по умолчанию",
+        "Аварии и предупреждения",
+        "Для разработчика компонентов",
+    )
+    for source in sources:
+        if load_component_guide(source.slug) is None:
+            continue
+        page = output / "components" / source.slug / "index.html"
+        if not page.is_file():
+            continue
+        text = page.read_text(encoding="utf-8")
+        for heading in guide_headings:
+            if heading not in text:
+                errors.append(f"{page.relative_to(output)}: missing guide section {heading!r}")
+        if text.count("<details") < 5:
+            errors.append(f"{page.relative_to(output)}: technical sections are not collapsed")
 
     html_paths = sorted(output.rglob("*.html"))
     download_links: list[str] = []

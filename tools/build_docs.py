@@ -20,8 +20,10 @@ from metakitlib import (
     discover_components,
     is_blank_row,
     load_catalog,
+    load_component_guide,
     load_config,
     non_blank_data_rows,
+    parameter_defaults,
     parameter_groups,
     parameter_keys,
     template_kind_label,
@@ -237,6 +239,253 @@ def render_instances(document: dict[str, Any]) -> str:
     return f'<div class="table-wrap"><table><thead><tr><th>Экземпляр</th><th>Тип MetaLib</th></tr></thead><tbody>{body}</tbody></table></div>'
 
 
+def render_rich_text(value: Any) -> str:
+    return markdown.markdown(str(value or ""), extensions=["fenced_code", "tables"])
+
+
+def render_text_list(items: Any) -> str:
+    if not isinstance(items, list):
+        return ""
+    return '<ul class="prose-list">' + "".join(
+        f"<li>{render_rich_text(item)}</li>" for item in items
+    ) + "</ul>"
+
+
+def render_how_it_works(items: Any) -> str:
+    if not isinstance(items, list):
+        return ""
+    cards: list[str] = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        cards.append(
+            '<article class="explain-card">'
+            f'<h3>{html.escape(str(item.get("title", "")))}</h3>'
+            f'{render_rich_text(item.get("text", ""))}'
+            '</article>'
+        )
+    return '<div class="explain-grid">' + "".join(cards) + "</div>"
+
+
+def render_quick_start(items: Any) -> str:
+    if not isinstance(items, list):
+        return ""
+    return '<ol class="steps">' + "".join(
+        f'<li><span>{index}</span><div>{render_rich_text(item)}</div></li>'
+        for index, item in enumerate(items, start=1)
+    ) + "</ol>"
+
+
+def render_examples(items: Any) -> str:
+    if not isinstance(items, list):
+        return ""
+    sections: list[str] = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        rows: list[str] = []
+        for raw_row in item.get("parameters", []):
+            if not isinstance(raw_row, list):
+                continue
+            row = [*raw_row, "", ""][:3]
+            rows.append(
+                "<tr>"
+                f"<td><code>{html.escape(str(row[0]))}</code></td>"
+                f"<td><code>{html.escape(str(row[1]))}</code></td>"
+                f"<td>{html.escape(str(row[2]))}</td>"
+                "</tr>"
+            )
+        table = (
+            '<div class="table-wrap example-table"><table><thead><tr>'
+            '<th>Параметр</th><th>Значение</th><th>Почему</th>'
+            f'</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
+        )
+        sections.append(
+            '<article class="example-card">'
+            f'<h3>{html.escape(str(item.get("title", "")))}</h3>'
+            f'<div class="example-scenario">{render_rich_text(item.get("scenario", ""))}</div>'
+            f'{table}'
+            '<div class="example-result"><strong>Результат</strong>'
+            f'{render_rich_text(item.get("result", ""))}</div>'
+            '</article>'
+        )
+    return "".join(sections)
+
+
+def render_parameter_reference(document: dict[str, Any], guide: dict[str, Any]) -> str:
+    descriptions = guide.get("parameters", {})
+    rows: list[str] = []
+    previous_group: int | None = None
+    for key, default, group_index in parameter_defaults(document):
+        if previous_group is not None and group_index != previous_group:
+            rows.append('<tr class="separator-row"><td colspan="4"></td></tr>')
+        previous_group = group_index
+        item = descriptions.get(key, {}) if isinstance(descriptions, dict) else {}
+        description = str(item.get("description", "")) if isinstance(item, dict) else ""
+        example = str(item.get("example", "")) if isinstance(item, dict) else ""
+        rows.append(
+            "<tr>"
+            f"<td><code>{html.escape(key)}</code></td>"
+            f"<td>{html.escape(description)}</td>"
+            f"<td><code>{html.escape(default)}</code></td>"
+            f"<td><code>{html.escape(example)}</code></td>"
+            "</tr>"
+        )
+    return (
+        '<div class="table-wrap parameter-reference"><table><thead><tr>'
+        '<th>Параметр</th><th>Что означает и что вводить</th><th>По умолчанию</th><th>Пример</th>'
+        f'</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
+    )
+
+
+def render_signal_cards(items: Any) -> str:
+    if not isinstance(items, list):
+        return ""
+    rows: list[str] = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        storage = str(item.get("storage", ""))
+        storage_html = f'<span class="signal-storage">{html.escape(storage)}</span>' if storage else ""
+        rows.append(
+            '<article class="signal-card">'
+            f'<div class="signal-heading"><h3>{html.escape(str(item.get("name", "")))}</h3>{storage_html}</div>'
+            f'<code>{html.escape(str(item.get("source", "")))}</code>'
+            f'<p>{html.escape(str(item.get("description", "")))}</p>'
+            '</article>'
+        )
+    return '<div class="signal-grid">' + "".join(rows) + "</div>"
+
+
+def render_diagnostics(items: Any) -> str:
+    if not isinstance(items, list):
+        return ""
+    rows: list[str] = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        rows.append(
+            "<tr>"
+            f'<td><span class="diagnostic-level">{html.escape(str(item.get("level", "")))}</span></td>'
+            f'<td><code>{html.escape(str(item.get("signal", "")))}</code></td>'
+            f'<td>{html.escape(str(item.get("message", "")))}</td>'
+            f'<td>{html.escape(str(item.get("condition", "")))}</td>'
+            f'<td>{html.escape(str(item.get("reset", "")))}</td>'
+            "</tr>"
+        )
+    return (
+        '<div class="table-wrap"><table><thead><tr>'
+        '<th>Уровень</th><th>Источник</th><th>Сообщение</th><th>Когда возникает</th><th>Сброс</th>'
+        f'</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
+    )
+
+
+def render_guided_component_page(
+    component: dict[str, Any],
+    all_components: list[dict[str, Any]],
+    *,
+    config: dict[str, Any],
+    base_url: str,
+    build_timestamp: str,
+) -> str:
+    document = component["document"]
+    guide = component["guide"]
+    download_url = url(base_url, f"downloads/components/{component['relative_path']}")
+    related = [
+        item for item in all_components
+        if item["relative_path"] != component["relative_path"] and item["category"] == component["category"]
+    ][:4]
+    related_html = "".join(render_component_card(item, base_url) for item in related)
+    code = str(document.get("code", {}).get("text", ""))
+    code_id = f"code-{component['slug']}"
+    hmi = guide.get("hmi", {}) if isinstance(guide.get("hmi"), dict) else {}
+    body = f"""
+<div class="breadcrumbs"><a href="{url(base_url)}">MetaKit</a><span>/</span><a href="{url(base_url, 'components/')}">Компоненты</a><span>/</span>{html.escape(component['name'])}</div>
+<section class="hero guide-hero">
+  <div class="eyebrow">{render_badge(component['kind'])} {html.escape(component['category'])} · руководство</div>
+  <h1>{html.escape(component['title'])}</h1>
+  <div class="lead">{render_rich_text(guide.get('intro', component['summary']))}</div>
+  <div class="hero-actions">
+    <a class="button button-primary" href="#quick-start">Начать настройку</a>
+    <a class="button" href="#parameters">Параметры</a>
+    <a class="button" href="{download_url}" download>Скачать YAML</a>
+  </div>
+</section>
+
+<div class="guide-columns">
+  <section class="guide-panel guide-panel-positive">
+    <h2>Когда использовать</h2>
+    {render_text_list(guide.get('use_cases'))}
+  </section>
+  <section class="guide-panel">
+    <h2>Когда выбрать другой компонент</h2>
+    {render_text_list(guide.get('not_for'))}
+  </section>
+</div>
+
+<h2>Как проходит сигнал</h2>
+{render_how_it_works(guide.get('how_it_works'))}
+
+<h2 id="quick-start">Быстрый старт</h2>
+{render_quick_start(guide.get('quick_start'))}
+
+<h2>Примеры использования</h2>
+{render_examples(guide.get('examples'))}
+
+<h2 id="parameters">Параметры компонента</h2>
+<p>Описание показывает не только техническое имя, но и какое значение должен ввести инженер. Значения по умолчанию считываются непосредственно из актуального YAML.</p>
+{render_parameter_reference(document, guide)}
+
+<h2>Что появится на HMI по умолчанию</h2>
+{render_signal_cards(hmi.get('default'))}
+<div class="callout">{html.escape(str(hmi.get('settings_note', '')))}</div>
+
+<h2>Что можно вывести дополнительно</h2>
+<p>Эти выходы существуют в MetaLib, но строки для них не добавлены в Data компонента по умолчанию.</p>
+{render_signal_cards(hmi.get('optional'))}
+
+<h2>Аварии и предупреждения</h2>
+{render_diagnostics(guide.get('diagnostics'))}
+
+<h2>Частые ошибки</h2>
+<div class="warning-panel">{render_text_list(guide.get('common_mistakes'))}</div>
+
+<h2>Для разработчика компонентов</h2>
+<p>Ниже находится точное представление исходного MetaGen-компонента. Для обычной настройки Sensor этот раздел не требуется.</p>
+<details>
+  <summary>Исходная таблица Params</summary>
+  {render_parameter_groups(document)}
+</details>
+<details>
+  <summary>Исходная таблица Data</summary>
+  {render_data_table(document)}
+</details>
+<details>
+  <summary>Экземпляры MetaLib</summary>
+  {render_instances(document)}
+</details>
+<details id="code">
+  <summary>ST-шаблон генерации</summary>
+  <div class="code-shell"><button class="copy-button" type="button" data-copy="{code_id}">Копировать</button><pre><code id="{code_id}">{html.escape(code)}</code></pre></div>
+</details>
+<details>
+  <summary>Сведения об исходном файле</summary>
+  <p><code>{html.escape(component['relative_path'])}</code></p>
+  <p>UUID компонента: <code>{html.escape(str(document['component']['id']))}</code></p>
+</details>
+{f'<h2>Похожие компоненты</h2><div class="cards">{related_html}</div>' if related_html else ''}
+"""
+    return render_page(
+        config=config,
+        base_url=base_url,
+        title=component["title"],
+        body=body,
+        active="catalog",
+        build_timestamp=build_timestamp,
+        description=component["summary"],
+    )
+
+
 def render_component_page(
     component: dict[str, Any],
     all_components: list[dict[str, Any]],
@@ -245,6 +494,14 @@ def render_component_page(
     base_url: str,
     build_timestamp: str,
 ) -> str:
+    if component.get("guide"):
+        return render_guided_component_page(
+            component,
+            all_components,
+            config=config,
+            base_url=base_url,
+            build_timestamp=build_timestamp,
+        )
     document = component["document"]
     download_url = url(base_url, f"downloads/components/{component['relative_path']}")
     block_badges = "".join(f'<span class="badge">{html.escape(block)}</span>' for block in component["blocks"])
@@ -479,6 +736,7 @@ def main() -> int:
                 "summary": str(item["summary"]),
                 "use_when": str(item["use_when"]),
                 "blocks": unique_blocks(source.document),
+                "guide": load_component_guide(source.slug),
             }
         )
     components.sort(key=lambda item: (KIND_ORDER.get(item["kind"], 99), item["category"], item["title"]))
