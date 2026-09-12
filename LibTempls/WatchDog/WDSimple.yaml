@@ -1,0 +1,95 @@
+kind: metagen.component
+version: 1
+component:
+  id: b49b43c5-b064-4aed-9c2d-be8eaab6019a
+  name: WDSimple
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CWDSimple'
+params:
+  format: header-plus-rows
+  header:
+  - $WDSimple
+  - WDSimpleId
+  - WDSimpleComment
+  - WDSimpleIn
+  - WDSimpleConf
+  - WDSimpleConfComment
+  - WDSimpleConnMsg
+  rows:
+  - - Простой WatchDog
+    - _ID_
+    - Комментарий
+    - _WD_IN_
+    - ''
+    - ''
+    - Связь установлена
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - DInt
+    - Conf
+    - '%"|WDSimpleConf|" if "|WDSimpleConf|"!="" else "|WDSimpleId|"%_WDSimple_diTimeout'
+    - '5'
+    - '%"|WDSimpleConfComment|" if "|WDSimpleConfComment|"!="" else "|WDSimpleComment|. |$WDSimple|"%. Таймаут связи'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - []
+  - - Bool
+    - '|WDSimpleId|_WDSimple_Inst'
+    - out_bConn
+    - ''
+    - '|WDSimpleComment|. |WDSimpleConnMsg|'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|WDSimpleId|_WDSimple_Inst'
+    - out_bInit
+    - ''
+    - '|WDSimpleComment|. |$WDSimple|. Получено первое изменение сигнала'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|WDSimpleId|_WDSimple_Inst'
+    - CWDSimple
+code:
+  format: template-text
+  language: st-template
+  text: "// |WDSimpleId| - |WDSimpleComment|. |$WDSimple|\n|WDSimpleId|_WDSimple_Inst(\n    in_wWD := |WDSimpleIn|,\n    in_diTimeout := Conf.%\"|WDSimpleConf|\" if \"|WDSimpleConf|\"!=\"\" else \"|WDSimpleId|\"%_WDSimple_diTimeout\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: WDSimple.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

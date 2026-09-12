@@ -1,0 +1,63 @@
+kind: metagen.component
+version: 1
+component:
+  id: b19cfc0b-fe1b-43bf-bdb9-ff4347e303df
+  name: xyScale
+  type: template
+  module: MetaGen
+  description: 'FunctionTemplate: xyScale'
+params:
+  format: header-plus-rows
+  header:
+  - $Scale
+  - ScaleComment
+  - ScaleXMin
+  - ScaleXMax
+  - ScaleYMin
+  - ScaleYMax
+  - ScaleX
+  - ScaleOut
+  - ScaleLimit
+  rows:
+  - - Масштабирование
+    - Комментарий
+    - '0.0'
+    - '100.0'
+    - ADC_4_IN_0_20
+    - ADC_MAX_VALUE
+    - '0.0'
+    - _AO_
+    - 'true'
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows: []
+instances:
+  format: list
+  rows: []
+code:
+  format: template-text
+  language: st-template
+  text: "// |ScaleOut| - |ScaleComment|. |$Scale|\n|ScaleOut| := REAL_TO_INT(xyScale(\n    in_fXMin := |ScaleXMin|,\n    in_fXMax := |ScaleXMax|,\n    in_fYMin := |ScaleYMin|,\n    in_fYMax := |ScaleYMax|,\n    in_fX := |ScaleX|,\n    in_bLimit := |ScaleLimit|\n));\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: xyScale.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

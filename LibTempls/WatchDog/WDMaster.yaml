@@ -1,0 +1,108 @@
+kind: metagen.component
+version: 1
+component:
+  id: c50ea826-242e-45e4-93e1-5fceddb0f390
+  name: WDMaster
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CWDMaster'
+params:
+  format: header-plus-rows
+  header:
+  - $WDMaster
+  - WDMasterId
+  - WDMasterComment
+  - WDMasterIn
+  - WDMasterOut
+  - WDMasterConf
+  - WDMasterConfComment
+  - WDMasterConnMsg
+  rows:
+  - - Ведущий WatchDog
+    - _ID_
+    - Комментарий
+    - _WD_IN_
+    - _WD_OUT_
+    - ''
+    - ''
+    - Связь установлена
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - DInt
+    - Conf
+    - '%"|WDMasterConf|" if "|WDMasterConf|"!="" else "|WDMasterId|"%_WDMaster_diPeriod'
+    - '1'
+    - '%"|WDMasterConfComment|" if "|WDMasterConfComment|"!="" else "|WDMasterComment|. |$WDMaster|"%. Период опроса'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|WDMasterConf|" if "|WDMasterConf|"!="" else "|WDMasterId|"%_WDMaster_diTimeout'
+    - '5'
+    - '%"|WDMasterConfComment|" if "|WDMasterConfComment|"!="" else "|WDMasterComment|. |$WDMaster|"%. Таймаут связи'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - []
+  - - Bool
+    - '|WDMasterId|_WDMaster_Inst'
+    - out_bConn
+    - ''
+    - '|WDMasterComment|. |WDMasterConnMsg|'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|WDMasterId|_WDMaster_Inst'
+    - out_bSync
+    - ''
+    - '|WDMasterComment|. |$WDMaster|. Синхронизация выполнена'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|WDMasterId|_WDMaster_Inst'
+    - CWDMaster
+code:
+  format: template-text
+  language: st-template
+  text: "// |WDMasterId| - |WDMasterComment|. |$WDMaster|\n|WDMasterId|_WDMaster_Inst(\n    in_wSlaveWD := |WDMasterIn|,\n    in_diPeriod := Conf.%\"|WDMasterConf|\" if \"|WDMasterConf|\"!=\"\" else \"|WDMasterId|\"%_WDMaster_diPeriod,\n    in_diTimeout := Conf.%\"|WDMasterConf|\" if \"|WDMasterConf|\"!=\"\" else \"|WDMasterId|\"%_WDMaster_diTimeout,\n    out_wMasterWD => |WDMasterOut|\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: WDMaster.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

@@ -1,0 +1,208 @@
+kind: metagen.component
+version: 1
+component:
+  id: 4a79a97e-0a12-4ddc-a8d1-98dc59d3ec05
+  name: CabinetController
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CCabinetController'
+params:
+  format: header-plus-rows
+  header:
+  - $CabCtl
+  - CabCtlStart
+  - CabCtlStop
+  - CabCtlEStop
+  - CabCtlPowerOk
+  - CabCtlBlock
+  - CabCtlFaultReset
+  rows:
+  - - Контроллер шкафа управления
+    - _DI_
+    - _DI_
+    - _DI_
+    - _DI_
+    - 'false'
+    - _DI_
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - DInt
+    - Conf
+    - CabinetController_diPowerControlFilter
+    - '3'
+    - Фильтр отсутствия напряжения, с
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - CabinetController_diFaultResetPulse
+    - '1'
+    - Длительность импульса сброса аварий, с
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Bool
+    - Conf
+    - CabinetController_bStartOnTrig
+    - 'true'
+    - Пуск по фронту
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - []
+  - - Bool
+    - CabinetController_Inst
+    - in_bBlock
+    - ''
+    - Блокировка
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - CabinetController_Inst
+    - out_bPowerControl
+    - ''
+    - Наличие напряжения
+    - '1'
+    - 'false'
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - CabinetController_Inst
+    - out_bWorking
+    - ''
+    - Работа
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - CabinetController_Inst
+    - out_bWorkAndPower
+    - ''
+    - Работа + Наличие напряжения
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - CabinetController_Inst
+    - out_bEmergencyStop
+    - ''
+    - Экстренный останов
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - CabinetController_Inst
+    - inout_bStart
+    - ''
+    - Пуск
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - CabinetController_Inst
+    - inout_bStop
+    - ''
+    - Стоп
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - CabinetController_Inst
+    - inout_bEmergencyStop
+    - ''
+    - Экстренный останов
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - CabinetController_Inst
+    - inout_bFaultReset
+    - ''
+    - Сброс аварии
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - CabinetController_Inst
+    - inout_bWorktimeReset
+    - ''
+    - Сброс времени наработки
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - CabinetController_Inst
+    - CCabinetController
+code:
+  format: template-text
+  language: st-template
+  text: "// Контроллер шкафа управления\nCabinetController_Inst(\n    in_bStart := |CabCtlStart|,\n    in_bStop := |CabCtlStop|,\n    in_bEmergencyStop := |CabCtlEStop|,\n    in_bPowerControl := |CabCtlPowerOk|,\n    in_diPowerControlFilter := Conf.CabinetController_diPowerControlFilter,\n    in_bBlock := |CabCtlBlock|,\n    in_bFaultReset := |CabCtlFaultReset|,\n    in_diFaultResetPulse := Conf.CabinetController_diFaultResetPulse,\n    in_bStartOnTrig := Conf.CabinetController_bStartOnTrig,\n    inout_bStart := View.CabinetController_Inst_inout_bStart,\n    inout_bStop := View.CabinetController_Inst_inout_bStop,\n    inout_bEmergencyStop := View.CabinetController_Inst_inout_bEmergencyStop,\n    inout_bFaultReset := View.CabinetController_Inst_inout_bFaultReset,\n    inout_bWorktimeReset := View.CabinetController_Inst_inout_bWorktimeReset\n);\n//\n//\n//\n//"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: cabinetcontroller-block-template.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''
+export:
+  format: list
+  rows: []

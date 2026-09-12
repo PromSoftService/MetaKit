@@ -1,0 +1,297 @@
+kind: metagen.component
+version: 1
+component:
+  id: deb00b5c-5817-47d4-afe1-d8a8c4f51f41
+  name: Engine
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CEngine'
+params:
+  format: header-plus-rows
+  header:
+  - $Eng
+  - EngId
+  - EngComment
+  - EngStartCmd
+  - EngStopCmd
+  - EngEStopExtra
+  - EngConf
+  - EngConfComment
+  rows:
+  - - Двигатель
+    - _ID_
+    - Комментарий
+    - 'false'
+    - 'false'
+    - 'false'
+    - ''
+    - ''
+  - []
+  - - EngLocal
+    - EngLocalControlByPLC
+    - EngRemote
+    - EngExtFault
+    - EngState
+    - EngStartOut
+  - - 'false'
+    - 'false'
+    - 'true'
+    - 'false'
+    - 'false'
+    - _DO_
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - DInt
+    - Conf
+    - '%"|EngConf|" if "|EngConf|"!="" else "|EngId|"%_Engine_diStateControlTime'
+    - '1'
+    - '%"|EngConfComment|" if "|EngConfComment|"!="" else "|EngComment|. |$Eng|"%. Время пуска'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|EngConf|" if "|EngConf|"!="" else "|EngId|"%_Engine_diStateConfirmTime'
+    - '3'
+    - '%"|EngConfComment|" if "|EngConfComment|"!="" else "|EngComment|. |$Eng|"%. Время подтверждения состояния'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|EngConf|" if "|EngConf|"!="" else "|EngId|"%_Engine_diStartDelayTime'
+    - '1'
+    - '%"|EngConfComment|" if "|EngConfComment|"!="" else "|EngComment|. |$Eng|"%. Задержка пуска'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|EngConf|" if "|EngConf|"!="" else "|EngId|"%_Engine_diStopDelayTime'
+    - '1'
+    - '%"|EngConfComment|" if "|EngConfComment|"!="" else "|EngComment|. |$Eng|"%. Задержка останова'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Bool
+    - Conf
+    - '%"|EngConf|" if "|EngConf|"!="" else "|EngId|"%_Engine_bStateControlBypass'
+    - 'false'
+    - '%"|EngConfComment|" if "|EngConfComment|"!="" else "|EngComment|. |$Eng|"%. Отключение контроля состояния'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - []
+  - - Int
+    - '|EngId|_Engine_Inst'
+    - out_iMode
+    - ''
+    - '|EngComment|. |$Eng|. Режим'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Int
+    - '|EngId|_Engine_Inst'
+    - out_iState
+    - ''
+    - '|EngComment|. |$Eng|. Состояние'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|EngId|_Engine_Inst'
+    - out_bStart
+    - ''
+    - '|EngComment|. |$Eng|. Пуск'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|EngId|_Engine_Inst'
+    - out_bExternalFault
+    - ''
+    - '|EngComment|. |$Eng|. Внешняя авария'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|EngId|_Engine_Inst'
+    - out_bStateFault
+    - ''
+    - '|EngComment|. |$Eng|. Авария. Время пуска'
+    - ''
+    - 'true'
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|EngId|_Engine_Inst'
+    - out_bFault
+    - ''
+    - '|EngComment|. |$Eng|. Общая авария'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|EngId|_Engine_Inst'
+    - out_bBlocked
+    - ''
+    - '|EngComment|. |$Eng|. Управление заблокировано'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|EngId|_Engine_Inst'
+    - out_bState
+    - ''
+    - '|EngComment|. |$Eng|. Работа'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|EngId|_Engine_Inst'
+    - out_bEnableAutoControl
+    - ''
+    - '|EngComment|. |$Eng|. Разрешено управление в автоматическом режиме'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - DInt
+    - '|EngId|_Engine_Inst'
+    - out_diWorktime
+    - ''
+    - '|EngComment|. |$Eng|. Время наработки'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Int
+    - '|EngId|_Engine_Inst'
+    - inout_iRemoteMode
+    - ''
+    - '|EngComment|. |$Eng|. Ручной/автоматический режим'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|EngId|_Engine_Inst'
+    - inout_bStart
+    - ''
+    - '|EngComment|. |$Eng|. Пуск'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|EngId|_Engine_Inst'
+    - inout_bStop
+    - ''
+    - '|EngComment|. |$Eng|. Стоп'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|EngId|_Engine_Inst'
+    - inout_bFaultReset
+    - ''
+    - '|EngComment|. |$Eng|. Сброс аварии'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|EngId|_Engine_Inst'
+    - inout_bWorktimeReset
+    - ''
+    - '|EngComment|. |$Eng|. Сброс времени наработки'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|EngId|_Engine_Inst'
+    - CEngine
+code:
+  format: template-text
+  language: st-template
+  text: "// |EngId| - |EngComment|. |$Eng|\n|EngId|_Engine_Inst(\n    in_bLocalControl := |EngLocal|,\n    in_bLocalControlByPLC := |EngLocalControlByPLC|,\n    in_bRemoteControl := |EngRemote|,\n    in_bEmergencyStop := false\n        OR CabinetController_Inst.out_bEmergencyStop\n        OR NOT CabinetController_Inst.out_bPowerControl\n        OR |EngEStopExtra|,\n    in_bExternalFault := |EngExtFault|,\n    in_bStart := false\n        OR ((|EngId|_Engine_Inst.out_iMode = ENGINEMODEAUTO) AND (|EngStartCmd|))\n        OR ((|EngId|_Engine_Inst.out_iMode = ENGINEMODEMANUAL) AND (View.|EngId|_Engine_Inst_inout_bStart)),\n    in_bStop := false\n        OR ((|EngId|_Engine_Inst.out_iMode = ENGINEMODEAUTO) AND (|EngStopCmd|))\n        OR ((|EngId|_Engine_Inst.out_iMode = ENGINEMODEMANUAL) AND (View.|EngId|_Engine_Inst_inout_bStop)),\n    in_bState := |EngState|,\n    in_bStateControlBypass := Conf.%\"|EngConf|\" if \"|EngConf|\"!=\"\" else \"|EngId|\"%_Engine_bStateControlBypass,\n    in_diStateControlTime := Conf.%\"|EngConf|\" if \"|EngConf|\"!=\"\" else \"|EngId|\"%_Engine_diStateControlTime,\n    in_diStateConfirmTime := Conf.%\"|EngConf|\" if \"|EngConf|\"!=\"\" else \"|EngId|\"%_Engine_diStateConfirmTime,\n    in_diStartDelayTime := Conf.%\"|EngConf|\" if \"|EngConf|\"!=\"\" else \"|EngId|\"%_Engine_diStartDelayTime,\n    in_diStopDelayTime := Conf.%\"|EngConf|\" if \"|EngConf|\"!=\"\" else \"|EngId|\"%_Engine_diStopDelayTime,\n    in_bFaultReset := CabinetController_Inst.out_bFaultReset,\n    in_bWorktimeReset := CabinetController_Inst.out_bWorktimeReset,\n    out_bStart => |EngStartOut|,\n    inout_iRemoteMode := View.|EngId|_Engine_Inst_inout_iRemoteMode,\n    inout_bStart := View.|EngId|_Engine_Inst_inout_bStart,\n    inout_bStop := View.|EngId|_Engine_Inst_inout_bStop,\n    inout_bFaultReset := View.|EngId|_Engine_Inst_inout_bFaultReset,\n    inout_bWorktimeReset := View.|EngId|_Engine_Inst_inout_bWorktimeReset\n);\n//\n//\n//\n//"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: Engine.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

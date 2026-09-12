@@ -1,0 +1,206 @@
+kind: metagen.component
+version: 1
+component:
+  id: 933f7c66-068b-49c5-aa95-4a8e7e0933e5
+  name: CascadeUnit
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CCascadeUnit adapter'
+params:
+  format: header-plus-rows
+  header:
+  - $CasUnit
+  - CasUnitId
+  - CasUnitComment
+  - CasUnitParent
+  - CasUnitStartCmd
+  - CasUnitEn
+  - ''
+  rows:
+  - - Элемент каскада
+    - _ID_
+    - Комментарий
+    - CabinetController_Inst
+    - 'false'
+    - 'true'
+    - ''
+  - []
+  - - CasUnitMode
+    - CasUnitState
+    - CasUnitStateBool
+    - CasUnitFault
+    - CasUnitWorktime
+    - CasUnitPower
+  - - 'true'
+    - '0'
+    - 'false'
+    - 'false'
+    - '0'
+    - '0.0'
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - Bool
+    - '|CasUnitId|_CascadeUnit_Inst'
+    - out_bEnable
+    - ''
+    - '|CasUnitComment|. |$CasUnit|. Разрешение'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CasUnitId|_CascadeUnit_Inst'
+    - out_bPowerControl
+    - ''
+    - '|CasUnitComment|. |$CasUnit|. Наличие напряжения'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CasUnitId|_CascadeUnit_Inst'
+    - out_bEmergencyStop
+    - ''
+    - '|CasUnitComment|. |$CasUnit|. Экстренный останов'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CasUnitId|_CascadeUnit_Inst'
+    - out_bMode
+    - ''
+    - '|CasUnitComment|. |$CasUnit|. Автоматический режим'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Int
+    - '|CasUnitId|_CascadeUnit_Inst'
+    - out_iState
+    - ''
+    - '|CasUnitComment|. |$CasUnit|. Состояние'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CasUnitId|_CascadeUnit_Inst'
+    - out_bState
+    - ''
+    - '|CasUnitComment|. |$CasUnit|. Работа'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CasUnitId|_CascadeUnit_Inst'
+    - out_bFault
+    - ''
+    - '|CasUnitComment|. |$CasUnit|. Авария'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CasUnitId|_CascadeUnit_Inst'
+    - out_bStart
+    - ''
+    - '|CasUnitComment|. |$CasUnit|. Команда пуска'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - DInt
+    - '|CasUnitId|_CascadeUnit_Inst'
+    - out_diWorktime
+    - ''
+    - '|CasUnitComment|. |$CasUnit|. Наработка'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Real
+    - '|CasUnitId|_CascadeUnit_Inst'
+    - out_fPower
+    - ''
+    - '|CasUnitComment|. |$CasUnit|. Мощность'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - '1'
+    - ''
+  - - Bool
+    - '|CasUnitId|_CascadeUnit_Inst'
+    - inout_bFaultReset
+    - ''
+    - '|CasUnitComment|. |$CasUnit|. Сброс аварии'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CasUnitId|_CascadeUnit_Inst'
+    - inout_bWorktimeReset
+    - ''
+    - '|CasUnitComment|. |$CasUnit|. Сброс времени наработки'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|CasUnitId|_CascadeUnit_Inst'
+    - CCascadeUnit
+code:
+  format: template-text
+  language: st-template
+  text: "// |CasUnitId| - |CasUnitComment|. |$CasUnit|\n|CasUnitId|_CascadeUnit_Inst(\n    in_bEnable := |CasUnitEn|,\n    in_bEmergencyStop := |CasUnitParent|.out_bEmergencyStop,\n    in_bPowerControl := |CasUnitParent|.out_bPowerControl,\n    in_bMode := |CasUnitMode|,\n    in_iState := |CasUnitState|,\n    in_bState := |CasUnitStateBool|,\n    in_bFault := |CasUnitFault|,\n    in_bStart := |CasUnitStartCmd|,\n    in_diWorktime := |CasUnitWorktime|,\n    in_fPower := |CasUnitPower|,\n    in_bFaultReset := |CasUnitParent|.out_bFaultReset,\n    in_bWorktimeReset := |CasUnitParent|.out_bWorktimeReset,\n    inout_bFaultReset := View.|CasUnitId|_CascadeUnit_Inst_inout_bFaultReset,\n    inout_bWorktimeReset := View.|CasUnitId|_CascadeUnit_Inst_inout_bWorktimeReset\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: CascadeUnit.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

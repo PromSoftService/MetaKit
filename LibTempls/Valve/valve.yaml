@@ -1,0 +1,354 @@
+kind: metagen.component
+version: 1
+component:
+  id: 160b1f19-bb85-4fad-97b2-80052d0207f0
+  name: Valve
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CValve'
+params:
+  format: header-plus-rows
+  header:
+  - $Val
+  - ValId
+  - ValComment
+  - ValOpenCmd
+  - ValCloseCmd
+  - ValEnAutoCtrlExtra
+  - ValEStopExtra
+  - ValPowerCtrlExtra
+  - ValConf
+  - ValConfComment
+  rows:
+  - - Клапан
+    - _ID_
+    - Комментарий
+    - 'false'
+    - 'false'
+    - 'true'
+    - 'false'
+    - 'true'
+    - ''
+    - ''
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - ValLocal
+    - ValRemote
+    - ValExtFault
+    - ValStateOpen
+    - ValStateClose
+    - ValOpenOut
+    - ValCloseOut
+    - ''
+    - ''
+    - ''
+  - - 'false'
+    - 'true'
+    - 'false'
+    - _DI_
+    - _DI_
+    - _DO_
+    - _DO_
+    - ''
+    - ''
+    - ''
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - Bool
+    - Conf
+    - '%"|ValConf|" if "|ValConf|"!="" else "|ValId|"%_Valve_bNO'
+    - 'false'
+    - '%"|ValConfComment|" if "|ValConfComment|"!="" else "|ValComment|. |$Val|"%. Нормально открытый'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Bool
+    - Conf
+    - '%"|ValConf|" if "|ValConf|"!="" else "|ValId|"%_Valve_bEnableFaultCtrl'
+    - 'false'
+    - '%"|ValConfComment|" if "|ValConfComment|"!="" else "|ValComment|. |$Val|"%. Закрытие/открытие при аварии'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Bool
+    - Conf
+    - '%"|ValConf|" if "|ValConf|"!="" else "|ValId|"%_Valve_bEnableCheckState'
+    - 'false'
+    - '%"|ValConfComment|" if "|ValConfComment|"!="" else "|ValComment|. |$Val|"%. Контроль крайних положений'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|ValConf|" if "|ValConf|"!="" else "|ValId|"%_Valve_diChangeStateDelay'
+    - '1'
+    - '%"|ValConfComment|" if "|ValConfComment|"!="" else "|ValComment|. |$Val|"%. Задержка смены состояния'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|ValConf|" if "|ValConf|"!="" else "|ValId|"%_Valve_diFullTime'
+    - '90'
+    - '%"|ValConfComment|" if "|ValConfComment|"!="" else "|ValComment|. |$Val|"%. Время полного хода'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Bool
+    - Conf
+    - '%"|ValConf|" if "|ValConf|"!="" else "|ValId|"%_Valve_bFullTimeCtrlBypass'
+    - 'false'
+    - '%"|ValConfComment|" if "|ValConfComment|"!="" else "|ValComment|. |$Val|"%. Шунт контроля полного хода'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - []
+  - - Int
+    - '|ValId|_Valve_Inst'
+    - out_iMode
+    - ''
+    - '|ValComment|. |$Val|. Режим'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Int
+    - '|ValId|_Valve_Inst'
+    - out_iState
+    - ''
+    - '|ValComment|. |$Val|. Состояние'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - out_bOpen
+    - ''
+    - '|ValComment|. |$Val|. Открытие'
+    - '0'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - out_bClose
+    - ''
+    - '|ValComment|. |$Val|. Закрытие'
+    - '0'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - out_bExternalFault
+    - ''
+    - '|ValComment|. |$Val|. Внешняя авария'
+    - '0'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - out_bFullTimeFault
+    - ''
+    - '|ValComment|. |$Val|. Авария полного хода'
+    - '0'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - out_bOpenFault
+    - ''
+    - '|ValComment|. |$Val|. Авария открытия'
+    - '0'
+    - 'true'
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - out_bCloseFault
+    - ''
+    - '|ValComment|. |$Val|. Авария закрытия'
+    - '0'
+    - 'true'
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - out_bFault
+    - ''
+    - '|ValComment|. |$Val|. Авария'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - out_bEnableAutoControl
+    - ''
+    - '|ValComment|. |$Val|. Разрешено управление в автоматическом режиме'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - out_bBlocked
+    - ''
+    - '|ValComment|. |$Val|. Управление заблокировано'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - DInt
+    - '|ValId|_Valve_Inst'
+    - out_diWorktime
+    - ''
+    - '|ValComment|. |$Val|. Время наработки'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Int
+    - '|ValId|_Valve_Inst'
+    - inout_iRemoteMode
+    - ''
+    - '|ValComment|. |$Val|. Ручной/автоматический режим'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - inout_bOpen
+    - ''
+    - '|ValComment|. |$Val|. Открытие'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - inout_bClose
+    - ''
+    - '|ValComment|. |$Val|. Закрытие'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - inout_bFaultReset
+    - ''
+    - '|ValComment|. |$Val|. Сброс аварии'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|ValId|_Valve_Inst'
+    - inout_bWorktimeReset
+    - ''
+    - '|ValComment|. |$Val|. Сброс времени наработки'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|ValId|_Valve_Inst'
+    - CValve
+code:
+  format: template-text
+  language: st-template
+  text: "// |ValId| - |ValComment|. |$Val|\n|ValId|_Valve_Inst(\n    in_bLocalControl := |ValLocal|,\n    in_bRemoteControl := |ValRemote|,\n    in_bEnableAutoControl := true\n        AND |ValEnAutoCtrlExtra|,\n    in_bEmergencyStop := false\n        OR CabinetController_Inst.out_bEmergencyStop\n        OR |ValEStopExtra|,\n    in_bPowerControl := true\n        AND CabinetController_Inst.out_bPowerControl\n        AND |ValPowerCtrlExtra|,\n    in_bNO := Conf.%\"|ValConf|\" if \"|ValConf|\"!=\"\" else \"|ValId|\"%_Valve_bNO,\n    in_bExternalFault := |ValExtFault|,\n    in_bEnableFaultCtrl := Conf.%\"|ValConf|\" if \"|ValConf|\"!=\"\" else \"|ValId|\"%_Valve_bEnableFaultCtrl,\n    in_bOpen := false\n        OR ((|ValId|_Valve_Inst.out_iMode = VALVEMODEAUTO) AND (|ValOpenCmd|))\n        OR ((|ValId|_Valve_Inst.out_iMode = VALVEMODEMANUAL) AND (View.|ValId|_Valve_Inst_inout_bOpen)),\n    in_bClose := false\n        OR ((|ValId|_Valve_Inst.out_iMode = VALVEMODEAUTO) AND (|ValCloseCmd|))\n        OR ((|ValId|_Valve_Inst.out_iMode = VALVEMODEMANUAL) AND (View.|ValId|_Valve_Inst_inout_bClose)),\n    in_bEnableCheckState := Conf.%\"|ValConf|\" if \"|ValConf|\"!=\"\" else \"|ValId|\"%_Valve_bEnableCheckState,\n    in_bStateOpen := |ValStateOpen|,\n    in_bStateClose := |ValStateClose|,\n    in_diChangeStateDelay := Conf.%\"|ValConf|\" if \"|ValConf|\"!=\"\" else \"|ValId|\"%_Valve_diChangeStateDelay,\n    in_diFullTime := Conf.%\"|ValConf|\" if \"|ValConf|\"!=\"\" else \"|ValId|\"%_Valve_diFullTime,\n    in_bFullTimeCtrlBypass := Conf.%\"|ValConf|\" if \"|ValConf|\"!=\"\" else \"|ValId|\"%_Valve_bFullTimeCtrlBypass,\n    in_bFaultReset := CabinetController_Inst.out_bFaultReset,\n    in_bWorktimeReset := CabinetController_Inst.out_bWorktimeReset,\n    out_bOpen => |ValOpenOut|,\n    out_bClose => |ValCloseOut|,\n    inout_iRemoteMode := View.|ValId|_Valve_Inst_inout_iRemoteMode,\n    inout_bOpen := View.|ValId|_Valve_Inst_inout_bOpen,\n    inout_bClose := View.|ValId|_Valve_Inst_inout_bClose,\n    inout_bFaultReset := View.|ValId|_Valve_Inst_inout_bFaultReset,\n    inout_bWorktimeReset := View.|ValId|_Valve_Inst_inout_bWorktimeReset\n);\n//\n//\n//\n//"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: Valve.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''
+export:
+  format: list
+  rows: []

@@ -1,0 +1,97 @@
+kind: metagen.component
+version: 1
+component:
+  id: c1509df4-751a-41b7-804a-c0bb83d3da44
+  name: WDSlave
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CWDSlave'
+params:
+  format: header-plus-rows
+  header:
+  - $WDSlave
+  - WDSlaveId
+  - WDSlaveComment
+  - WDSlaveIn
+  - WDSlaveOut
+  - WDSlaveConf
+  - WDSlaveConfComment
+  - WDSlaveConnMsg
+  rows:
+  - - Ведомый WatchDog
+    - _ID_
+    - Комментарий
+    - _WD_IN_
+    - _WD_OUT_
+    - ''
+    - ''
+    - Связь установлена
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - DInt
+    - Conf
+    - '%"|WDSlaveConf|" if "|WDSlaveConf|"!="" else "|WDSlaveId|"%_WDSlave_diTimeout'
+    - '5'
+    - '%"|WDSlaveConfComment|" if "|WDSlaveConfComment|"!="" else "|WDSlaveComment|. |$WDSlave|"%. Таймаут связи'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - []
+  - - Bool
+    - '|WDSlaveId|_WDSlave_Inst'
+    - out_bConn
+    - ''
+    - '|WDSlaveComment|. |WDSlaveConnMsg|'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|WDSlaveId|_WDSlave_Inst'
+    - out_bSync
+    - ''
+    - '|WDSlaveComment|. |$WDSlave|. Синхронизация выполнена'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|WDSlaveId|_WDSlave_Inst'
+    - CWDSlave
+code:
+  format: template-text
+  language: st-template
+  text: "// |WDSlaveId| - |WDSlaveComment|. |$WDSlave|\n|WDSlaveId|_WDSlave_Inst(\n    in_wMasterWD := |WDSlaveIn|,\n    in_diTimeout := Conf.%\"|WDSlaveConf|\" if \"|WDSlaveConf|\"!=\"\" else \"|WDSlaveId|\"%_WDSlave_diTimeout,\n    out_wSlaveWD => |WDSlaveOut|\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: WDSlave.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

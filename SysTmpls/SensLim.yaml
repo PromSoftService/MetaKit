@@ -1,0 +1,384 @@
+kind: metagen.component
+version: 1
+component:
+  id: 6793b868-9ef0-4ebb-9932-9953fb71cf09
+  name: SensLim
+  type: template
+  module: MetaGen
+  description: "BlockTemplate: sensor limits with CSignalsFilter3 faults/warnings"
+params:
+  format: header-plus-rows
+  header:
+    - $Limit
+    - ""
+    - ""
+    - ""
+    - ""
+    - ""
+    - ""
+    - ""
+    - ""
+    - ""
+  rows:
+    - - Пределы датчика
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - SensId
+      - Comment
+      - SensErrFlt
+      - SensErrWrn
+      - HHEnable
+      - HEnable
+      - LEnable
+      - LLEnable
+      - FltAutoReset
+      - WrnAutoReset
+    - - _ID_
+      - датчик
+      - "true"
+      - "false"
+      - "true"
+      - "true"
+      - "true"
+      - "true"
+      - "false"
+      - "true"
+data:
+  format: table
+  columns:
+    - Type
+    - Data block
+    - Tag
+    - Value
+    - Comment
+    - HMI
+    - Flt
+    - Wrn
+    - Alm
+    - Trend
+    - Conf
+  rows:
+    - - Real
+      - Conf
+      - "|SensId|_SensLim_fHH"
+      - "0.0"
+      - "|Comment|. Верхняя аварийная граница"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - "|SensId|_SensLim_fH"
+      - "0.0"
+      - "|Comment|. Верхняя предупредительная граница"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - "|SensId|_SensLim_fL"
+      - "0.0"
+      - "|Comment|. Нижняя предупредительная граница"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - "|SensId|_SensLim_fLL"
+      - "0.0"
+      - "|Comment|. Нижняя аварийная граница"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - DInt
+      - Conf
+      - "|SensId|_SensLim_Flt_diDelay"
+      - "1"
+      - "|Comment|. Аварийные границы. Задержка срабатывания"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - DInt
+      - Conf
+      - "|SensId|_SensLim_Wrn_diDelay"
+      - "1"
+      - "|Comment|. Предупредительные границы. Задержка срабатывания"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Bool
+      - Conf
+      - "|SensId|_SensLim_HH_bBypass"
+      - "true"
+      - "|Comment|. Верхняя аварийная граница. Шунт"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Bool
+      - Conf
+      - "|SensId|_SensLim_H_bBypass"
+      - "true"
+      - "|Comment|. Верхняя предупредительная граница. Шунт"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Bool
+      - Conf
+      - "|SensId|_SensLim_L_bBypass"
+      - "true"
+      - "|Comment|. Нижняя предупредительная граница. Шунт"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Bool
+      - Conf
+      - "|SensId|_SensLim_LL_bBypass"
+      - "true"
+      - "|Comment|. Нижняя аварийная граница. Шунт"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - Bool
+      - "|SensId|_SensLim_Flts_Inst"
+      - out_Signal1_bQ
+      - ""
+      - "|Comment|. Верхняя аварийная граница"
+      - "1"
+      - "true"
+      - ""
+      - ""
+      - ""
+      - ""
+    - - Bool
+      - "|SensId|_SensLim_Flts_Inst"
+      - out_Signal2_bQ
+      - ""
+      - "|Comment|. Нижняя аварийная граница"
+      - "1"
+      - "true"
+      - ""
+      - ""
+      - ""
+      - ""
+    - - Bool
+      - "|SensId|_SensLim_Flts_Inst"
+      - out_Signal3_bQ
+      - ""
+      - "|Comment|. Ошибка датчика"
+      - "1"
+      - "true"
+      - ""
+      - ""
+      - ""
+      - ""
+    - - Bool
+      - "|SensId|_SensLim_Flts_Inst"
+      - out_bQ
+      - ""
+      - "|Comment|. Авария"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - Bool
+      - "|SensId|_SensLim_Wrns_Inst"
+      - out_Signal1_bQ
+      - ""
+      - "|Comment|. Верхняя предупредительная граница"
+      - "1"
+      - ""
+      - "true"
+      - ""
+      - ""
+      - ""
+    - - Bool
+      - "|SensId|_SensLim_Wrns_Inst"
+      - out_Signal2_bQ
+      - ""
+      - "|Comment|. Нижняя предупредительная граница"
+      - "1"
+      - ""
+      - "true"
+      - ""
+      - ""
+      - ""
+    - - Bool
+      - "|SensId|_SensLim_Wrns_Inst"
+      - out_Signal3_bQ
+      - ""
+      - "|Comment|. Ошибка датчика"
+      - "1"
+      - ""
+      - "true"
+      - ""
+      - ""
+      - ""
+    - - Bool
+      - "|SensId|_SensLim_Wrns_Inst"
+      - out_bQ
+      - ""
+      - "|Comment|. Предупреждение"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+instances:
+  format: list
+  rows:
+    - - "|SensId|_SensLim_Flts_Inst"
+      - CSignalsFilter
+    - - "|SensId|_SensLim_Wrns_Inst"
+      - CSignalsFilter
+export:
+  format: list
+  rows: []
+code:
+  format: template-text
+  language: st-template
+  text: >
+    // |SensId| - |Comment|. Аварийные границы
+
+    |SensId|_SensLim_Flts_Inst(
+        in_bReset := CabinetController_Inst.out_bFaultReset,
+        in_Signal1_bIN := |SensId|_SensFilter_Inst.out_fY >= Conf.|SensId|_SensLim_fHH,
+        in_Signal1_bBypass := Conf.|SensId|_Sensor_EV_bLimitBypass OR Conf.|SensId|_SensLim_HH_bBypass,
+        in_Signal1_bEnable := |HHEnable|,
+        in_Signal1_diDelay := Conf.|SensId|_SensLim_Flt_diDelay,
+        in_Signal1_bAutoReset := |FltAutoReset|,
+        in_Signal2_bIN := |SensId|_SensFilter_Inst.out_fY <= Conf.|SensId|_SensLim_fLL,
+        in_Signal2_bBypass := Conf.|SensId|_Sensor_EV_bLimitBypass OR Conf.|SensId|_SensLim_LL_bBypass,
+        in_Signal2_bEnable := |LLEnable|,
+        in_Signal2_diDelay := Conf.|SensId|_SensLim_Flt_diDelay,
+        in_Signal2_bAutoReset := |FltAutoReset|,
+        in_Signal3_bIN := |SensId|_Sensor_Inst.out_bError,
+        in_Signal3_bBypass := false,
+        in_Signal3_bEnable := |SensErrFlt|,
+        in_Signal3_diDelay := 0,
+        in_Signal3_bAutoReset := |FltAutoReset|
+    );
+
+    //
+
+    //
+
+    //
+
+    //
+
+
+    // |SensId| - |Comment|. Предупредительные границы
+
+    |SensId|_SensLim_Wrns_Inst(
+        in_bReset := CabinetController_Inst.out_bFaultReset,
+        in_Signal1_bIN := true
+            AND (|SensId|_SensFilter_Inst.out_fY >= Conf.|SensId|_SensLim_fH)
+            AND ((|SensId|_SensFilter_Inst.out_fY < Conf.|SensId|_SensLim_fHH) OR Conf.|SensId|_SensLim_HH_bBypass),
+        in_Signal1_bBypass := Conf.|SensId|_Sensor_EV_bLimitBypass OR Conf.|SensId|_SensLim_H_bBypass,
+        in_Signal1_bEnable := |HEnable|,
+        in_Signal1_diDelay := Conf.|SensId|_SensLim_Wrn_diDelay,
+        in_Signal1_bAutoReset := |WrnAutoReset|,
+        in_Signal2_bIN := true
+            AND (|SensId|_SensFilter_Inst.out_fY <= Conf.|SensId|_SensLim_fL)
+            AND ((|SensId|_SensFilter_Inst.out_fY > Conf.|SensId|_SensLim_fLL) OR Conf.|SensId|_SensLim_LL_bBypass),
+        in_Signal2_bBypass := Conf.|SensId|_Sensor_EV_bLimitBypass OR Conf.|SensId|_SensLim_L_bBypass,
+        in_Signal2_bEnable := |LEnable|,
+        in_Signal2_diDelay := Conf.|SensId|_SensLim_Wrn_diDelay,
+        in_Signal2_bAutoReset := |WrnAutoReset|,
+        in_Signal3_bIN := |SensId|_Sensor_Inst.out_bError,
+        in_Signal3_bBypass := false,
+        in_Signal3_bEnable := |SensErrWrn|,
+        in_Signal3_diDelay := 0,
+        in_Signal3_bAutoReset := |WrnAutoReset|
+    );
+
+    //
+
+    //
+
+    //
+
+    //
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: SensLim.st
+meta:
+  author: ""
+  importedFrom: ""
+  importedSheet: ""

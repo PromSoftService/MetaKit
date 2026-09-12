@@ -1,0 +1,103 @@
+kind: metagen.component
+version: 1
+component:
+  id: 0875f843-058e-4343-9b00-b86ad2185a0c
+  name: Pulse
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CPulse'
+params:
+  format: header-plus-rows
+  header:
+  - $Pulse
+  - PulseId
+  - PulseComment
+  - PulseEn
+  - PulseConf
+  - PulseConfComment
+  rows:
+  - - Генератор импульсов
+    - _ID_
+    - Комментарий
+    - 'true'
+    - ''
+    - ''
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - DInt
+    - Conf
+    - '%"|PulseConf|" if "|PulseConf|"!="" else "|PulseId|"%_Pulse_diPeriod'
+    - '24'
+    - '%"|PulseConfComment|" if "|PulseConfComment|"!="" else "|PulseComment|. |$Pulse|"%. Период цикла импульс/пауза'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|PulseConf|" if "|PulseConf|"!="" else "|PulseId|"%_Pulse_diPeriodMultiplier'
+    - '3600000'
+    - '%"|PulseConfComment|" if "|PulseConfComment|"!="" else "|PulseComment|. |$Pulse|"%. Множитель периода'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|PulseConf|" if "|PulseConf|"!="" else "|PulseId|"%_Pulse_diPulse'
+    - '5'
+    - '%"|PulseConfComment|" if "|PulseConfComment|"!="" else "|PulseComment|. |$Pulse|"%. Длительность импульса'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|PulseConf|" if "|PulseConf|"!="" else "|PulseId|"%_Pulse_diPulseMultiplier'
+    - '1000'
+    - '%"|PulseConfComment|" if "|PulseConfComment|"!="" else "|PulseComment|. |$Pulse|"%. Множитель длительности импульса'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+instances:
+  format: list
+  rows:
+  - - '|PulseId|_Pulse_Inst'
+    - CPulse
+code:
+  format: template-text
+  language: st-template
+  text: "// |PulseId| - |PulseComment|. |$Pulse|\n|PulseId|_Pulse_Inst(\n    in_bEnable := |PulseEn|,\n    in_diPeriod := Conf.%\"|PulseConf|\" if \"|PulseConf|\"!=\"\" else \"|PulseId|\"%_Pulse_diPeriod,\n    in_diPeriodMultiplier := Conf.%\"|PulseConf|\" if \"|PulseConf|\"!=\"\" else \"|PulseId|\"%_Pulse_diPeriodMultiplier,\n    in_diPulse := Conf.%\"|PulseConf|\" if \"|PulseConf|\"!=\"\" else \"|PulseId|\"%_Pulse_diPulse,\n    in_diPulseMultiplier := Conf.%\"|PulseConf|\" if \"|PulseConf|\"!=\"\" else \"|PulseId|\"%_Pulse_diPulseMultiplier\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: Pulse.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

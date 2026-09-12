@@ -1,0 +1,381 @@
+kind: metagen.component
+version: 1
+component:
+  id: f47592f0-d095-4fb3-b638-e3ef85b774f1
+  name: VfdGroupPidCascade
+  type: template
+  module: MetaGen
+  description: Каскад частотно-регулируемых двигателей с общим ПИД-регулятором
+params:
+  format: header-plus-rows
+  header:
+  - Id
+  - Comment
+  - Parent
+  - CasPV
+  - CasPVErr
+  - Enable
+  rows:
+  - - _ID_
+    - Комментарий
+    - CabinetController_Inst
+    - '0.0'
+    - 'false'
+    - 'true'
+  - []
+  - - $Cas
+    - CasConf
+    - CasConfComment
+  - - Каскад
+    - ''
+    - ''
+  - []
+  - - UnitId1
+    - UnitId2
+    - UnitId3
+    - UnitId4
+    - UnitId5
+    - UnitId6
+    - UnitId7
+    - UnitId8
+    - UnitId9
+    - UnitId10
+    - UnitId11
+    - UnitId12
+    - UnitId13
+    - UnitId14
+    - UnitId15
+    - UnitId16
+  - - _ID_
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - []
+  - - $PID
+  - - Регулятор
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - Int
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|Id|"%_Cascade_iWorkCount'
+    - '1'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|Comment|. |$Cas|"%. Минимальное количество агрегатов в работе'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Int
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|Id|"%_Cascade_iMaxWorkCount'
+    - '1'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|Comment|. |$Cas|"%. Максимальное количество агрегатов в работе'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|Id|"%_Cascade_fSP'
+    - '0.0'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|Comment|. |$Cas|"%. Уставка'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|Id|"%_Cascade_fHys'
+    - '0.0'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|Comment|. |$Cas|"%. Гистерезис'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|Id|"%_Cascade_diConnectionDelay'
+    - '1'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|Comment|. |$Cas|"%. Задержка подключения'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|Id|"%_Cascade_diDisconnectionDelay'
+    - '1'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|Comment|. |$Cas|"%. Задержка отключения'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Bool
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|Id|"%_Cascade_bPowerControlEnable'
+    - 'false'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|Comment|. |$Cas|"%. Включение контроля мощности'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|Id|"%_Cascade_fPowerLoLimit'
+    - '0.0'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|Comment|. |$Cas|"%. Нижний предел мощности'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|Id|"%_Cascade_fPowerHiLimit'
+    - '0.0'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|Comment|. |$Cas|"%. Верхний предел мощности'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|Id|"%_Cascade_diSwitchPeriod'
+    - '36'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|Comment|. |$Cas|"%. Период смены'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - []
+  - - Real
+    - Conf
+    - '|Id|_PID_fSP'
+    - '0.0'
+    - '|Comment|. |$PID|. Уставка'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|Id|_PID_fDB'
+    - '0.0'
+    - '|Comment|. |$PID|. Зона нечувствительности'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|Id|_PID_fSR'
+    - '3.0'
+    - '|Comment|. |$PID|. Время дискретизации'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|Id|_PID_fKp'
+    - '1.0'
+    - '|Comment|. |$PID|. Kp'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|Id|_PID_fTi'
+    - '0.0'
+    - '|Comment|. |$PID|. Ti'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|Id|_PID_fTd'
+    - '0.0'
+    - '|Comment|. |$PID|. Td'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|Id|_PID_fYMin'
+    - '0.0'
+    - '|Comment|. |$PID|. Минимум выхода'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|Id|_PID_fYMax'
+    - '100.0'
+    - '|Comment|. |$PID|. Максимум выхода'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|Id|_PID_fYLoLimit'
+    - '0.0'
+    - '|Comment|. |$PID|. Нижнее ограничение'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|Id|_PID_fYHiLimit'
+    - '100.0'
+    - '|Comment|. |$PID|. Верхнее ограничение'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|Id|_PID_fOffValue'
+    - '0.0'
+    - '|Comment|. |$PID|. Выход при отключении'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - []
+  - - Real
+    - '|Id|_PID_Inst'
+    - out_fY
+    - ''
+    - '|Comment|. |$PID|. Управляющий сигнал'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Real
+    - '|Id|_PID_Inst'
+    - out_fYS
+    - ''
+    - '|Comment|. |$PID|. Накопленный управляющий сигнал'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|Id|_PID_Inst'
+    - inout_bYManual
+    - ''
+    - '|Comment|. |$PID|. Ручной режим выхода'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Real
+    - '|Id|_PID_Inst'
+    - inout_fYManual
+    - ''
+    - '|Comment|. |$PID|. Ручное значение выхода'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|Id|_Cascade_Inst'
+    - CCascade
+  - - '|Id|_PID_Inst'
+    - CPID
+code:
+  format: template-text
+  language: st-template
+  text: "// |Id| - |Comment|. |$Cas|\n|Id|_Cascade_Inst(\n    in_bEnable := |Enable| AND NOT (|CasPVErr|),\n    in_bConnectionCondition :=\n        (|Id|_Cascade_Inst.out_iConnectedCount < Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_iWorkCount)\n        OR (\n            (|Id|_Cascade_Inst.out_iConnectedCount < Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_iMaxWorkCount)\n            AND (\n                |CasPV| < (Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_fSP - Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_fHys)\n            )\n        ),\n    in_diConnectionDelay := Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_diConnectionDelay,\n    in_bDisconnectionCondition :=\n        (|Id|_Cascade_Inst.out_iConnectedCount > Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_iMaxWorkCount)\n        OR (\n            (|Id|_Cascade_Inst.out_iConnectedCount > Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_iWorkCount)\n            AND (\n                |CasPV| > (Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_fSP + Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_fHys)\n            )\n        ),\n    in_diDisconnectionDelay := Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_diDisconnectionDelay,\n    in_bPowerControlEnable := Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_bPowerControlEnable,\n    in_fPowerLoLimit := Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_fPowerLoLimit,\n    in_fPowerHiLimit := Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_fPowerHiLimit,\n    in_diSwitchPeriod := Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|Id|\"%_Cascade_diSwitchPeriod,\n    in_bFastStartEnable := true,\n%\"\".strip() if \"|UnitId1|\"==\"\" else \"    in_Unit1_bEnable := |UnitId1|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId1|\"==\"\" else \"    in_Unit1_bState := |UnitId1|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId1|\"==\"\" else \"    in_Unit1_bFault := |UnitId1|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId1|\"==\"\" else \"    in_Unit1_fPower := |UnitId1|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId1|\"==\"\" else \"    in_Unit1_diWorktime := |UnitId1|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId2|\"==\"\" else \"    in_Unit2_bEnable := |UnitId2|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId2|\"==\"\" else \"    in_Unit2_bState := |UnitId2|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId2|\"==\"\" else \"    in_Unit2_bFault := |UnitId2|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId2|\"==\"\" else \"    in_Unit2_fPower := |UnitId2|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId2|\"==\"\" else \"    in_Unit2_diWorktime := |UnitId2|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId3|\"==\"\" else \"    in_Unit3_bEnable := |UnitId3|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId3|\"==\"\" else \"    in_Unit3_bState := |UnitId3|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId3|\"==\"\" else \"    in_Unit3_bFault := |UnitId3|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId3|\"==\"\" else \"    in_Unit3_fPower := |UnitId3|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId3|\"==\"\" else \"    in_Unit3_diWorktime := |UnitId3|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId4|\"==\"\" else \"    in_Unit4_bEnable := |UnitId4|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId4|\"==\"\" else \"    in_Unit4_bState := |UnitId4|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId4|\"==\"\" else \"    in_Unit4_bFault := |UnitId4|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId4|\"==\"\" else \"    in_Unit4_fPower := |UnitId4|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId4|\"==\"\" else \"    in_Unit4_diWorktime := |UnitId4|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId5|\"==\"\" else \"    in_Unit5_bEnable := |UnitId5|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId5|\"==\"\" else \"    in_Unit5_bState := |UnitId5|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId5|\"==\"\" else \"    in_Unit5_bFault := |UnitId5|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId5|\"==\"\" else \"    in_Unit5_fPower := |UnitId5|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId5|\"==\"\" else \"    in_Unit5_diWorktime := |UnitId5|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId6|\"==\"\" else \"    in_Unit6_bEnable := |UnitId6|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId6|\"==\"\" else \"    in_Unit6_bState := |UnitId6|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId6|\"==\"\" else \"    in_Unit6_bFault := |UnitId6|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId6|\"==\"\" else \"    in_Unit6_fPower := |UnitId6|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId6|\"==\"\" else \"    in_Unit6_diWorktime := |UnitId6|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId7|\"==\"\" else \"    in_Unit7_bEnable := |UnitId7|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId7|\"==\"\" else \"    in_Unit7_bState := |UnitId7|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId7|\"==\"\" else \"    in_Unit7_bFault := |UnitId7|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId7|\"==\"\" else \"    in_Unit7_fPower := |UnitId7|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId7|\"==\"\" else \"    in_Unit7_diWorktime := |UnitId7|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId8|\"==\"\" else \"    in_Unit8_bEnable := |UnitId8|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId8|\"==\"\" else \"    in_Unit8_bState := |UnitId8|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId8|\"==\"\" else \"    in_Unit8_bFault := |UnitId8|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId8|\"==\"\" else \"    in_Unit8_fPower := |UnitId8|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId8|\"==\"\" else \"    in_Unit8_diWorktime := |UnitId8|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId9|\"==\"\" else \"    in_Unit9_bEnable := |UnitId9|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId9|\"==\"\" else \"    in_Unit9_bState := |UnitId9|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId9|\"==\"\" else \"    in_Unit9_bFault := |UnitId9|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId9|\"==\"\" else \"    in_Unit9_fPower := |UnitId9|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId9|\"==\"\" else \"    in_Unit9_diWorktime := |UnitId9|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId10|\"==\"\" else \"    in_Unit10_bEnable := |UnitId10|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId10|\"==\"\" else \"    in_Unit10_bState := |UnitId10|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId10|\"==\"\" else \"    in_Unit10_bFault := |UnitId10|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId10|\"==\"\" else \"    in_Unit10_fPower := |UnitId10|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId10|\"==\"\" else \"    in_Unit10_diWorktime := |UnitId10|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId11|\"==\"\" else \"    in_Unit11_bEnable := |UnitId11|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId11|\"==\"\" else \"    in_Unit11_bState := |UnitId11|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId11|\"==\"\" else \"    in_Unit11_bFault := |UnitId11|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId11|\"==\"\" else \"    in_Unit11_fPower := |UnitId11|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId11|\"==\"\" else \"    in_Unit11_diWorktime := |UnitId11|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId12|\"==\"\" else \"    in_Unit12_bEnable := |UnitId12|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId12|\"==\"\" else \"    in_Unit12_bState := |UnitId12|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId12|\"==\"\" else \"    in_Unit12_bFault := |UnitId12|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId12|\"==\"\" else \"    in_Unit12_fPower := |UnitId12|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId12|\"==\"\" else \"    in_Unit12_diWorktime := |UnitId12|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId13|\"==\"\" else \"    in_Unit13_bEnable := |UnitId13|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId13|\"==\"\" else \"    in_Unit13_bState := |UnitId13|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId13|\"==\"\" else \"    in_Unit13_bFault := |UnitId13|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId13|\"==\"\" else \"    in_Unit13_fPower := |UnitId13|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId13|\"==\"\" else \"    in_Unit13_diWorktime := |UnitId13|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId14|\"==\"\" else \"    in_Unit14_bEnable := |UnitId14|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId14|\"==\"\" else \"    in_Unit14_bState := |UnitId14|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId14|\"==\"\" else \"    in_Unit14_bFault := |UnitId14|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId14|\"==\"\" else \"    in_Unit14_fPower := |UnitId14|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId14|\"==\"\" else \"    in_Unit14_diWorktime := |UnitId14|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId15|\"==\"\" else \"    in_Unit15_bEnable := |UnitId15|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId15|\"==\"\" else \"    in_Unit15_bState := |UnitId15|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId15|\"==\"\" else \"    in_Unit15_bFault := |UnitId15|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId15|\"==\"\" else \"    in_Unit15_fPower := |UnitId15|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId15|\"==\"\" else \"    in_Unit15_diWorktime := |UnitId15|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|UnitId16|\"==\"\" else \"    in_Unit16_bEnable := |UnitId16|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|UnitId16|\"==\"\" else \"    in_Unit16_bState := |UnitId16|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|UnitId16|\"==\"\" else \"    in_Unit16_bFault := |UnitId16|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|UnitId16|\"==\"\" else \"    in_Unit16_fPower := |UnitId16|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|UnitId16|\"==\"\" else \"    in_Unit16_diWorktime := |UnitId16|_CascadeUnit_Inst.out_diWorktime,\"%\n    in_bResetSwitch := |Parent|.out_bWorktimeReset\n);\n//\n//\n//\n//\n\n// |Id| - |Comment|. |$PID|\n|Id|_PID_Inst(\n    in_bEnable := |Enable|\n        AND NOT (|CasPVErr|)\n        AND (|Id|_Cascade_Inst.out_iConnectedCount > 0),\n    in_fSP := Conf.|Id|_PID_fSP,\n    in_fPV := |CasPV|,\n    in_fDB := Conf.|Id|_PID_fDB,\n    in_fSR := Conf.|Id|_PID_fSR,\n    in_fKp := Conf.|Id|_PID_fKp,\n    in_fTi := Conf.|Id|_PID_fTi,\n    in_fTd := Conf.|Id|_PID_fTd,\n    in_fYMin := Conf.|Id|_PID_fYMin,\n    in_fYMax := Conf.|Id|_PID_fYMax,\n    in_fYLoLimit := Conf.|Id|_PID_fYLoLimit,\n    in_fYHiLimit := Conf.|Id|_PID_fYHiLimit,\n    in_fOffValue := Conf.|Id|_PID_fOffValue,\n    in_bReset := |Parent|.out_bWorktimeReset,\n    inout_bYManual := View.|Id|_PID_Inst_inout_bYManual,\n    inout_fYManual := View.|Id|_PID_Inst_inout_fYManual\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: vfdgrouppidcascade.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

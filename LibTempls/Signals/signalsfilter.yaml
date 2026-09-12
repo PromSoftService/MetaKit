@@ -1,0 +1,535 @@
+kind: metagen.component
+version: 1
+component:
+  id: ea58f27a-4f95-4a52-b99f-87358ea56c38
+  name: SignalsFilter
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CSignalsFilter'
+params:
+  format: header-plus-rows
+  header:
+  - $SgnlsFltr
+  - SgnlsFltrId
+  - SgnlsFltrComment
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  rows:
+  - - Аварии
+    - _ID_
+    - аварии
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - SgnlsFltrSigId1
+    - SgnlsFltrSigComment1
+    - SgnlsFltrIn1
+    - SgnlsFltrEn1
+    - SgnlsFltrAutoReset1
+    - SgnlsFltrFlt1
+    - SgnlsFltrWrn1
+    - SgnlsFltrAlm1
+  - - _ID_
+    - авария
+    - _DI_
+    - 'true'
+    - 'false'
+    - ''
+    - ''
+    - ''
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - SgnlsFltrSigId2
+    - SgnlsFltrSigComment2
+    - SgnlsFltrIn2
+    - SgnlsFltrEn2
+    - SgnlsFltrAutoReset2
+    - SgnlsFltrFlt2
+    - SgnlsFltrWrn2
+    - SgnlsFltrAlm2
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - SgnlsFltrSigId3
+    - SgnlsFltrSigComment3
+    - SgnlsFltrIn3
+    - SgnlsFltrEn3
+    - SgnlsFltrAutoReset3
+    - SgnlsFltrFlt3
+    - SgnlsFltrWrn3
+    - SgnlsFltrAlm3
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - SgnlsFltrSigId4
+    - SgnlsFltrSigComment4
+    - SgnlsFltrIn4
+    - SgnlsFltrEn4
+    - SgnlsFltrAutoReset4
+    - SgnlsFltrFlt4
+    - SgnlsFltrWrn4
+    - SgnlsFltrAlm4
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - SgnlsFltrSigId5
+    - SgnlsFltrSigComment5
+    - SgnlsFltrIn5
+    - SgnlsFltrEn5
+    - SgnlsFltrAutoReset5
+    - SgnlsFltrFlt5
+    - SgnlsFltrWrn5
+    - SgnlsFltrAlm5
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - SgnlsFltrSigId6
+    - SgnlsFltrSigComment6
+    - SgnlsFltrIn6
+    - SgnlsFltrEn6
+    - SgnlsFltrAutoReset6
+    - SgnlsFltrFlt6
+    - SgnlsFltrWrn6
+    - SgnlsFltrAlm6
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - SgnlsFltrSigId7
+    - SgnlsFltrSigComment7
+    - SgnlsFltrIn7
+    - SgnlsFltrEn7
+    - SgnlsFltrAutoReset7
+    - SgnlsFltrFlt7
+    - SgnlsFltrWrn7
+    - SgnlsFltrAlm7
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - SgnlsFltrSigId8
+    - SgnlsFltrSigComment8
+    - SgnlsFltrIn8
+    - SgnlsFltrEn8
+    - SgnlsFltrAutoReset8
+    - SgnlsFltrFlt8
+    - SgnlsFltrWrn8
+    - SgnlsFltrAlm8
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - '%"" if "|SgnlsFltrSigId1|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId1|_bBypass"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "false"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment1|. Шунт"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId1|"=="" else "DInt"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId1|_diDelay"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "0"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment1|. Задержка срабатывания"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId2|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId2|_bBypass"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "false"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment2|. Шунт"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId2|"=="" else "DInt"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId2|_diDelay"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "0"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment2|. Задержка срабатывания"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId3|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId3|_bBypass"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "false"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment3|. Шунт"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId3|"=="" else "DInt"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId3|_diDelay"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "0"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment3|. Задержка срабатывания"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId4|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId4|_bBypass"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "false"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment4|. Шунт"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId4|"=="" else "DInt"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId4|_diDelay"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "0"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment4|. Задержка срабатывания"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId5|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId5|_bBypass"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "false"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment5|. Шунт"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId5|"=="" else "DInt"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId5|_diDelay"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "0"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment5|. Задержка срабатывания"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId6|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId6|_bBypass"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "false"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment6|. Шунт"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId6|"=="" else "DInt"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId6|_diDelay"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "0"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment6|. Задержка срабатывания"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId7|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId7|_bBypass"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "false"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment7|. Шунт"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId7|"=="" else "DInt"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId7|_diDelay"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "0"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment7|. Задержка срабатывания"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId8|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId8|_bBypass"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "false"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment8|. Шунт"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "1"%'
+  - - '%"" if "|SgnlsFltrSigId8|"=="" else "DInt"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "Conf"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId8|_diDelay"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "0"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment8|. Задержка срабатывания"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "1"%'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "1"%'
+  - []
+  - - Bool
+    - '|SgnlsFltrId|_SgnlsFltr_Inst'
+    - out_bQ
+    - ''
+    - '|SgnlsFltrComment|. Срабатывание'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|SgnlsFltrId|_SgnlsFltr_Inst'
+    - out_bBypass
+    - ''
+    - '|SgnlsFltrComment|. Шунт включен'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - '%"" if "|SgnlsFltrSigId1|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "|SgnlsFltrId|_SgnlsFltr_Inst"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "out_Signal1_bQ"%'
+    - ''
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment1|"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "1"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "|SgnlsFltrFlt1|"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "|SgnlsFltrWrn1|"%'
+    - '%"" if "|SgnlsFltrSigId1|"=="" else "|SgnlsFltrAlm1|"%'
+    - ''
+    - ''
+  - - '%"" if "|SgnlsFltrSigId2|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "|SgnlsFltrId|_SgnlsFltr_Inst"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "out_Signal2_bQ"%'
+    - ''
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment2|"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "1"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "|SgnlsFltrFlt2|"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "|SgnlsFltrWrn2|"%'
+    - '%"" if "|SgnlsFltrSigId2|"=="" else "|SgnlsFltrAlm2|"%'
+    - ''
+    - ''
+  - - '%"" if "|SgnlsFltrSigId3|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "|SgnlsFltrId|_SgnlsFltr_Inst"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "out_Signal3_bQ"%'
+    - ''
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment3|"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "1"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "|SgnlsFltrFlt3|"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "|SgnlsFltrWrn3|"%'
+    - '%"" if "|SgnlsFltrSigId3|"=="" else "|SgnlsFltrAlm3|"%'
+    - ''
+    - ''
+  - - '%"" if "|SgnlsFltrSigId4|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "|SgnlsFltrId|_SgnlsFltr_Inst"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "out_Signal4_bQ"%'
+    - ''
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment4|"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "1"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "|SgnlsFltrFlt4|"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "|SgnlsFltrWrn4|"%'
+    - '%"" if "|SgnlsFltrSigId4|"=="" else "|SgnlsFltrAlm4|"%'
+    - ''
+    - ''
+  - - '%"" if "|SgnlsFltrSigId5|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "|SgnlsFltrId|_SgnlsFltr_Inst"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "out_Signal5_bQ"%'
+    - ''
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment5|"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "1"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "|SgnlsFltrFlt5|"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "|SgnlsFltrWrn5|"%'
+    - '%"" if "|SgnlsFltrSigId5|"=="" else "|SgnlsFltrAlm5|"%'
+    - ''
+    - ''
+  - - '%"" if "|SgnlsFltrSigId6|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "|SgnlsFltrId|_SgnlsFltr_Inst"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "out_Signal6_bQ"%'
+    - ''
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment6|"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "1"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "|SgnlsFltrFlt6|"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "|SgnlsFltrWrn6|"%'
+    - '%"" if "|SgnlsFltrSigId6|"=="" else "|SgnlsFltrAlm6|"%'
+    - ''
+    - ''
+  - - '%"" if "|SgnlsFltrSigId7|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "|SgnlsFltrId|_SgnlsFltr_Inst"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "out_Signal7_bQ"%'
+    - ''
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment7|"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "1"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "|SgnlsFltrFlt7|"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "|SgnlsFltrWrn7|"%'
+    - '%"" if "|SgnlsFltrSigId7|"=="" else "|SgnlsFltrAlm7|"%'
+    - ''
+    - ''
+  - - '%"" if "|SgnlsFltrSigId8|"=="" else "Bool"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "|SgnlsFltrId|_SgnlsFltr_Inst"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "out_Signal8_bQ"%'
+    - ''
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "|SgnlsFltrComment|. |SgnlsFltrSigComment8|"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "1"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "|SgnlsFltrFlt8|"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "|SgnlsFltrWrn8|"%'
+    - '%"" if "|SgnlsFltrSigId8|"=="" else "|SgnlsFltrAlm8|"%'
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|SgnlsFltrId|_SgnlsFltr_Inst'
+    - CSignalsFilter
+code:
+  format: template-text
+  language: st-template
+  text: "// |SgnlsFltrId| - |SgnlsFltrComment|. |$SgnlsFltr|\n|SgnlsFltrId|_SgnlsFltr_Inst(\n    in_bReset := CabinetController_Inst.out_bFaultReset,\n\n    // |SgnlsFltrSigComment1|\n    in_Signal1_bIN := %\"false\" if \"|SgnlsFltrSigId1|\"==\"\" else \"|SgnlsFltrIn1|\"%,\n    in_Signal1_bBypass := %\"false\" if \"|SgnlsFltrSigId1|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId1|_bBypass\"%,\n    in_Signal1_bEnable := %\"false\" if \"|SgnlsFltrSigId1|\"==\"\" else \"|SgnlsFltrEn1|\"%,\n    in_Signal1_diDelay := %\"0\" if \"|SgnlsFltrSigId1|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId1|_diDelay\"%,\n    in_Signal1_bAutoReset := %\"true\" if \"|SgnlsFltrSigId1|\"==\"\" else \"|SgnlsFltrAutoReset1|\"%,\n    // |SgnlsFltrSigComment2|\n    in_Signal2_bIN := %\"false\" if \"|SgnlsFltrSigId2|\"==\"\" else \"|SgnlsFltrIn2|\"%,\n    in_Signal2_bBypass := %\"false\" if \"|SgnlsFltrSigId2|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId2|_bBypass\"%,\n    in_Signal2_bEnable := %\"false\" if \"|SgnlsFltrSigId2|\"==\"\" else \"|SgnlsFltrEn2|\"%,\n    in_Signal2_diDelay := %\"0\" if \"|SgnlsFltrSigId2|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId2|_diDelay\"%,\n    in_Signal2_bAutoReset := %\"true\" if \"|SgnlsFltrSigId2|\"==\"\" else \"|SgnlsFltrAutoReset2|\"%,\n    // |SgnlsFltrSigComment3|\n    in_Signal3_bIN := %\"false\" if \"|SgnlsFltrSigId3|\"==\"\" else \"|SgnlsFltrIn3|\"%,\n    in_Signal3_bBypass := %\"false\" if \"|SgnlsFltrSigId3|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId3|_bBypass\"%,\n    in_Signal3_bEnable := %\"false\" if \"|SgnlsFltrSigId3|\"==\"\" else \"|SgnlsFltrEn3|\"%,\n    in_Signal3_diDelay := %\"0\" if \"|SgnlsFltrSigId3|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId3|_diDelay\"%,\n    in_Signal3_bAutoReset := %\"true\" if \"|SgnlsFltrSigId3|\"==\"\" else \"|SgnlsFltrAutoReset3|\"%,\n    // |SgnlsFltrSigComment4|\n    in_Signal4_bIN := %\"false\" if \"|SgnlsFltrSigId4|\"==\"\" else \"|SgnlsFltrIn4|\"%,\n    in_Signal4_bBypass := %\"false\" if \"|SgnlsFltrSigId4|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId4|_bBypass\"%,\n    in_Signal4_bEnable := %\"false\" if \"|SgnlsFltrSigId4|\"==\"\" else \"|SgnlsFltrEn4|\"%,\n    in_Signal4_diDelay := %\"0\" if \"|SgnlsFltrSigId4|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId4|_diDelay\"%,\n    in_Signal4_bAutoReset := %\"true\" if \"|SgnlsFltrSigId4|\"==\"\" else \"|SgnlsFltrAutoReset4|\"%,\n    // |SgnlsFltrSigComment5|\n    in_Signal5_bIN := %\"false\" if \"|SgnlsFltrSigId5|\"==\"\" else \"|SgnlsFltrIn5|\"%,\n    in_Signal5_bBypass := %\"false\" if \"|SgnlsFltrSigId5|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId5|_bBypass\"%,\n    in_Signal5_bEnable := %\"false\" if \"|SgnlsFltrSigId5|\"==\"\" else \"|SgnlsFltrEn5|\"%,\n    in_Signal5_diDelay := %\"0\" if \"|SgnlsFltrSigId5|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId5|_diDelay\"%,\n    in_Signal5_bAutoReset := %\"true\" if \"|SgnlsFltrSigId5|\"==\"\" else \"|SgnlsFltrAutoReset5|\"%,\n    // |SgnlsFltrSigComment6|\n    in_Signal6_bIN := %\"false\" if \"|SgnlsFltrSigId6|\"==\"\" else \"|SgnlsFltrIn6|\"%,\n    in_Signal6_bBypass := %\"false\" if \"|SgnlsFltrSigId6|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId6|_bBypass\"%,\n    in_Signal6_bEnable := %\"false\" if \"|SgnlsFltrSigId6|\"==\"\" else \"|SgnlsFltrEn6|\"%,\n    in_Signal6_diDelay := %\"0\" if \"|SgnlsFltrSigId6|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId6|_diDelay\"%,\n    in_Signal6_bAutoReset := %\"true\" if \"|SgnlsFltrSigId6|\"==\"\" else \"|SgnlsFltrAutoReset6|\"%,\n    // |SgnlsFltrSigComment7|\n    in_Signal7_bIN := %\"false\" if \"|SgnlsFltrSigId7|\"==\"\" else \"|SgnlsFltrIn7|\"%,\n    in_Signal7_bBypass := %\"false\" if \"|SgnlsFltrSigId7|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId7|_bBypass\"%,\n    in_Signal7_bEnable := %\"false\" if \"|SgnlsFltrSigId7|\"==\"\" else \"|SgnlsFltrEn7|\"%,\n    in_Signal7_diDelay := %\"0\" if \"|SgnlsFltrSigId7|\"==\"\" else \"\
+    Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId7|_diDelay\"%,\n    in_Signal7_bAutoReset := %\"true\" if \"|SgnlsFltrSigId7|\"==\"\" else \"|SgnlsFltrAutoReset7|\"%,\n    // |SgnlsFltrSigComment8|\n    in_Signal8_bIN := %\"false\" if \"|SgnlsFltrSigId8|\"==\"\" else \"|SgnlsFltrIn8|\"%,\n    in_Signal8_bBypass := %\"false\" if \"|SgnlsFltrSigId8|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId8|_bBypass\"%,\n    in_Signal8_bEnable := %\"false\" if \"|SgnlsFltrSigId8|\"==\"\" else \"|SgnlsFltrEn8|\"%,\n    in_Signal8_diDelay := %\"0\" if \"|SgnlsFltrSigId8|\"==\"\" else \"Conf.|SgnlsFltrId|_SgnlsFltr_|SgnlsFltrSigId8|_diDelay\"%,\n    in_Signal8_bAutoReset := %\"true\" if \"|SgnlsFltrSigId8|\"==\"\" else \"|SgnlsFltrAutoReset8|\"%\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: SignalsFilter.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

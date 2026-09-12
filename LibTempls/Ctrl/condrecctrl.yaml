@@ -1,0 +1,127 @@
+kind: metagen.component
+version: 1
+component:
+  id: 46e0bd89-35d3-4ca1-abaf-24c4858a4aba
+  name: CondRecCtrl
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CCondRecCtrl'
+params:
+  format: header-plus-rows
+  header:
+  - $CondRecCtrl
+  - CondRecCtrlId
+  - CondRecCtrlComment
+  - CondRecCtrlCond
+  - CondRecCtrlEn
+  - CondRecCtrlConf
+  - CondRecCtrlConfComment
+  rows:
+  - - Контроль условия
+    - _ID_
+    - Комментарий
+    - 'false'
+    - 'true'
+    - ''
+    - ''
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - Bool
+    - Conf
+    - '%"|CondRecCtrlConf|" if "|CondRecCtrlConf|"!="" else "|CondRecCtrlId|"%_CondRecCtrl_bBypass'
+    - 'false'
+    - '%"|CondRecCtrlConfComment|" if "|CondRecCtrlConfComment|"!="" else "|CondRecCtrlComment|. |$CondRecCtrl|"%. Шунт'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|CondRecCtrlConf|" if "|CondRecCtrlConf|"!="" else "|CondRecCtrlId|"%_CondRecCtrl_diCondDelay'
+    - '1'
+    - '%"|CondRecCtrlConfComment|" if "|CondRecCtrlConfComment|"!="" else "|CondRecCtrlComment|. |$CondRecCtrl|"%. Задержка фиксации условия'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|CondRecCtrlConf|" if "|CondRecCtrlConf|"!="" else "|CondRecCtrlId|"%_CondRecCtrl_diRecoveryDelay'
+    - '1'
+    - '%"|CondRecCtrlConfComment|" if "|CondRecCtrlConfComment|"!="" else "|CondRecCtrlComment|. |$CondRecCtrl|"%. Задержка восстановления после условия'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - []
+  - - Bool
+    - '|CondRecCtrlId|_CondRecCtrl_Inst'
+    - out_bCond
+    - ''
+    - '|CondRecCtrlComment|. |$CondRecCtrl|. Условие зафиксировано'
+    - '0'
+    - ''
+    - 'true'
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CondRecCtrlId|_CondRecCtrl_Inst'
+    - out_bRecovery
+    - ''
+    - '|CondRecCtrlComment|. |$CondRecCtrl|. Восстановление после условия'
+    - '0'
+    - ''
+    - 'true'
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CondRecCtrlId|_CondRecCtrl_Inst'
+    - out_bWarning
+    - ''
+    - '|CondRecCtrlComment|. |$CondRecCtrl|. Предупреждение'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CondRecCtrlId|_CondRecCtrl_Inst'
+    - out_bReady
+    - ''
+    - '|CondRecCtrlComment|. |$CondRecCtrl|. Готовность'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|CondRecCtrlId|_CondRecCtrl_Inst'
+    - CCondRecCtrl
+code:
+  language: scl
+  text: "// |CondRecCtrlId| - |CondRecCtrlComment|. |$CondRecCtrl|\n|CondRecCtrlId|_CondRecCtrl_Inst(\n    in_bCond := |CondRecCtrlCond|,\n    in_bBypass := Conf.%\"|CondRecCtrlConf|\" if \"|CondRecCtrlConf|\"!=\"\" else \"|CondRecCtrlId|\"%_CondRecCtrl_bBypass,\n    in_bEnable := |CondRecCtrlEn|,\n    in_bReset := CabinetController_Inst.out_bFaultReset,\n    in_diCondDelay := Conf.%\"|CondRecCtrlConf|\" if \"|CondRecCtrlConf|\"!=\"\" else \"|CondRecCtrlId|\"%_CondRecCtrl_diCondDelay,\n    in_diRecoveryDelay := Conf.%\"|CondRecCtrlConf|\" if \"|CondRecCtrlConf|\"!=\"\" else \"|CondRecCtrlId|\"%_CondRecCtrl_diRecoveryDelay\n);\n//\n//\n//\n//\n"

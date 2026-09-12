@@ -1,0 +1,103 @@
+kind: metagen.component
+version: 1
+component:
+  id: cd440dbf-8c2f-4523-b4e7-7b1fa3a08512
+  name: Timer
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CTimer'
+params:
+  format: table
+  header:
+  - $Timer
+  - TimerId
+  - TimerComment
+  - TimerEn
+  - TimerConf
+  - TimerConfComment
+  rows:
+  - - Циклический таймер
+    - _ID_
+    - Комментарий
+    - 'true'
+    - ''
+    - ''
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - DInt
+    - Conf
+    - '%"|TimerConf|" if "|TimerConf|"!="" else "|TimerId|"%_Timer_diPeriod'
+    - '60'
+    - '%"|TimerConfComment|" if "|TimerConfComment|"!="" else "|TimerComment|. |$Timer|"%. Период'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|TimerConf|" if "|TimerConf|"!="" else "|TimerId|"%_Timer_diCount'
+    - '1'
+    - '%"|TimerConfComment|" if "|TimerConfComment|"!="" else "|TimerComment|. |$Timer|"%. Количество периодов'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - []
+  - - Bool
+    - '|TimerId|_Timer_Inst'
+    - out_bQ
+    - ''
+    - '|TimerComment|. |$Timer|. Таймер отработал'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - DInt
+    - '|TimerId|_Timer_Inst'
+    - out_diCurPeriod
+    - ''
+    - '|TimerComment|. |$Timer|. Текущий период'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - DInt
+    - '|TimerId|_Timer_Inst'
+    - out_diRemainingPeriods
+    - ''
+    - '|TimerComment|. |$Timer|. Осталось периодов'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|TimerId|_Timer_Inst'
+    - CTimer
+code:
+  language: scl
+  text: "// |TimerId| - |TimerComment|. |$Timer|\n|TimerId|_Timer_Inst(\n    in_bEnable := |TimerEn|,\n    in_diPeriod := Conf.%\"|TimerConf|\" if \"|TimerConf|\"!=\"\" else \"|TimerId|\"%_Timer_diPeriod,\n    in_diCount := Conf.%\"|TimerConf|\" if \"|TimerConf|\"!=\"\" else \"|TimerId|\"%_Timer_diCount\n);\n//\n//\n//\n//\n"

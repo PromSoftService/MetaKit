@@ -1,0 +1,104 @@
+kind: metagen.component
+version: 1
+component:
+  id: 71a2ec99-b133-42b3-8c5f-c610583fcb78
+  name: PulseCtrl
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CPulseCtrl'
+params:
+  format: header-plus-rows
+  header:
+  - $PulseCtrl
+  - PulseCtrlId
+  - PulseCtrlComment
+  - PulseCtrlEn
+  - PulseCtrlConf
+  - PulseCtrlConfComment
+  rows:
+  - - Импульсное управление
+    - _ID_
+    - Комментарий
+    - 'true'
+    - ''
+    - ''
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - DInt
+    - Conf
+    - '%"|PulseCtrlConf|" if "|PulseCtrlConf|"!="" else "|PulseCtrlId|"%_PulseCtrl_diTotalTime'
+    - '10'
+    - '%"|PulseCtrlConfComment|" if "|PulseCtrlConfComment|"!="" else "|PulseCtrlComment|. |$PulseCtrl|"%. Время подачи импульсов'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|PulseCtrlConf|" if "|PulseCtrlConf|"!="" else "|PulseCtrlId|"%_PulseCtrl_diPulseCycle'
+    - '2'
+    - '%"|PulseCtrlConfComment|" if "|PulseCtrlConfComment|"!="" else "|PulseCtrlComment|. |$PulseCtrl|"%. Время цикла импульса'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|PulseCtrlConf|" if "|PulseCtrlConf|"!="" else "|PulseCtrlId|"%_PulseCtrl_diPulseTime'
+    - '1'
+    - '%"|PulseCtrlConfComment|" if "|PulseCtrlConfComment|"!="" else "|PulseCtrlComment|. |$PulseCtrl|"%. Время подачи импульса'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - []
+  - - Bool
+    - '|PulseCtrlId|_PulseCtrl_Inst'
+    - out_bSignal
+    - ''
+    - '|PulseCtrlComment|. |$PulseCtrl|. Сигнал управления'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|PulseCtrlId|_PulseCtrl_Inst'
+    - CPulseCtrl
+code:
+  format: template-text
+  language: st-template
+  text: "// |PulseCtrlId| - |PulseCtrlComment|. |$PulseCtrl|\n|PulseCtrlId|_PulseCtrl_Inst(\n    in_bEnable := |PulseCtrlEn|,\n    in_diTotalTime := Conf.%\"|PulseCtrlConf|\" if \"|PulseCtrlConf|\"!=\"\" else \"|PulseCtrlId|\"%_PulseCtrl_diTotalTime,\n    in_diPulseCycle := Conf.%\"|PulseCtrlConf|\" if \"|PulseCtrlConf|\"!=\"\" else \"|PulseCtrlId|\"%_PulseCtrl_diPulseCycle,\n    in_diPulseTime := Conf.%\"|PulseCtrlConf|\" if \"|PulseCtrlConf|\"!=\"\" else \"|PulseCtrlId|\"%_PulseCtrl_diPulseTime\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: PulseCtrl.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

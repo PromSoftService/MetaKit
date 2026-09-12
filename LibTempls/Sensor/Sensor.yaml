@@ -1,0 +1,403 @@
+kind: metagen.component
+version: 1
+component:
+  id: 804e3826-5fa2-4325-a36d-33d91c192de6
+  name: Sensor
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CSensor + CSensorFilter'
+params:
+  format: header-plus-rows
+  header:
+  - $Sensor
+  - SensId
+  - Raw
+  - SensComment
+  - SensRawMin
+  - SensRawMax
+  - SensEVMin
+  - SensEVMax
+  - SensEVZP
+  - SensFVZP
+  - SensFVXMin
+  - SensFVXMax
+  - SensFVYMin
+  - SensFVYMax
+  - SensFVLimit
+  - SensEnScale
+  - SensK
+  - SensAdd
+  - ChErr
+  - SensChannelBypass
+  - SensEVLL
+  - SensEVHH
+  - SensLimitBypass
+  - SensLimitFilterTime
+  - SensAutoReset
+  - SensFilterPeriod
+  - SensFilterCount
+  rows:
+  - - Датчик аналоговый
+    - _ID_
+    - _IN_
+    - Комментарий
+    - ADC_4_IN_0_20
+    - ADC_MAX_VALUE
+    - '4.0'
+    - '20.0'
+    - '4.0'
+    - '0.0'
+    - '4.0'
+    - '20.0'
+    - '0.0'
+    - '100.0'
+    - 'false'
+    - 'true'
+    - '1.0'
+    - '0.0'
+    - 'FALSE'
+    - 'false'
+    - '3.0'
+    - '21.0'
+    - 'false'
+    - '0'
+    - 'true'
+    - '1'
+    - '3'
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_fRawMin'
+    - '|SensRawMin|'
+    - '|SensComment|. |$Sensor|. Датчик. Нижняя граница АЦП'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_fRawMax'
+    - '|SensRawMax|'
+    - '|SensComment|. |$Sensor|. Датчик. Верхняя граница АЦП'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_EV_fMin'
+    - '|SensEVMin|'
+    - '|SensComment|. |$Sensor|. Датчик. Нижняя граница ЭВ'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_EV_fMax'
+    - '|SensEVMax|'
+    - '|SensComment|. |$Sensor|. Датчик. Верхняя граница ЭВ'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_EV_fZP'
+    - '|SensEVZP|'
+    - '|SensComment|. |$Sensor|. Датчик. Точка нуля ЭВ'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_FV_fZP'
+    - '|SensFVZP|'
+    - '|SensComment|. |$Sensor|. Датчик. Точка нуля ФВ'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_FV_fXMin'
+    - '|SensFVXMin|'
+    - '|SensComment|. |$Sensor|. Измерение. Нижняя граница ЭВ'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_FV_fXMax'
+    - '|SensFVXMax|'
+    - '|SensComment|. |$Sensor|. Измерение. Верхняя граница ЭВ'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_FV_fYMin'
+    - '|SensFVYMin|'
+    - '|SensComment|. |$Sensor|. Измерение. Нижняя граница ФВ'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_FV_fYMax'
+    - '|SensFVYMax|'
+    - '|SensComment|. |$Sensor|. Измерение. Верхняя граница ФВ'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Bool
+    - Conf
+    - '|SensId|_Sensor_FV_bLimit'
+    - '|SensFVLimit|'
+    - '|SensComment|. |$Sensor|. Измерение. Ограничение шкалы'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_fK'
+    - '|SensK|'
+    - '|SensComment|. |$Sensor|. Пропорциональный коэффициент'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_fAdd'
+    - '|SensAdd|'
+    - '|SensComment|. |$Sensor|. Аддитивный компонент'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_EV_fLL'
+    - '|SensEVLL|'
+    - '|SensComment|. |$Sensor|. Датчик. Нижняя аварийная граница'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '|SensId|_Sensor_EV_fHH'
+    - '|SensEVHH|'
+    - '|SensComment|. |$Sensor|. Датчик. Верхняя аварийная граница'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Bool
+    - Conf
+    - '|SensId|_Sensor_EV_bLimitBypass'
+    - '|SensLimitBypass|'
+    - '|SensComment|. |$Sensor|. Датчик. Шунт'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '|SensId|_Sensor_EV_diLimitFilterTime'
+    - '|SensLimitFilterTime|'
+    - '|SensComment|. |$Sensor|. Датчик. Контроль аварийных границ. Фильтр'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Real
+    - '|SensId|_Sensor_Inst'
+    - out_fEV
+    - ''
+    - '|SensComment|. |$Sensor|. Значение датчика'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|SensId|_Sensor_Inst'
+    - out_bError
+    - ''
+    - '|SensComment|. |$Sensor|. Ошибка датчика'
+    - '1'
+    - ''
+    - 'true'
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|SensId|_Sensor_Inst'
+    - inout_bCalibrateFV_fXMin
+    - ''
+    - '|SensComment|. |$Sensor|. Измерение. Нижняя граница ЭВ. Калибровка'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|SensId|_Sensor_Inst'
+    - inout_bCalibrateFV_fXMax
+    - ''
+    - '|SensComment|. |$Sensor|. Измерение. Верхняя граница ЭВ. Калибровка'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - DInt
+    - Conf
+    - '|SensId|_SensFilter_diPeriod'
+    - '|SensFilterPeriod|'
+    - '|SensComment|. |$Sensor|. Фильтр. Период'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Int
+    - Conf
+    - '|SensId|_SensFilter_iCount'
+    - '|SensFilterCount|'
+    - '|SensComment|. |$Sensor|. Фильтр. Кол-во периодов'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Real
+    - '|SensId|_SensFilter_Inst'
+    - out_fY
+    - ''
+    - '|SensComment|. |$Sensor|. Значение измерения'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - '1'
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|SensId|_Sensor_Inst'
+    - CSensor
+  - - '|SensId|_SensFilter_Inst'
+    - CSensorFilter
+code:
+  format: template-text
+  language: st-template
+  text: "// |SensId| - |SensComment|. |$Sensor|\n|SensId|_Sensor_Inst(\n    in_fRawMin := Conf.|SensId|_Sensor_fRawMin,\n    in_fRawMax := Conf.|SensId|_Sensor_fRawMax,\n    in_EV_fMin := Conf.|SensId|_Sensor_EV_fMin,\n    in_EV_fMax := Conf.|SensId|_Sensor_EV_fMax,\n    in_EV_fZP := Conf.|SensId|_Sensor_EV_fZP,\n    in_FV_fZP := Conf.|SensId|_Sensor_FV_fZP,\n    inout_FV_fXMin := Conf.|SensId|_Sensor_FV_fXMin,\n    inout_FV_fXMax := Conf.|SensId|_Sensor_FV_fXMax,\n    in_FV_fYMin := Conf.|SensId|_Sensor_FV_fYMin,\n    in_FV_fYMax := Conf.|SensId|_Sensor_FV_fYMax,\n    in_FV_bLimit := Conf.|SensId|_Sensor_FV_bLimit,\n    in_bEnableScale := |SensEnScale|,\n    in_fK := Conf.|SensId|_Sensor_fK,\n    in_fAdd := Conf.|SensId|_Sensor_fAdd,\n    in_Channel_bError := |ChErr|,\n    in_Channel_bErrorBypass := |SensChannelBypass|,\n    in_Channel_diErrorFilterTime := 0,\n    in_EV_fLL := Conf.|SensId|_Sensor_EV_fLL,\n    in_EV_fHH := Conf.|SensId|_Sensor_EV_fHH,\n    in_EV_bLimitBypass := Conf.|SensId|_Sensor_EV_bLimitBypass,\n    in_EV_diLimitFilterTime := Conf.|SensId|_Sensor_EV_diLimitFilterTime,\n    in_fRaw := |Raw|,\n    in_bReset := CabinetController_Inst.out_bFaultReset,\n    in_bAutoReset := |SensAutoReset|,\n    inout_bCalibrateFV_fXMin := View.|SensId|_Sensor_Inst_inout_bCalibrateFV_fXMin,\n    inout_bCalibrateFV_fXMax := View.|SensId|_Sensor_Inst_inout_bCalibrateFV_fXMax\n);\n//\n//\n//\n//\n\n// |SensId| - |SensComment|. Фильтр\n|SensId|_SensFilter_Inst(\n    in_fSignal := |SensId|_Sensor_Inst.out_fFV,\n    in_diPeriod := Conf.|SensId|_SensFilter_diPeriod,\n    in_iCount := Conf.|SensId|_SensFilter_iCount\n);\n//\n//\n//\n//"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: Sensor.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''
+export:
+  format: list
+  rows: []

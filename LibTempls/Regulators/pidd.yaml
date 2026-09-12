@@ -1,0 +1,128 @@
+kind: metagen.component
+version: 1
+component:
+  id: 570714da-f6b0-41fa-9142-3130f27918a3
+  name: PIDD
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CPIDD'
+params:
+  format: header-plus-rows
+  header:
+  - $PIDD
+  - PIDDId
+  - PIDDComment
+  - PIDDEnExtra
+  - PIDDConf
+  - PIDDConfComment
+  rows:
+  - - Дискретный ПИД-регулятор
+    - _ID_
+    - Комментарий
+    - 'true'
+    - ''
+    - ''
+  - []
+  - - PIDDSensId
+  - - _ID_
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - Real
+    - Conf
+    - '%"|PIDDConf|" if "|PIDDConf|"!="" else "|PIDDId|"%_PIDD_fSP'
+    - '0.0'
+    - '%"|PIDDConfComment|" if "|PIDDConfComment|"!="" else "|PIDDComment|. |$PIDD|"%. Уставка'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|PIDDConf|" if "|PIDDConf|"!="" else "|PIDDId|"%_PIDD_fDB'
+    - '0.0'
+    - '%"|PIDDConfComment|" if "|PIDDConfComment|"!="" else "|PIDDComment|. |$PIDD|"%. Зона нечувствительности'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|PIDDConf|" if "|PIDDConf|"!="" else "|PIDDId|"%_PIDD_fSR'
+    - '3.0'
+    - '%"|PIDDConfComment|" if "|PIDDConfComment|"!="" else "|PIDDComment|. |$PIDD|"%. Время дискретизации'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|PIDDConf|" if "|PIDDConf|"!="" else "|PIDDId|"%_PIDD_fKp'
+    - '1.0'
+    - '%"|PIDDConfComment|" if "|PIDDConfComment|"!="" else "|PIDDComment|. |$PIDD|"%. Kp'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|PIDDConf|" if "|PIDDConf|"!="" else "|PIDDId|"%_PIDD_fTi'
+    - '0.0'
+    - '%"|PIDDConfComment|" if "|PIDDConfComment|"!="" else "|PIDDComment|. |$PIDD|"%. Ti'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|PIDDConf|" if "|PIDDConf|"!="" else "|PIDDId|"%_PIDD_fTd'
+    - '0.0'
+    - '%"|PIDDConfComment|" if "|PIDDConfComment|"!="" else "|PIDDComment|. |$PIDD|"%. Td'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+instances:
+  format: list
+  rows:
+  - - '|PIDDId|_PIDD_Inst'
+    - CPIDD
+code:
+  format: template-text
+  language: st-template
+  text: "// |PIDDId| - |PIDDComment|. |$PIDD|\n|PIDDId|_PIDD_Inst(\n    in_bEnable := true\n        AND (NOT |PIDDSensId|_Sensor_Inst.out_bError)\n        AND |PIDDEnExtra|,\n    in_fSP := Conf.%\"|PIDDConf|\" if \"|PIDDConf|\"!=\"\" else \"|PIDDId|\"%_PIDD_fSP,\n    in_fPV := |PIDDSensId|_SensFilter_Inst.out_fY,\n    in_fDB := Conf.%\"|PIDDConf|\" if \"|PIDDConf|\"!=\"\" else \"|PIDDId|\"%_PIDD_fDB,\n    in_fSR := Conf.%\"|PIDDConf|\" if \"|PIDDConf|\"!=\"\" else \"|PIDDId|\"%_PIDD_fSR,\n    in_fKp := Conf.%\"|PIDDConf|\" if \"|PIDDConf|\"!=\"\" else \"|PIDDId|\"%_PIDD_fKp,\n    in_fTi := Conf.%\"|PIDDConf|\" if \"|PIDDConf|\"!=\"\" else \"|PIDDId|\"%_PIDD_fTi,\n    in_fTd := Conf.%\"|PIDDConf|\" if \"|PIDDConf|\"!=\"\" else \"|PIDDId|\"%_PIDD_fTd,\n    in_bReset := CabinetController_Inst.out_bWorktimeReset\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: PIDD.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

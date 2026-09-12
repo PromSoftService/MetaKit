@@ -1,0 +1,376 @@
+kind: metagen.component
+version: 1
+component:
+  id: 02875701-ad28-4b3d-b386-ea3cd10955da
+  name: PID
+  type: template
+  module: MetaGen
+  description: "BlockTemplate: CPID"
+params:
+  format: header-plus-rows
+  header:
+    - $PID
+    - PIDId
+    - PIDComment
+    - PIDEnExtra
+    - PIDConf
+    - PIDConfComment
+  rows:
+    - - ПИД-регулятор
+      - _ID_
+      - Комментарий
+      - "true"
+      - ""
+      - ""
+    - - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - PIDSensId
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - _ID_
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - $Out
+      - OutConf
+      - OutConfComment
+      - ""
+      - ""
+      - ""
+    - - Аналоговый выход
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - OutRaw
+      - OutRawMin
+      - OutRawMax
+      - ""
+      - ""
+      - ""
+    - - _AO_
+      - ADC_4_IN_0_20
+      - ADC_MAX_VALUE
+      - ""
+      - ""
+      - ""
+data:
+  format: table
+  columns:
+    - Type
+    - Data block
+    - Tag
+    - Value
+    - Comment
+    - HMI
+    - Flt
+    - Wrn
+    - Alm
+    - Trend
+    - Conf
+  rows:
+    - - Real
+      - Conf
+      - '%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fSP'
+      - "0.0"
+      - '%"|PIDConfComment|" if "|PIDConfComment|"!="" else "|PIDComment|.
+        |$PID|"%. Уставка'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - '%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fDB'
+      - "0.0"
+      - '%"|PIDConfComment|" if "|PIDConfComment|"!="" else "|PIDComment|.
+        |$PID|"%. Зона нечувствительности'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - '%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fSR'
+      - "3.0"
+      - '%"|PIDConfComment|" if "|PIDConfComment|"!="" else "|PIDComment|.
+        |$PID|"%. Время дискретизации'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - '%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fKp'
+      - "1.0"
+      - '%"|PIDConfComment|" if "|PIDConfComment|"!="" else "|PIDComment|.
+        |$PID|"%. Kp'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - '%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fTi'
+      - "0.0"
+      - '%"|PIDConfComment|" if "|PIDConfComment|"!="" else "|PIDComment|.
+        |$PID|"%. Ti'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - '%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fTd'
+      - "0.0"
+      - '%"|PIDConfComment|" if "|PIDConfComment|"!="" else "|PIDComment|.
+        |$PID|"%. Td'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - '%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fYMin'
+      - "0.0"
+      - '%"|PIDConfComment|" if "|PIDConfComment|"!="" else "|PIDComment|.
+        |$PID|"%. Минимальная граница управляющего воздействия'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - '%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fYMax'
+      - "100.0"
+      - '%"|PIDConfComment|" if "|PIDConfComment|"!="" else "|PIDComment|.
+        |$PID|"%. Максимальная граница управляющего воздействия'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - '%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fYLoLimit'
+      - "0.0"
+      - '%"|PIDConfComment|" if "|PIDConfComment|"!="" else "|PIDComment|.
+        |$PID|"%. Ограничение регулирования снизу'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - '%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fYHiLimit'
+      - "100.0"
+      - '%"|PIDConfComment|" if "|PIDConfComment|"!="" else "|PIDComment|.
+        |$PID|"%. Ограничение регулирования сверху'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - '%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fOffValue'
+      - "0.0"
+      - '%"|PIDConfComment|" if "|PIDConfComment|"!="" else "|PIDComment|.
+        |$PID|"%. Значение в выключенном состоянии'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - Real
+      - Conf
+      - '%"|OutConf|" if "|OutConf|"!="" else "|PIDId|"%_OUT_fRawMin'
+      - "|OutRawMin|"
+      - '%"|OutConfComment|" if "|OutConfComment|"!="" else "|PIDComment|.
+        |$Out|"%. Минимум аналогового выхода'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - Real
+      - Conf
+      - '%"|OutConf|" if "|OutConf|"!="" else "|PIDId|"%_OUT_fRawMax'
+      - "|OutRawMax|"
+      - '%"|OutConfComment|" if "|OutConfComment|"!="" else "|PIDComment|.
+        |$Out|"%. Максимум аналогового выхода'
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - "1"
+    - - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - Real
+      - "|PIDId|_PID_Inst"
+      - out_fY
+      - ""
+      - "|PIDComment|. |$PID|. Управляющее воздействие"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - "1"
+      - ""
+    - - Real
+      - "|PIDId|_PID_Inst"
+      - out_fYS
+      - ""
+      - "|PIDComment|. |$PID|. Накопленное управляющее воздействие"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - "1"
+      - ""
+    - - Bool
+      - "|PIDId|_PID_Inst"
+      - inout_bYManual
+      - ""
+      - "|PIDComment|. |$PID|. Ручной режим"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    - - Real
+      - "|PIDId|_PID_Inst"
+      - inout_fYManual
+      - ""
+      - "|PIDComment|. |$PID|. Управление в ручном режиме"
+      - "1"
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+instances:
+  format: list
+  rows:
+    - - "|PIDId|_PID_Inst"
+      - CPID
+code:
+  format: template-text
+  language: st-template
+  text: |-
+    // |PIDId| - |PIDComment|. |$PID|
+
+    |PIDId|_PID_Inst(
+        in_bEnable := true
+            AND (NOT |PIDSensId|_Sensor_Inst.out_bError)
+            AND |PIDEnExtra|,
+        in_fSP := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fSP,
+        in_fPV := |PIDSensId|_SensFilter_Inst.out_fY,
+        in_fDB := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fDB,
+        in_fSR := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fSR,
+        in_fKp := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fKp,
+        in_fTi := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fTi,
+        in_fTd := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fTd,
+        in_fYMin := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fYMin,
+        in_fYMax := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fYMax,
+        in_fYLoLimit := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fYLoLimit,
+        in_fYHiLimit := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fYHiLimit,
+        in_fOffValue := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fOffValue,
+        in_bReset := CabinetController_Inst.out_bWorktimeReset,
+        inout_bYManual := View.|PIDId|_PID_Inst_inout_bYManual,
+        inout_fYManual := View.|PIDId|_PID_Inst_inout_fYManual
+    );
+
+
+    // |PIDId| - |PIDComment|. |$Out|
+
+    |OutRaw| := REAL_TO_INT(xyScale(
+        in_fXMin := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fYMin,
+        in_fXMax := Conf.%"|PIDConf|" if "|PIDConf|"!="" else "|PIDId|"%_PID_fYMax,
+        in_fYMin := Conf.%"|OutConf|" if "|OutConf|"!="" else "|PIDId|"%_OUT_fRawMin,
+        in_fYMax := Conf.%"|OutConf|" if "|OutConf|"!="" else "|PIDId|"%_OUT_fRawMax,
+        in_fX := |PIDId|_PID_Inst.out_fYS,
+        in_bLimit := true
+    ));
+    //
+    //
+    //
+    //
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: PID.st
+meta:
+  author: ""
+  importedFrom: ""
+  importedSheet: ""
+export:
+  format: list
+  rows: []

@@ -1,0 +1,97 @@
+kind: metagen.component
+version: 1
+component:
+  id: 543d23dd-e086-45e6-9de8-5a2db11c6e55
+  name: ThreeStep
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CThreeStep'
+params:
+  format: header-plus-rows
+  header:
+  - $ThreeStep
+  - ThreeStepId
+  - ThreeStepComment
+  - ThreeStepEnExtra
+  - ThreeStepConf
+  - ThreeStepConfComment
+  rows:
+  - - Трёхпозиционный регулятор
+    - _ID_
+    - Комментарий
+    - 'true'
+    - ''
+    - ''
+  - []
+  - - ThreeStepSensId
+    - ThreeStepInput
+  - - _ID_
+    - 'true'
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - Real
+    - Conf
+    - '%"|ThreeStepConf|" if "|ThreeStepConf|"!="" else "|ThreeStepId|"%_ThreeStep_fSP'
+    - '0.0'
+    - '%"|ThreeStepConfComment|" if "|ThreeStepConfComment|"!="" else "|ThreeStepComment|. |$ThreeStep|"%. Уставка'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|ThreeStepConf|" if "|ThreeStepConf|"!="" else "|ThreeStepId|"%_ThreeStep_fDeadband'
+    - '0.0'
+    - '%"|ThreeStepConfComment|" if "|ThreeStepConfComment|"!="" else "|ThreeStepComment|. |$ThreeStep|"%. Зона нечувствительности'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|ThreeStepConf|" if "|ThreeStepConf|"!="" else "|ThreeStepId|"%_ThreeStep_fHysteresis'
+    - '0.0'
+    - '%"|ThreeStepConfComment|" if "|ThreeStepConfComment|"!="" else "|ThreeStepComment|. |$ThreeStep|"%. Гистерезис'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+instances:
+  format: list
+  rows:
+  - - '|ThreeStepId|_ThreeStep_Inst'
+    - CThreeStep
+code:
+  format: template-text
+  language: st-template
+  text: "// |ThreeStepId| - |ThreeStepComment|. |$ThreeStep|\n|ThreeStepId|_ThreeStep_Inst(\n    in_bEnable := true\n        AND %\"NOT |ThreeStepSensId|_Sensor_Inst.out_bError\" if \"|ThreeStepInput|\"==\"true\" else \"true\"%\n        AND |ThreeStepEnExtra|,\n    in_fSP := Conf.%\"|ThreeStepConf|\" if \"|ThreeStepConf|\"!=\"\" else \"|ThreeStepId|\"%_ThreeStep_fSP,\n    in_fPV := %\"|ThreeStepSensId|_SensFilter_Inst.out_fY\" if \"|ThreeStepInput|\"==\"true\" else \"0.0\"%,\n    in_fDeadband := Conf.%\"|ThreeStepConf|\" if \"|ThreeStepConf|\"!=\"\" else \"|ThreeStepId|\"%_ThreeStep_fDeadband,\n    in_fHysteresis := Conf.%\"|ThreeStepConf|\" if \"|ThreeStepConf|\"!=\"\" else \"|ThreeStepId|\"%_ThreeStep_fHysteresis,\n    in_bReset := CabinetController_Inst.out_bWorktimeReset\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: ThreeStep.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

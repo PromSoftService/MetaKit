@@ -1,0 +1,70 @@
+kind: metagen.component
+version: 1
+component:
+  id: 5818d932-a3d9-40d8-b004-c7a1e714995a
+  name: SwitchCtrl
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CSwitchCtrl'
+params:
+  format: header-plus-rows
+  header:
+  - $SwitchCtrl
+  - SwitchCtrlId
+  - SwitchCtrlComment
+  - SwitchCtrlEn
+  - SwitchCtrlConf
+  - SwitchCtrlConfComment
+  rows:
+  - - Контроль переключения
+    - _ID_
+    - Комментарий
+    - 'true'
+    - ''
+    - ''
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - DInt
+    - Conf
+    - '%"|SwitchCtrlConf|" if "|SwitchCtrlConf|"!="" else "|SwitchCtrlId|"%_SwitchCtrl_diDelay'
+    - '1'
+    - '%"|SwitchCtrlConfComment|" if "|SwitchCtrlConfComment|"!="" else "|SwitchCtrlComment|. |$SwitchCtrl|"%. Задержка переключения'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+instances:
+  format: list
+  rows:
+  - - '|SwitchCtrlId|_SwitchCtrl_Inst'
+    - CSwitchCtrl
+code:
+  format: template-text
+  language: st-template
+  text: "// |SwitchCtrlId| - |SwitchCtrlComment|. |$SwitchCtrl|\n|SwitchCtrlId|_SwitchCtrl_Inst(\n    in_bEnable := |SwitchCtrlEn|,\n    in_diDelay := Conf.%\"|SwitchCtrlConf|\" if \"|SwitchCtrlConf|\"!=\"\" else \"|SwitchCtrlId|\"%_SwitchCtrl_diDelay\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: SwitchCtrl.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

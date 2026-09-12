@@ -1,0 +1,208 @@
+kind: metagen.component
+version: 1
+component:
+  id: b9bdf39b-f028-4aba-89f5-4c5adc749bf6
+  name: Cascade
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: universal CCascade'
+params:
+  format: header-plus-rows
+  header:
+  - $Cas
+  - CasId
+  - CasComment
+  - CasParent
+  - CasEn
+  - CasPV
+  - CasPVErr
+  - CasConf
+  - CasConfComment
+  rows:
+  - - Каскад
+    - _ID_
+    - Комментарий
+    - CabinetController_Inst
+    - 'true'
+    - '0.0'
+    - 'false'
+    - ''
+    - ''
+  - []
+  - - CasUnitId1
+    - CasUnitId2
+    - CasUnitId3
+    - CasUnitId4
+    - CasUnitId5
+    - CasUnitId6
+    - CasUnitId7
+    - CasUnitId8
+    - CasUnitId9
+    - CasUnitId10
+    - CasUnitId11
+    - CasUnitId12
+    - CasUnitId13
+    - CasUnitId14
+    - CasUnitId15
+    - CasUnitId16
+  - - _ID_
+    - _ID_
+    - _ID_
+    - _ID_
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - Int
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|CasId|"%_Cascade_iWorkCount'
+    - '1'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|CasComment|. |$Cas|"%. Минимальное количество агрегатов в работе'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Int
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|CasId|"%_Cascade_iMaxWorkCount'
+    - '1'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|CasComment|. |$Cas|"%. Максимальное количество агрегатов в работе'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|CasId|"%_Cascade_fSP'
+    - '0.0'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|CasComment|. |$Cas|"%. Уставка'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|CasId|"%_Cascade_fHys'
+    - '0.0'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|CasComment|. |$Cas|"%. Гистерезис'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|CasId|"%_Cascade_diConnectionDelay'
+    - '1'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|CasComment|. |$Cas|"%. Задержка подключения'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|CasId|"%_Cascade_diDisconnectionDelay'
+    - '1'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|CasComment|. |$Cas|"%. Задержка отключения'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Bool
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|CasId|"%_Cascade_bPowerControlEnable'
+    - 'false'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|CasComment|. |$Cas|"%. Включение контроля мощности'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|CasId|"%_Cascade_fPowerLoLimit'
+    - '0.0'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|CasComment|. |$Cas|"%. Нижний предел мощности'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - Real
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|CasId|"%_Cascade_fPowerHiLimit'
+    - '0.0'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|CasComment|. |$Cas|"%. Верхний предел мощности'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|CasConf|" if "|CasConf|"!="" else "|CasId|"%_Cascade_diSwitchPeriod'
+    - '36'
+    - '%"|CasConfComment|" if "|CasConfComment|"!="" else "|CasComment|. |$Cas|"%. Период смены'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+instances:
+  format: list
+  rows:
+  - - '|CasId|_Cascade_Inst'
+    - CCascade
+code:
+  format: template-text
+  language: st-template
+  text: "// |CasId| - |CasComment|. |$Cas|\n|CasId|_Cascade_Inst(\n    in_bEnable := |CasEn| AND NOT |CasPVErr|,\n    in_bConnectionCondition :=\n        (|CasId|_Cascade_Inst.out_iConnectedCount < Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_iWorkCount)\n        OR (\n            (|CasId|_Cascade_Inst.out_iConnectedCount < Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_iMaxWorkCount)\n            AND (\n                |CasPV| < (Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_fSP - Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_fHys)\n            )\n        ),\n    in_diConnectionDelay := Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_diConnectionDelay,\n    in_bDisconnectionCondition :=\n        (|CasId|_Cascade_Inst.out_iConnectedCount > Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_iMaxWorkCount)\n        OR (\n            (|CasId|_Cascade_Inst.out_iConnectedCount > Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_iWorkCount)\n            AND (\n                |CasPV| > (Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_fSP + Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_fHys)\n            )\n        ),\n    in_diDisconnectionDelay := Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_diDisconnectionDelay,\n    in_bPowerControlEnable := Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_bPowerControlEnable,\n    in_fPowerLoLimit := Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_fPowerLoLimit,\n    in_fPowerHiLimit := Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_fPowerHiLimit,\n    in_diSwitchPeriod := Conf.%\"|CasConf|\" if \"|CasConf|\"!=\"\" else \"|CasId|\"%_Cascade_diSwitchPeriod,\n    in_bFastStartEnable := true,\n%\"\".strip() if \"|CasUnitId1|\"==\"\" else \"    in_Unit1_bEnable := |CasUnitId1|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId1|\"==\"\" else \"    in_Unit1_bState := |CasUnitId1|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId1|\"==\"\" else \"    in_Unit1_bFault := |CasUnitId1|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId1|\"==\"\" else \"    in_Unit1_fPower := |CasUnitId1|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId1|\"==\"\" else \"    in_Unit1_diWorktime := |CasUnitId1|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId2|\"==\"\" else \"    in_Unit2_bEnable := |CasUnitId2|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId2|\"==\"\" else \"    in_Unit2_bState := |CasUnitId2|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId2|\"==\"\" else \"    in_Unit2_bFault := |CasUnitId2|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId2|\"==\"\" else \"    in_Unit2_fPower := |CasUnitId2|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId2|\"==\"\" else \"    in_Unit2_diWorktime := |CasUnitId2|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId3|\"==\"\" else \"    in_Unit3_bEnable := |CasUnitId3|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId3|\"==\"\" else \"    in_Unit3_bState := |CasUnitId3|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId3|\"==\"\" else \"    in_Unit3_bFault := |CasUnitId3|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId3|\"==\"\" else \"    in_Unit3_fPower := |CasUnitId3|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId3|\"==\"\" else \"    in_Unit3_diWorktime := |CasUnitId3|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId4|\"==\"\" else \"    in_Unit4_bEnable := |CasUnitId4|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId4|\"==\"\" else \"    in_Unit4_bState := |CasUnitId4|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId4|\"==\"\" else \"    in_Unit4_bFault := |CasUnitId4|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId4|\"==\"\" else \"    in_Unit4_fPower := |CasUnitId4|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId4|\"==\"\" else \"    in_Unit4_diWorktime := |CasUnitId4|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId5|\"==\"\" else \"    in_Unit5_bEnable := |CasUnitId5|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId5|\"==\"\" else \"    in_Unit5_bState := |CasUnitId5|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId5|\"==\"\" else \"    in_Unit5_bFault := |CasUnitId5|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId5|\"==\"\" else \"    in_Unit5_fPower := |CasUnitId5|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId5|\"==\"\" else \"    in_Unit5_diWorktime := |CasUnitId5|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId6|\"==\"\" else \"    in_Unit6_bEnable := |CasUnitId6|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId6|\"==\"\" else \"    in_Unit6_bState := |CasUnitId6|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId6|\"==\"\" else \"    in_Unit6_bFault := |CasUnitId6|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId6|\"==\"\" else \"    in_Unit6_fPower := |CasUnitId6|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId6|\"==\"\" else \"    in_Unit6_diWorktime := |CasUnitId6|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId7|\"==\"\" else \"    in_Unit7_bEnable := |CasUnitId7|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId7|\"==\"\" else \"    in_Unit7_bState := |CasUnitId7|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId7|\"==\"\" else \"    in_Unit7_bFault := |CasUnitId7|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId7|\"==\"\" else \"    in_Unit7_fPower := |CasUnitId7|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId7|\"==\"\" else \"    in_Unit7_diWorktime := |CasUnitId7|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId8|\"==\"\" else \"    in_Unit8_bEnable := |CasUnitId8|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId8|\"==\"\" else \"    in_Unit8_bState := |CasUnitId8|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId8|\"==\"\" else \"    in_Unit8_bFault := |CasUnitId8|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId8|\"==\"\" else \"    in_Unit8_fPower := |CasUnitId8|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId8|\"==\"\" else \"    in_Unit8_diWorktime := |CasUnitId8|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId9|\"==\"\" else \"    in_Unit9_bEnable := |CasUnitId9|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId9|\"==\"\" else \"    in_Unit9_bState := |CasUnitId9|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId9|\"==\"\" else \"    in_Unit9_bFault := |CasUnitId9|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId9|\"==\"\" else \"    in_Unit9_fPower := |CasUnitId9|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId9|\"==\"\" else \"    in_Unit9_diWorktime := |CasUnitId9|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId10|\"==\"\" else \"    in_Unit10_bEnable := |CasUnitId10|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId10|\"==\"\" else \"    in_Unit10_bState := |CasUnitId10|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId10|\"==\"\" else \"    in_Unit10_bFault := |CasUnitId10|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId10|\"==\"\" else \"    in_Unit10_fPower := |CasUnitId10|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId10|\"==\"\" else \"    in_Unit10_diWorktime := |CasUnitId10|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId11|\"==\"\" else \"    in_Unit11_bEnable := |CasUnitId11|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId11|\"==\"\" else \"    in_Unit11_bState := |CasUnitId11|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId11|\"==\"\" else \"    in_Unit11_bFault := |CasUnitId11|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId11|\"==\"\" else \"    in_Unit11_fPower := |CasUnitId11|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId11|\"==\"\" else \"    in_Unit11_diWorktime := |CasUnitId11|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId12|\"==\"\" else \"    in_Unit12_bEnable := |CasUnitId12|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId12|\"==\"\" else \"    in_Unit12_bState := |CasUnitId12|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId12|\"==\"\" else \"    in_Unit12_bFault := |CasUnitId12|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId12|\"==\"\" else \"    in_Unit12_fPower := |CasUnitId12|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId12|\"==\"\" else \"    in_Unit12_diWorktime := |CasUnitId12|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId13|\"==\"\" else \"    in_Unit13_bEnable := |CasUnitId13|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId13|\"==\"\" else \"    in_Unit13_bState := |CasUnitId13|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId13|\"==\"\" else \"    in_Unit13_bFault := |CasUnitId13|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId13|\"==\"\" else \"    in_Unit13_fPower := |CasUnitId13|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId13|\"==\"\" else \"    in_Unit13_diWorktime := |CasUnitId13|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId14|\"==\"\" else \"    in_Unit14_bEnable := |CasUnitId14|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId14|\"==\"\" else \"    in_Unit14_bState := |CasUnitId14|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId14|\"==\"\" else \"    in_Unit14_bFault := |CasUnitId14|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId14|\"==\"\" else \"    in_Unit14_fPower := |CasUnitId14|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId14|\"==\"\" else \"    in_Unit14_diWorktime := |CasUnitId14|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId15|\"==\"\" else \"    in_Unit15_bEnable := |CasUnitId15|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId15|\"==\"\" else \"    in_Unit15_bState := |CasUnitId15|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId15|\"==\"\" else \"    in_Unit15_bFault := |CasUnitId15|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId15|\"==\"\" else \"    in_Unit15_fPower := |CasUnitId15|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId15|\"==\"\" else \"    in_Unit15_diWorktime := |CasUnitId15|_CascadeUnit_Inst.out_diWorktime,\"%\n%\"\".strip() if \"|CasUnitId16|\"==\"\" else \"    in_Unit16_bEnable := |CasUnitId16|_CascadeUnit_Inst.out_bEnable,\"%\n%\"\".strip() if \"|CasUnitId16|\"==\"\" else \"    in_Unit16_bState := |CasUnitId16|_CascadeUnit_Inst.out_bState,\"%\n%\"\".strip() if \"|CasUnitId16|\"==\"\" else \"    in_Unit16_bFault := |CasUnitId16|_CascadeUnit_Inst.out_bFault,\"%\n%\"\".strip() if \"|CasUnitId16|\"==\"\" else \"    in_Unit16_fPower := |CasUnitId16|_CascadeUnit_Inst.out_fPower,\"%\n%\"\".strip() if \"|CasUnitId16|\"==\"\" else \"    in_Unit16_diWorktime := |CasUnitId16|_CascadeUnit_Inst.out_diWorktime,\"%\n    in_bResetSwitch := |CasParent|.out_bWorktimeReset\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: Cascade.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

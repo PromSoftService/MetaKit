@@ -1,0 +1,81 @@
+kind: metagen.component
+version: 1
+component:
+  id: b4afc823-1a40-403b-a8d2-bfadb8d96fb5
+  name: Delay
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CDelay'
+params:
+  format: header-plus-rows
+  header:
+  - $Delay
+  - DelayId
+  - DelayComment
+  - DelayEn
+  - DelayConf
+  - DelayConfComment
+  rows:
+  - - Задержка сигнала
+    - _ID_
+    - Комментарий
+    - 'true'
+    - ''
+    - ''
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - DInt
+    - Conf
+    - '%"|DelayConf|" if "|DelayConf|"!="" else "|DelayId|"%_Delay_diTime'
+    - '1'
+    - '%"|DelayConfComment|" if "|DelayConfComment|"!="" else "|DelayComment|. |$Delay|"%. Время'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+  - - DInt
+    - Conf
+    - '%"|DelayConf|" if "|DelayConf|"!="" else "|DelayId|"%_Delay_diMultiplier'
+    - '1000'
+    - '%"|DelayConfComment|" if "|DelayConfComment|"!="" else "|DelayComment|. |$Delay|"%. Множитель'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - '1'
+instances:
+  format: list
+  rows:
+  - - '|DelayId|_Delay_Inst'
+    - CDelay
+code:
+  format: template-text
+  language: st-template
+  text: "// |DelayId| - |DelayComment|. |$Delay|\n|DelayId|_Delay_Inst(\n    in_bEnable := |DelayEn|,\n    in_diTime := Conf.%\"|DelayConf|\" if \"|DelayConf|\"!=\"\" else \"|DelayId|\"%_Delay_diTime,\n    in_diMultiplier := Conf.%\"|DelayConf|\" if \"|DelayConf|\"!=\"\" else \"|DelayId|\"%_Delay_diMultiplier,\n    in_bReset := CabinetController_Inst.out_bWorktimeReset\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: Delay.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''

@@ -1,0 +1,189 @@
+kind: metagen.component
+version: 1
+component:
+  id: 8aa0495c-cefd-45c5-a32d-d6e3868c8b39
+  name: ControlValve
+  type: template
+  module: MetaGen
+  description: 'BlockTemplate: CControlValve'
+params:
+  format: header-plus-rows
+  header:
+  - $CtrlVal
+  - CtrlValId
+  - CtrlValComment
+  - CtrlValStartCmd
+  - CtrlValEStopExtra
+  rows:
+  - - Регулирующий клапан
+    - _ID_
+    - Комментарий
+    - 'false'
+    - 'false'
+  - []
+  - - CtrlValLocal
+    - CtrlValRemote
+    - CtrlValExtFault
+    - CtrlValStateOpen
+    - CtrlValStateClose
+  - - 'false'
+    - 'true'
+    - 'false'
+    - _DI_
+    - _DI_
+data:
+  format: table
+  columns:
+  - Type
+  - Data block
+  - Tag
+  - Value
+  - Comment
+  - HMI
+  - Flt
+  - Wrn
+  - Alm
+  - Trend
+  - Conf
+  rows:
+  - - Int
+    - '|CtrlValId|_CtrlValve_Inst'
+    - out_iMode
+    - ''
+    - '|CtrlValComment|. |$CtrlVal|. Режим'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CtrlValId|_CtrlValve_Inst'
+    - out_bStart
+    - ''
+    - '|CtrlValComment|. |$CtrlVal|. Включение'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CtrlValId|_CtrlValve_Inst'
+    - out_bState
+    - ''
+    - '|CtrlValComment|. |$CtrlVal|. Работа'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CtrlValId|_CtrlValve_Inst'
+    - out_bEnableAutoControl
+    - ''
+    - '|CtrlValComment|. |$CtrlVal|. Разрешено управление в автоматическом режиме'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CtrlValId|_CtrlValve_Inst'
+    - out_bExternalFault
+    - ''
+    - '|CtrlValComment|. |$CtrlVal|. Авария'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CtrlValId|_CtrlValve_Inst'
+    - out_bBlocked
+    - ''
+    - '|CtrlValComment|. |$CtrlVal|. Управление заблокировано'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - DInt
+    - '|CtrlValId|_CtrlValve_Inst'
+    - out_diWorktime
+    - ''
+    - '|CtrlValComment|. |$CtrlVal|. Время наработки'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Int
+    - '|CtrlValId|_CtrlValve_Inst'
+    - inout_iRemoteMode
+    - ''
+    - '|CtrlValComment|. |$CtrlVal|. Выбор дистанционного режима'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CtrlValId|_CtrlValve_Inst'
+    - inout_bStart
+    - ''
+    - '|CtrlValComment|. |$CtrlVal|. Команда пуска в ручном режиме'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CtrlValId|_CtrlValve_Inst'
+    - inout_bFaultReset
+    - ''
+    - '|CtrlValComment|. |$CtrlVal|. Сброс аварии'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+  - - Bool
+    - '|CtrlValId|_CtrlValve_Inst'
+    - inout_bWorktimeReset
+    - ''
+    - '|CtrlValComment|. |$CtrlVal|. Сброс времени наработки'
+    - '1'
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+instances:
+  format: list
+  rows:
+  - - '|CtrlValId|_CtrlValve_Inst'
+    - CControlValve
+code:
+  format: template-text
+  language: st-template
+  text: "// |CtrlValId| - |CtrlValComment|. |$CtrlVal|\n|CtrlValId|_CtrlValve_Inst(\n    in_bLocalControl := |CtrlValLocal|,\n    in_bRemoteControl := |CtrlValRemote|,\n    in_bStart := false\n        OR ((|CtrlValId|_CtrlValve_Inst.out_iMode = VALVEMODEAUTO) AND (|CtrlValStartCmd|))\n        OR (|CtrlValId|_CtrlValve_Inst.out_iMode = VALVEMODEMANUAL),\n    in_bEmergencyStop := false\n        OR CabinetController_Inst.out_bEmergencyStop\n        OR NOT CabinetController_Inst.out_bPowerControl\n        OR |CtrlValEStopExtra|,\n    in_bExternalFault := |CtrlValExtFault|,\n    in_bStateOpen := |CtrlValStateOpen|,\n    in_bStateClose := |CtrlValStateClose|,\n    in_bFaultReset := CabinetController_Inst.out_bFaultReset,\n    in_bWorktimeReset := CabinetController_Inst.out_bWorktimeReset,\n    inout_iRemoteMode := View.|CtrlValId|_CtrlValve_Inst_inout_iRemoteMode,\n    inout_bStart := View.|CtrlValId|_CtrlValve_Inst_inout_bStart,\n    inout_bFaultReset := View.|CtrlValId|_CtrlValve_Inst_inout_bFaultReset,\n    inout_bWorktimeReset := View.|CtrlValId|_CtrlValve_Inst_inout_bWorktimeReset\n);\n//\n//\n//\n//\n"
+generation:
+  engine: python
+  entrypoint: gen_v2.py
+  mode: external
+  output:
+    language: st
+    fileName: ControlValve.st
+meta:
+  author: ''
+  importedFrom: ''
+  importedSheet: ''
