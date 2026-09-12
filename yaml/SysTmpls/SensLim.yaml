@@ -313,12 +313,16 @@ code:
 
     |SensId|_SensLim_Flts_Inst(
         in_bReset := CabinetController_Inst.out_bFaultReset,
-        in_Signal1_bIN := |SensId|_SensFilter_Inst.out_fY >= Conf.|SensId|_SensLim_fHH,
+        in_Signal1_bIN := true
+            AND (NOT |SensId|_Sensor_Inst.out_bError)
+            AND (|SensId|_SensFilter_Inst.out_fY >= Conf.|SensId|_SensLim_fHH),
         in_Signal1_bBypass := Conf.|SensId|_Sensor_EV_bLimitBypass OR Conf.|SensId|_SensLim_HH_bBypass,
         in_Signal1_bEnable := |HHEnable|,
         in_Signal1_diDelay := Conf.|SensId|_SensLim_Flt_diDelay,
         in_Signal1_bAutoReset := |FltAutoReset|,
-        in_Signal2_bIN := |SensId|_SensFilter_Inst.out_fY <= Conf.|SensId|_SensLim_fLL,
+        in_Signal2_bIN := true
+            AND (NOT |SensId|_Sensor_Inst.out_bError)
+            AND (|SensId|_SensFilter_Inst.out_fY <= Conf.|SensId|_SensLim_fLL),
         in_Signal2_bBypass := Conf.|SensId|_Sensor_EV_bLimitBypass OR Conf.|SensId|_SensLim_LL_bBypass,
         in_Signal2_bEnable := |LLEnable|,
         in_Signal2_diDelay := Conf.|SensId|_SensLim_Flt_diDelay,
@@ -344,15 +348,17 @@ code:
     |SensId|_SensLim_Wrns_Inst(
         in_bReset := CabinetController_Inst.out_bFaultReset,
         in_Signal1_bIN := true
+            AND (NOT |SensId|_Sensor_Inst.out_bError)
             AND (|SensId|_SensFilter_Inst.out_fY >= Conf.|SensId|_SensLim_fH)
-            AND ((|SensId|_SensFilter_Inst.out_fY < Conf.|SensId|_SensLim_fHH) OR Conf.|SensId|_SensLim_HH_bBypass),
+            AND (NOT |SensId|_SensLim_Flts_Inst.out_Signal1_bQ),
         in_Signal1_bBypass := Conf.|SensId|_Sensor_EV_bLimitBypass OR Conf.|SensId|_SensLim_H_bBypass,
         in_Signal1_bEnable := |HEnable|,
         in_Signal1_diDelay := Conf.|SensId|_SensLim_Wrn_diDelay,
         in_Signal1_bAutoReset := |WrnAutoReset|,
         in_Signal2_bIN := true
+            AND (NOT |SensId|_Sensor_Inst.out_bError)
             AND (|SensId|_SensFilter_Inst.out_fY <= Conf.|SensId|_SensLim_fL)
-            AND ((|SensId|_SensFilter_Inst.out_fY > Conf.|SensId|_SensLim_fLL) OR Conf.|SensId|_SensLim_LL_bBypass),
+            AND (NOT |SensId|_SensLim_Flts_Inst.out_Signal2_bQ),
         in_Signal2_bBypass := Conf.|SensId|_Sensor_EV_bLimitBypass OR Conf.|SensId|_SensLim_L_bBypass,
         in_Signal2_bEnable := |LEnable|,
         in_Signal2_diDelay := Conf.|SensId|_SensLim_Wrn_diDelay,
