@@ -1,0 +1,177 @@
+component: ControlValve
+slug: controlvalve
+source: yaml/LibTempls/Valve/controlvalve.yaml
+kind: Lib
+title: Регулирующий клапан
+category: Исполнительные механизмы
+summary: Индивидуальный CControlValve с режимами, разрешением управления и ручным включением.
+description: Индивидуальный CControlValve с режимами, разрешением управления и ручным включением. CControlValve выдаёт разрешение
+  управления с учётом режима, блокировки и внешней аварии.
+use_cases:
+- Пользовательский контур управляет регулирующим клапаном с заданием положения.
+- В автоматическом режиме клапан получает внешнее аналоговое задание, а в ручном оператор включает управление и задаёт положение
+  с HMI.
+not_for:
+- Если нужен полностью готовый технологический контур с CascadeUnit, авариями и HMI — выберите подходящий Unit-компонент.
+diagram:
+  lanes:
+  - - 'Аналоговое задание
+
+      0–100 %'
+    - 'CControlValve
+
+      разрешение управления'
+    - 'Аналоговый выход
+
+      положение'
+  - - 'Режим и состояние
+
+      Local / Remote'
+    - 'CControlValve
+
+      блокировки'
+    - 'HMI клапана
+
+      режим / работа'
+  - - Внешняя авария
+    - out_bExternalFault
+    - 'HMI диагностики
+
+      состояние'
+application:
+  intro: В автоматическом режиме клапан получает внешнее аналоговое задание, а в ручном оператор включает управление и задаёт
+    положение с HMI. Ниже показаны параметры в том же формате ключ/значение, который используется в MetaPlatform.
+  result: CControlValve выдаёт разрешение управления с учётом режима, блокировки и внешней аварии.
+parameter_groups:
+- title: Регулирующий клапан
+  items:
+  - key: $CtrlVal
+    default: Регулирующий клапан
+    example: Регулирующий клапан
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: CtrlValId
+    default: _ID_
+    example: CV101
+    description: Уникальный идентификатор блока и префикс создаваемых тегов.
+  - key: CtrlValComment
+    default: Комментарий
+    example: Клапан подпитки
+    description: Понятное человеку название блока или группы, используемое в комментариях и HMI.
+  - key: CtrlValStartCmd
+    default: 'false'
+    example: 'false'
+    description: Внешняя команда запуска соответствующего механизма.
+  - key: CtrlValEStopExtra
+    default: 'false'
+    example: 'false'
+    description: Дополнительное условие экстренного останова исполнительного механизма.
+- title: Группа параметров 2
+  items:
+  - key: CtrlValLocal
+    default: 'false'
+    example: 'false'
+    description: Признак местного режима управления исполнительным механизмом.
+  - key: CtrlValRemote
+    default: 'true'
+    example: 'true'
+    description: Признак дистанционного режима управления исполнительным механизмом.
+  - key: CtrlValExtFault
+    default: 'false'
+    example: 'false'
+    description: Внешняя авария или защитное условие, запрещающее работу механизма.
+  - key: CtrlValStateOpen
+    default: _DI_
+    example: DI_CTRLVALSTATEOPEN
+    description: Дискретный сигнал концевика полностью открытого положения.
+  - key: CtrlValStateClose
+    default: _DI_
+    example: DI_CTRLVALSTATECLOSE
+    description: Дискретный сигнал концевика полностью закрытого положения.
+example:
+  title: Регулирующий клапан подпитки
+  scenario: В автоматическом режиме клапан получает внешнее аналоговое задание, а в ручном оператор включает управление и
+    задаёт положение с HMI.
+  result: CControlValve выдаёт разрешение управления с учётом режима, блокировки и внешней аварии.
+settings: []
+hmi:
+- tag: CtrlValve.out_iMode
+  description: Режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CtrlValve.out_bStart
+  description: Включение
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CtrlValve.out_bState
+  description: Работа
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CtrlValve.out_bEnableAutoControl
+  description: Разрешено управление в автоматическом режиме
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CtrlValve.out_bExternalFault
+  description: Авария
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CtrlValve.out_bBlocked
+  description: Управление заблокировано
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CtrlValve.out_diWorktime
+  description: Время наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CtrlValve.inout_iRemoteMode
+  description: Выбор дистанционного режима
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CtrlValve.inout_bStart
+  description: Команда пуска в ручном режиме
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CtrlValve.inout_bFaultReset
+  description: Сброс аварии
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CtrlValve.inout_bWorktimeReset
+  description: Сброс времени наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+optional_hmi: []
+common_mistakes:
+- Оставить служебные значения _ID_, _DI_, _DO_ или _AO_ вместо реальных тегов проекта.
+- Не проверить классы сообщений и доступность настроек на HMI после генерации проекта.

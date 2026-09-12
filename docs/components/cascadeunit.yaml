@@ -1,0 +1,187 @@
+component: CascadeUnit
+slug: cascadeunit
+source: yaml/LibTempls/Cascade/cascadeunit.yaml
+kind: Lib
+title: Интерфейс элемента каскада
+category: Каскады
+summary: Унифицированный адаптер между технологическим компонентом, родительским каскадом и CabinetController.
+description: Унифицированный адаптер между технологическим компонентом, родительским каскадом и CabinetController. Внутренняя
+  логика насоса остаётся независимой от того, подключён он к CabinetController или к промежуточному CascadeUnit.
+use_cases:
+- Компонент должен передавать готовность, состояние, аварию, наработку и принимать команду запуска от родителя.
+- Насосный Unit сообщает родительскому Cascade готовность, состояние, аварию, наработку и мощность, а получает разрешение
+  и команду пуска.
+not_for:
+- Если нужен полностью готовый технологический контур с CascadeUnit, авариями и HMI — выберите подходящий Unit-компонент.
+diagram:
+  lanes:
+  - - 'Parent
+
+      Cabinet или CascadeUnit'
+    - 'CCascadeUnit
+
+      адаптер элемента'
+    - 'Исполнительный блок
+
+      Engine / Valve'
+  - - 'Состояние / авария
+
+      элемента'
+    - 'CCascadeUnit
+
+      обратная связь'
+    - 'HMI элемента
+
+      готовность / работа'
+application:
+  intro: Насосный Unit сообщает родительскому Cascade готовность, состояние, аварию, наработку и мощность, а получает разрешение
+    и команду пуска. Ниже показаны параметры в том же формате ключ/значение, который используется в MetaPlatform.
+  result: Внутренняя логика насоса остаётся независимой от того, подключён он к CabinetController или к промежуточному CascadeUnit.
+parameter_groups:
+- title: Элемент каскада
+  items:
+  - key: $CasUnit
+    default: Элемент каскада
+    example: Элемент каскада
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: CasUnitId
+    default: _ID_
+    example: CASCADEUNI
+    description: Уникальный идентификатор блока и префикс создаваемых тегов.
+  - key: CasUnitComment
+    default: Комментарий
+    example: Насос как элемент общего каскада
+    description: Понятное человеку название блока или группы, используемое в комментариях и HMI.
+  - key: CasUnitParent
+    default: CabinetController_Inst
+    example: CabinetController_Inst
+    description: Родительский контроллер или каскадный элемент для обмена разрешениями и состоянием.
+  - key: CasUnitStartCmd
+    default: 'false'
+    example: 'false'
+    description: Внешняя команда запуска соответствующего механизма.
+  - key: CasUnitEn
+    default: 'true'
+    example: 'true'
+    description: Дополнительное разрешение работы соответствующего блока.
+- title: Группа параметров 2
+  items:
+  - key: CasUnitMode
+    default: 'true'
+    example: 'true'
+    description: Обратная связь элемента, передаваемая в родительский каскад.
+  - key: CasUnitState
+    default: '0'
+    example: '0'
+    description: Сигнал подтверждения фактического состояния исполнительного механизма.
+  - key: CasUnitStateBool
+    default: 'false'
+    example: 'false'
+    description: Обратная связь элемента, передаваемая в родительский каскад.
+  - key: CasUnitFault
+    default: 'false'
+    example: 'false'
+    description: Внешняя авария или защитное условие, запрещающее работу механизма.
+  - key: CasUnitWorktime
+    default: '0'
+    example: '0'
+    description: Обратная связь элемента, передаваемая в родительский каскад.
+  - key: CasUnitPower
+    default: '0.0'
+    example: '0.0'
+    description: Обратная связь элемента, передаваемая в родительский каскад.
+example:
+  title: Насос как элемент общего каскада
+  scenario: Насосный Unit сообщает родительскому Cascade готовность, состояние, аварию, наработку и мощность, а получает разрешение
+    и команду пуска.
+  result: Внутренняя логика насоса остаётся независимой от того, подключён он к CabinetController или к промежуточному CascadeUnit.
+settings: []
+hmi:
+- tag: CascadeUnit.out_bEnable
+  description: Разрешение
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_bPowerControl
+  description: Наличие напряжения
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_bEmergencyStop
+  description: Экстренный останов
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_bMode
+  description: Автоматический режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_iState
+  description: Состояние
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_bState
+  description: Работа
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_bFault
+  description: Авария
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_bStart
+  description: Команда пуска
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_diWorktime
+  description: Наработка
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_fPower
+  description: Мощность
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: Да
+- tag: CascadeUnit.inout_bFaultReset
+  description: Сброс аварии
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.inout_bWorktimeReset
+  description: Сброс времени наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+optional_hmi: []
+common_mistakes:
+- Оставить служебные значения _ID_, _DI_, _DO_ или _AO_ вместо реальных тегов проекта.
+- Не проверить классы сообщений и доступность настроек на HMI после генерации проекта.

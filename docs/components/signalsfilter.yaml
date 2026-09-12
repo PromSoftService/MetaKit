@@ -1,0 +1,214 @@
+component: SignalsFilter
+slug: signalsfilter
+source: yaml/LibTempls/Signals/signalsfilter.yaml
+kind: Lib
+title: Фильтр сигналов
+category: Обработка сигналов
+summary: CSignalsFilter для группы аварийных, предупредительных или технологических сигналов.
+description: CSignalsFilter для группы аварийных, предупредительных или технологических сигналов. Каждая заполненная строка
+  становится отдельным сообщением, а out_bQ показывает наличие хотя бы одного активного сигнала.
+use_cases:
+- Сигналы требуют задержки, разрешения, обхода, фиксации и общего выхода.
+- 'Нужно обработать несколько дискретных причин: задержать кратковременные сигналы, разрешить их шунтирование и сформировать
+  общий признак аварии.'
+not_for:
+- Если нужен полностью готовый технологический контур с CascadeUnit, авариями и HMI — выберите подходящий Unit-компонент.
+diagram:
+  lanes:
+  - - Signal1…Signal8
+    - 'CSignalsFilter
+
+      задержка и фиксация'
+    - 'HMI сообщений
+
+      Flt / Wrn / Alm'
+  - - Шунты сигналов
+    - Общий out_bBypass
+    - 'HMI диагностики
+
+      шунт включён'
+application:
+  intro: 'Нужно обработать несколько дискретных причин: задержать кратковременные сигналы, разрешить их шунтирование и сформировать
+    общий признак аварии. Ниже показаны параметры в том же формате ключ/значение, который используется в MetaPlatform.'
+  result: Каждая заполненная строка становится отдельным сообщением, а out_bQ показывает наличие хотя бы одного активного
+    сигнала.
+parameter_groups:
+- title: Аварии
+  items:
+  - key: $SgnlsFltr
+    default: Аварии
+    example: Аварии
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: SgnlsFltrId
+    default: _ID_
+    example: SIGNALSFIL
+    description: Уникальный идентификатор блока и префикс создаваемых тегов.
+  - key: SgnlsFltrComment
+    default: аварии
+    example: аварии
+    description: Понятное человеку название блока или группы, используемое в комментариях и HMI.
+- title: Строки 1–8
+  items:
+  - key: SgnlsFltrSigId1…SgnlsFltrSigId8
+    default: _ID_
+    example: SIGNALSFIL
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся. Одинаково применяется к строкам
+      1–8.
+  - key: SgnlsFltrSigComment1…SgnlsFltrSigComment8
+    default: авария
+    example: авария
+    description: Текст причины, который увидит оператор в списке сообщений. Одинаково применяется к строкам 1–8.
+  - key: SgnlsFltrIn1…SgnlsFltrIn8
+    default: _DI_
+    example: DI_SGNLSFLTRIN1
+    description: Булево выражение контролируемой причины. Одинаково применяется к строкам 1–8.
+  - key: SgnlsFltrEn1…SgnlsFltrEn8
+    default: 'true'
+    example: 'true'
+    description: Разрешение обработки конкретного сигнала. Одинаково применяется к строкам 1–8.
+  - key: SgnlsFltrAutoReset1…SgnlsFltrAutoReset8
+    default: 'false'
+    example: 'false'
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины. Одинаково применяется к строкам 1–8.
+  - key: SgnlsFltrFlt1…SgnlsFltrFlt8
+    default: ''
+    example: ''
+    description: Формировать для этой строки аварию соответствующего класса. Одинаково применяется к строкам 1–8.
+  - key: SgnlsFltrWrn1…SgnlsFltrWrn8
+    default: ''
+    example: ''
+    description: Формировать для этой строки предупреждение соответствующего класса. Одинаково применяется к строкам 1–8.
+  - key: SgnlsFltrAlm1…SgnlsFltrAlm8
+    default: ''
+    example: ''
+    description: Формировать для этой строки сообщение соответствующего класса. Одинаково применяется к строкам 1–8.
+example:
+  title: Аварии насосной группы
+  scenario: 'Нужно обработать несколько дискретных причин: задержать кратковременные сигналы, разрешить их шунтирование и
+    сформировать общий признак аварии.'
+  result: Каждая заполненная строка становится отдельным сообщением, а out_bQ показывает наличие хотя бы одного активного
+    сигнала.
+settings:
+- key: …_SgnlsFltr_|SgnlsFltrSigId1|_bBypass"%
+  default: '%"" if "|SgnlsFltrSigId1|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId1|_diDelay"%
+  default: '%"" if "|SgnlsFltrSigId1|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId2|_bBypass"%
+  default: '%"" if "|SgnlsFltrSigId2|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId2|_diDelay"%
+  default: '%"" if "|SgnlsFltrSigId2|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId3|_bBypass"%
+  default: '%"" if "|SgnlsFltrSigId3|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId3|_diDelay"%
+  default: '%"" if "|SgnlsFltrSigId3|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId4|_bBypass"%
+  default: '%"" if "|SgnlsFltrSigId4|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId4|_diDelay"%
+  default: '%"" if "|SgnlsFltrSigId4|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId5|_bBypass"%
+  default: '%"" if "|SgnlsFltrSigId5|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId5|_diDelay"%
+  default: '%"" if "|SgnlsFltrSigId5|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId6|_bBypass"%
+  default: '%"" if "|SgnlsFltrSigId6|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId6|_diDelay"%
+  default: '%"" if "|SgnlsFltrSigId6|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId7|_bBypass"%
+  default: '%"" if "|SgnlsFltrSigId7|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId7|_diDelay"%
+  default: '%"" if "|SgnlsFltrSigId7|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId8|_bBypass"%
+  default: '%"" if "|SgnlsFltrSigId8|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|SgnlsFltrSigId8|_diDelay"%
+  default: '%"" if "|SgnlsFltrSigId8|"=="" else "0"%'
+  description: Настройка функционального блока
+hmi:
+- tag: SgnlsFltr.out_bQ
+  description: Срабатывание
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: SgnlsFltr.out_bBypass
+  description: Шунт включен
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: SgnlsFltr.%"" if "|SgnlsFltrSigId1|"=="" else "out_Signal1_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|SgnlsFltrSigId2|"=="" else "out_Signal2_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|SgnlsFltrSigId3|"=="" else "out_Signal3_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|SgnlsFltrSigId4|"=="" else "out_Signal4_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|SgnlsFltrSigId5|"=="" else "out_Signal5_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|SgnlsFltrSigId6|"=="" else "out_Signal6_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|SgnlsFltrSigId7|"=="" else "out_Signal7_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|SgnlsFltrSigId8|"=="" else "out_Signal8_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+optional_hmi: []
+common_mistakes:
+- Оставить служебные значения _ID_, _DI_, _DO_ или _AO_ вместо реальных тегов проекта.
+- Не проверить классы сообщений и доступность настроек на HMI после генерации проекта.

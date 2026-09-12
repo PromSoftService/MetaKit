@@ -36,6 +36,9 @@ header @metakit_downloads Content-Disposition "attachment"
 
 ## GitHub Actions
 
-Workflow `.github/workflows/docs.yml` проверяет все YAML, собирает документацию и публикует artifact `metakit-docs`. Этот artifact можно скачать на VPS и развернуть без установки генератора документации на сервере.
+Workflow `.github/workflows/docs.yml` проверяет структуру руководств и наличие
+связанных компонентов, собирает документацию и публикует artifact
+`metakit-docs`. Этот artifact можно скачать на VPS и развернуть без установки
+генератора документации на сервере.
 
 Альтернативный вариант — клонировать MetaKit на VPS и выполнить `make verify`. Выходная структура в обоих случаях одинакова.

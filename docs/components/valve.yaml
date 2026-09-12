@@ -1,0 +1,243 @@
+component: Valve
+slug: valve
+source: yaml/LibTempls/Valve/valve.yaml
+kind: Lib
+title: Дискретный клапан
+category: Исполнительные механизмы
+summary: Индивидуальный CValve с командами открытия и закрытия, контролем состояния и авариями.
+description: Индивидуальный CValve с командами открытия и закрытия, контролем состояния и авариями. CValve управляет направлениями
+  движения, выдерживает паузу перед реверсом, контролирует полный ход и формирует аварии.
+use_cases:
+- Пользовательский контур содержит двухпозиционный клапан.
+- Клапан открывается и закрывается дискретными выходами, имеет концевики крайних положений и при аварии должен перейти в безопасное
+  положение.
+not_for:
+- Если нужен полностью готовый технологический контур с CascadeUnit, авариями и HMI — выберите подходящий Unit-компонент.
+diagram:
+  lanes:
+  - - 'Команды
+
+      Открыть / Закрыть'
+    - 'CValve
+
+      режимы и реверс'
+    - 'Выходы
+
+      Open / Close'
+  - - 'Концевики
+
+      Open / Close'
+    - 'Контроль хода
+
+      и состояния'
+    - 'HMI клапана
+
+      положение / режим'
+  - - 'Внешняя авария
+
+      и E-Stop'
+    - 'CValve
+
+      out_bFault'
+    - 'HMI аварий
+
+      Flt'
+application:
+  intro: Клапан открывается и закрывается дискретными выходами, имеет концевики крайних положений и при аварии должен перейти
+    в безопасное положение. Ниже показаны параметры в том же формате ключ/значение, который используется в MetaPlatform.
+  result: CValve управляет направлениями движения, выдерживает паузу перед реверсом, контролирует полный ход и формирует аварии.
+parameter_groups:
+- title: Клапан
+  items:
+  - key: $Val
+    default: Клапан
+    example: Клапан
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: ValId
+    default: _ID_
+    example: V101
+    description: Уникальный идентификатор блока и префикс создаваемых тегов.
+  - key: ValComment
+    default: Комментарий
+    example: Клапан отсечной
+    description: Понятное человеку название блока или группы, используемое в комментариях и HMI.
+  - key: ValOpenCmd
+    default: 'false'
+    example: 'false'
+    description: Дополнительная команда открытия клапана.
+  - key: ValCloseCmd
+    default: 'false'
+    example: 'false'
+    description: Дополнительная команда закрытия клапана.
+  - key: ValEnAutoCtrlExtra
+    default: 'true'
+    example: 'true'
+    description: Значение передаётся в одноимённую часть функционального блока; изменяйте его в соответствии с алгоритмом
+      проекта.
+  - key: ValEStopExtra
+    default: 'false'
+    example: 'false'
+    description: Дополнительное условие экстренного останова исполнительного механизма.
+  - key: ValPowerCtrlExtra
+    default: 'true'
+    example: 'true'
+    description: Значение передаётся в одноимённую часть функционального блока; изменяйте его в соответствии с алгоритмом
+      проекта.
+  - key: ValConf
+    default: ''
+    example: ''
+    description: Необязательный общий префикс настроек. Пустое значение создаёт индивидуальные настройки по Id компонента.
+  - key: ValConfComment
+    default: ''
+    example: ''
+    description: Общий комментарий для совместно используемых настроек. Оставьте пустым при индивидуальной конфигурации.
+- title: Группа параметров 2
+  items:
+  - key: ValLocal
+    default: 'false'
+    example: 'false'
+    description: Признак местного режима управления исполнительным механизмом.
+  - key: ValRemote
+    default: 'true'
+    example: 'true'
+    description: Признак дистанционного режима управления исполнительным механизмом.
+  - key: ValExtFault
+    default: 'false'
+    example: 'false'
+    description: Внешняя авария или защитное условие, запрещающее работу механизма.
+  - key: ValStateOpen
+    default: _DI_
+    example: DI_V101_OPEN
+    description: Дискретный сигнал концевика полностью открытого положения.
+  - key: ValStateClose
+    default: _DI_
+    example: DI_V101_CLOSE
+    description: Дискретный сигнал концевика полностью закрытого положения.
+  - key: ValOpenOut
+    default: _DO_
+    example: DO_V101_OPEN
+    description: Физический дискретный выход открытия клапана.
+  - key: ValCloseOut
+    default: _DO_
+    example: DO_V101_CLOSE
+    description: Физический дискретный выход закрытия клапана.
+example:
+  title: Отсечной клапан
+  scenario: Клапан открывается и закрывается дискретными выходами, имеет концевики крайних положений и при аварии должен перейти
+    в безопасное положение.
+  result: CValve управляет направлениями движения, выдерживает паузу перед реверсом, контролирует полный ход и формирует аварии.
+settings:
+- key: …_Valve_bNO
+  default: 'false'
+  description: Нормально открытый
+- key: …_Valve_bEnableFaultCtrl
+  default: 'false'
+  description: Закрытие/открытие при аварии
+- key: …_Valve_bEnableCheckState
+  default: 'false'
+  description: Контроль крайних положений
+- key: …_Valve_diChangeStateDelay
+  default: '1'
+  description: Задержка смены состояния
+- key: …_Valve_diFullTime
+  default: '90'
+  description: Время полного хода
+- key: …_Valve_bFullTimeCtrlBypass
+  default: 'false'
+  description: Шунт контроля полного хода
+hmi:
+- tag: Valve.out_iMode
+  description: Режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Valve.out_iState
+  description: Состояние
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Valve.out_bOpenFault
+  description: Авария открытия
+  hmi: —
+  flt: Да
+  wrn: —
+  alm: —
+  trend: —
+- tag: Valve.out_bCloseFault
+  description: Авария закрытия
+  hmi: —
+  flt: Да
+  wrn: —
+  alm: —
+  trend: —
+- tag: Valve.out_bFault
+  description: Авария
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Valve.out_bEnableAutoControl
+  description: Разрешено управление в автоматическом режиме
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Valve.out_bBlocked
+  description: Управление заблокировано
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Valve.out_diWorktime
+  description: Время наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Valve.inout_iRemoteMode
+  description: Ручной/автоматический режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Valve.inout_bOpen
+  description: Открытие
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Valve.inout_bClose
+  description: Закрытие
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Valve.inout_bFaultReset
+  description: Сброс аварии
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Valve.inout_bWorktimeReset
+  description: Сброс времени наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+optional_hmi: []
+common_mistakes:
+- Оставить служебные значения _ID_, _DI_, _DO_ или _AO_ вместо реальных тегов проекта.
+- Не проверить классы сообщений и доступность настроек на HMI после генерации проекта.

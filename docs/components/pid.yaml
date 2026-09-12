@@ -1,0 +1,174 @@
+component: PID
+slug: pid
+source: yaml/LibTempls/Regulators/PID.yaml
+kind: Lib
+title: PID-регулятор
+category: Регуляторы
+summary: Индивидуальный CPID с настройками регулятора, ручным заданием и отдельной секцией аналогового выхода.
+description: Индивидуальный CPID с настройками регулятора, ручным заданием и отдельной секцией аналогового выхода. CPID формирует
+  мгновенную и накопленную составляющие выхода, ограничивает результат и обеспечивает безударный ручной режим.
+use_cases:
+- Пользовательский контур требует непрерывного регулирования.
+- Регулятор получает давление 0–10 бар и формирует задание скорости 0–100 %. При переходе в ручной режим оператор задаёт выход
+  напрямую.
+not_for:
+- Если нужен полностью готовый технологический контур с CascadeUnit, авариями и HMI — выберите подходящий Unit-компонент.
+diagram:
+  lanes:
+  - - PV + SP
+    - 'CPID
+
+      регулирование'
+    - 'out_fYS
+
+      управляющий сигнал'
+  - - Ручное задание
+    - inout_bYManual
+    - 'HMI регулятора
+
+      режим / выход'
+application:
+  intro: Регулятор получает давление 0–10 бар и формирует задание скорости 0–100 %. При переходе в ручной режим оператор задаёт
+    выход напрямую. Ниже показаны параметры в том же формате ключ/значение, который используется в MetaPlatform.
+  result: CPID формирует мгновенную и накопленную составляющие выхода, ограничивает результат и обеспечивает безударный ручной
+    режим.
+parameter_groups:
+- title: ПИД-регулятор
+  items:
+  - key: $PID
+    default: ПИД-регулятор
+    example: ПИД-регулятор
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: PIDId
+    default: _ID_
+    example: PIC101
+    description: Уникальный идентификатор блока и префикс создаваемых тегов.
+  - key: PIDComment
+    default: Комментарий
+    example: Регулятор давления
+    description: Понятное человеку название блока или группы, используемое в комментариях и HMI.
+  - key: PIDEnExtra
+    default: 'true'
+    example: NOT PT101_Sensor_Inst.out_bError
+    description: Дополнительное разрешение работы соответствующего блока.
+  - key: PIDConf
+    default: ''
+    example: ''
+    description: Необязательный общий префикс настроек. Пустое значение создаёт индивидуальные настройки по Id компонента.
+  - key: PIDConfComment
+    default: ''
+    example: ''
+    description: Общий комментарий для совместно используемых настроек. Оставьте пустым при индивидуальной конфигурации.
+- title: Группа параметров 2
+  items:
+  - key: PIDSensId
+    default: _ID_
+    example: PID
+    description: Id Sensor, который предоставляет PV и признак ошибки для PID.
+- title: Аналоговый выход
+  items:
+  - key: $Out
+    default: Аналоговый выход
+    example: Аналоговый выход
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: OutConf
+    default: ''
+    example: ''
+    description: Необязательный общий префикс настроек. Пустое значение создаёт индивидуальные настройки по Id компонента.
+  - key: OutConfComment
+    default: ''
+    example: ''
+    description: Общий комментарий для совместно используемых настроек. Оставьте пустым при индивидуальной конфигурации.
+- title: Группа параметров 4
+  items:
+  - key: OutRaw
+    default: _AO_
+    example: AO_OUTRAW
+    description: Переменная физического аналогового выхода, в которую записывается масштабированное значение.
+  - key: OutRawMin
+    default: ADC_4_IN_0_20
+    example: ADC_4_IN_0_20
+    description: Код аналогового выхода, соответствующий нижней точке инженерной шкалы.
+  - key: OutRawMax
+    default: ADC_MAX_VALUE
+    example: ADC_MAX_VALUE
+    description: Код аналогового выхода, соответствующий верхней точке инженерной шкалы.
+example:
+  title: Поддержание давления насосом с ПЧ
+  scenario: Регулятор получает давление 0–10 бар и формирует задание скорости 0–100 %. При переходе в ручной режим оператор
+    задаёт выход напрямую.
+  result: CPID формирует мгновенную и накопленную составляющие выхода, ограничивает результат и обеспечивает безударный ручной
+    режим.
+settings:
+- key: …_PID_fSP
+  default: '0.0'
+  description: Уставка
+- key: …_PID_fDB
+  default: '0.0'
+  description: Зона нечувствительности
+- key: …_PID_fSR
+  default: '3.0'
+  description: Время дискретизации
+- key: …_PID_fKp
+  default: '1.0'
+  description: Kp
+- key: …_PID_fTi
+  default: '0.0'
+  description: Ti
+- key: …_PID_fTd
+  default: '0.0'
+  description: Td
+- key: …_PID_fYMin
+  default: '0.0'
+  description: Минимальная граница управляющего воздействия
+- key: …_PID_fYMax
+  default: '100.0'
+  description: Максимальная граница управляющего воздействия
+- key: …_PID_fYLoLimit
+  default: '0.0'
+  description: Ограничение регулирования снизу
+- key: …_PID_fYHiLimit
+  default: '100.0'
+  description: Ограничение регулирования сверху
+- key: …_PID_fOffValue
+  default: '0.0'
+  description: Значение в выключенном состоянии
+- key: …_OUT_fRawMin
+  default: ADC_4_IN_0_20
+  description: Минимум аналогового выхода
+- key: …_OUT_fRawMax
+  default: ADC_MAX_VALUE
+  description: Максимум аналогового выхода
+hmi:
+- tag: PID.out_fY
+  description: Управляющее воздействие
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: Да
+- tag: PID.out_fYS
+  description: Накопленное управляющее воздействие
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: Да
+- tag: PID.inout_bYManual
+  description: Ручной режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: PID.inout_fYManual
+  description: Управление в ручном режиме
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+optional_hmi: []
+common_mistakes:
+- Оставить служебные значения _ID_, _DI_, _DO_ или _AO_ вместо реальных тегов проекта.
+- Не проверить классы сообщений и доступность настроек на HMI после генерации проекта.

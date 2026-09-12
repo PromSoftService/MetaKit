@@ -12,807 +12,354 @@ from pathlib import Path
 from typing import Any
 
 import markdown
-
-from metakitlib import (
-    DATA_COLUMNS,
-    REPOSITORY_ROOT,
-    component_instances,
-    discover_components,
-    is_blank_row,
-    load_catalog,
-    load_component_guide,
-    load_config,
-    non_blank_data_rows,
-    parameter_defaults,
-    parameter_groups,
-    parameter_keys,
-    template_kind_label,
-    unique_blocks,
-)
+import yaml
 
 
-KIND_ORDER = {"LibTempls": 0, "UnitsTmpls": 1, "SysTmpls": 2}
+ROOT = Path(__file__).resolve().parents[1]
+KIND_ORDER = {"Lib": 0, "Unit": 1, "Sys": 2}
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build static MetaKit documentation")
-    parser.add_argument("--output", default="dist/docs", help="Output directory")
-    parser.add_argument("--base-url", default="/docs/", help="Public URL prefix")
-    parser.add_argument("--timestamp", help="UTC timestamp in YYYYMMDD_HHMMSS format")
+    parser = argparse.ArgumentParser(description="Build the MetaKit documentation site")
+    parser.add_argument("--output", default="dist/docs")
+    parser.add_argument("--base-url", default="/docs/")
+    parser.add_argument("--timestamp", help="UTC timestamp: YYYYMMDD_HHMMSS")
     return parser.parse_args()
 
 
-def normalize_base_url(value: str) -> str:
-    value = "/" + value.strip("/")
-    return value + "/"
+def esc(value: Any, *, quote: bool = False) -> str:
+    return html.escape(str(value or ""), quote=quote)
+
+
+def normalize_base(value: str) -> str:
+    return "/" + value.strip("/") + "/"
+
+
+def link(base: str, relative: str = "") -> str:
+    return base + relative.lstrip("/")
+
+
+def write(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8", newline="\n")
 
 
 def clean_output(path: Path) -> None:
     resolved = path.resolve()
     if resolved == Path(resolved.anchor) or len(resolved.parts) < 3:
-        raise ValueError(f"Refusing to clean unsafe output path: {resolved}")
+        raise ValueError(f"Unsafe output path: {resolved}")
     if resolved.exists():
         shutil.rmtree(resolved)
-    resolved.mkdir(parents=True, exist_ok=True)
+    resolved.mkdir(parents=True)
 
 
-def write_text(path: Path, value: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(value, encoding="utf-8", newline="\n")
+def load_yaml(path: Path) -> dict[str, Any]:
+    document = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(document, dict):
+        raise ValueError(f"Expected a mapping in {path}")
+    return document
 
 
-def url(base_url: str, relative: str = "") -> str:
-    return base_url + relative.lstrip("/")
+def load_guides() -> list[dict[str, Any]]:
+    guides = []
+    for path in sorted((ROOT / "docs/components").glob("*.yaml")):
+        guide = load_yaml(path)
+        guide["guide_path"] = path.relative_to(ROOT).as_posix()
+        guides.append(guide)
+    return sorted(guides, key=lambda item: (
+        KIND_ORDER.get(str(item.get("kind")), 99),
+        str(item.get("category")),
+        str(item.get("title")),
+    ))
 
 
-def markdown_html(path: Path, *, drop_first_heading: bool = False) -> str:
-    source = path.read_text(encoding="utf-8")
-    if drop_first_heading:
-        source = re.sub(r"^#\s+.+?\n+", "", source, count=1)
-    return markdown.markdown(source, extensions=["fenced_code", "tables", "toc"])
+def markdown_file(path: Path) -> str:
+    return markdown.markdown(path.read_text(encoding="utf-8"), extensions=["fenced_code", "tables", "toc"])
 
 
-def component_href(base_url: str, component: dict[str, Any]) -> str:
-    return url(base_url, f"components/{component['slug']}/")
+def badge(kind: str) -> str:
+    modifier = {"Unit": " badge-unit", "Sys": " badge-sys"}.get(kind, "")
+    return f'<span class="badge{modifier}">{esc(kind)}</span>'
 
 
-def render_sidebar(base_url: str, active: str) -> str:
-    items = [
-        ("overview", "Обзор", ""),
-        ("catalog", "Каталог компонентов", "components/"),
-        ("types", "Типы компонентов", "concepts/component-types/"),
-        ("params", "Params и Data", "concepts/params-and-data/"),
-        ("custom", "Собственный контур", "guides/custom-unit/"),
-        ("shared", "Общие настройки", "guides/shared-configuration/"),
-        ("watchdog", "WatchDog", "guides/watchdog/"),
-        ("deployment", "Сборка и развёртывание", "deployment/"),
+def sidebar(base: str, active: str) -> str:
+    groups = [
+        ("MetaKit", [("overview", "Обзор", ""), ("catalog", "Компоненты", "components/")]),
+        ("Основные понятия", [("types", "Типы компонентов", "concepts/component-types/")]),
+        ("Руководства", [
+            ("custom", "Собственный контур", "guides/custom-unit/"),
+            ("shared", "Общие настройки", "guides/shared-configuration/"),
+            ("watchdog", "WatchDog", "guides/watchdog/"),
+        ]),
+        ("Эксплуатация", [("deployment", "Сборка и развёртывание", "deployment/")]),
     ]
-    rows: list[str] = []
-    current_group = ""
-    groups = {
-        "overview": "MetaKit",
-        "types": "Основные понятия",
-        "custom": "Руководства",
-        "deployment": "Эксплуатация",
-    }
-    for key, label, href in items:
-        if key in groups and groups[key] != current_group:
-            current_group = groups[key]
-            rows.append(f'<div class="sidebar-title">{html.escape(current_group)}</div>')
-        class_name = "active" if active == key else ""
-        rows.append(f'<a class="{class_name}" href="{url(base_url, href)}">{html.escape(label)}</a>')
-    return "\n".join(rows)
+    rows = []
+    for title, items in groups:
+        rows.append(f'<div class="sidebar-title">{esc(title)}</div>')
+        for key, label, target in items:
+            current = " active" if key == active else ""
+            rows.append(f'<a class="sidebar-link{current}" href="{link(base, target)}">{esc(label)}</a>')
+    return "".join(rows)
 
 
-def render_page(
-    *,
-    config: dict[str, Any],
-    base_url: str,
-    title: str,
-    body: str,
-    active: str,
-    build_timestamp: str,
-    description: str = "",
-) -> str:
-    page_title = f"{title} — MetaKit"
-    description = description or str(config.get("description", ""))
-    sidebar = render_sidebar(base_url, active)
-    return f"""<!doctype html>
+def page(*, config: dict[str, Any], base: str, title: str, body: str, active: str, built_at: str, description: str = "") -> str:
+    return f'''<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{html.escape(description, quote=True)}">
-  <title>{html.escape(page_title)}</title>
-  <link rel="stylesheet" href="{url(base_url, 'assets/styles.css')}">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="{esc(description or config.get('description'), quote=True)}">
+  <title>{esc(title)} — MetaKit</title>
+  <link rel="stylesheet" href="{link(base, 'assets/styles.css')}">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="{url(base_url)}">
-      <span class="brand-mark">TENION</span>
-      <span class="brand-divider"></span>
-      <span class="brand-product">MetaKit</span>
-    </a>
-    <div class="top-meta">
-      <span class="desktop-only">Версия {html.escape(str(config.get('version', 'current')))}</span>
-      <button class="mobile-nav" type="button" data-mobile-nav>Меню</button>
-    </div>
+    <a class="brand" href="{base}"><span class="brand-product">MetaKit</span><span class="brand-note">документация</span></a>
+    <button class="nav-button" type="button" data-mobile-nav>Меню</button>
   </header>
   <div class="layout">
-    <aside class="sidebar">{sidebar}</aside>
-    <main class="content">
-      {body}
-      <footer class="footer">MetaKit {html.escape(str(config.get('version', 'current')))} · build {html.escape(build_timestamp)} · PromSoftService</footer>
+    <aside class="sidebar" data-sidebar>{sidebar(base, active)}</aside>
+    <main class="content">{body}
+      <footer class="footer">MetaKit · версия {esc(config.get('version', 'current'))} · {esc(built_at)}</footer>
     </main>
   </div>
-  <script src="{url(base_url, 'assets/app.js')}"></script>
+  <script src="{link(base, 'assets/app.js')}"></script>
 </body>
-</html>
-"""
+</html>'''
 
 
-def render_badge(kind: str) -> str:
-    label = template_kind_label(kind)
-    modifier = {"Unit": "badge-unit", "Sys": "badge-sys"}.get(label, "")
-    return f'<span class="badge {modifier}">{html.escape(label)}</span>'
+def list_html(items: Any) -> str:
+    if not isinstance(items, list):
+        return ""
+    return '<ul class="plain-list">' + "".join(f"<li>{esc(item)}</li>" for item in items) + "</ul>"
 
 
-def render_component_card(component: dict[str, Any], base_url: str) -> str:
-    search = " ".join(
-        [
-            component["name"],
-            component["title"],
-            component["summary"],
-            component["category"],
-            *component["blocks"],
+def guide_link(base: str, guide: dict[str, Any]) -> str:
+    return link(base, f"components/{guide['slug']}/")
+
+
+def source_relative(guide: dict[str, Any]) -> str:
+    return str(guide["source"]).removeprefix("yaml/")
+
+
+def card(base: str, guide: dict[str, Any]) -> str:
+    search = " ".join(str(guide.get(key, "")) for key in ("component", "title", "category", "summary")).lower()
+    return f'''<a class="component-card" href="{guide_link(base, guide)}" data-search="{esc(search, quote=True)}" data-kind="{esc(guide['kind'], quote=True)}">
+  <div class="card-meta">{badge(str(guide['kind']))}<span>{esc(guide['category'])}</span></div>
+  <h3>{esc(guide['title'])}</h3>
+  <p>{esc(guide['summary'])}</p>
+  <span class="card-code">{esc(guide['component'])}</span>
+</a>'''
+
+
+def render_diagram(guide: dict[str, Any]) -> str:
+    lanes = guide.get("diagram", {}).get("lanes", [])
+    rendered = []
+    for lane_index, lane in enumerate(lanes):
+        if not isinstance(lane, list) or not lane:
+            continue
+        width, node_height = 920, 92
+        node_width = min(190, max(130, int((width - 48 - (len(lane) - 1) * 52) / len(lane))))
+        gap = (width - 48 - node_width * len(lane)) / max(1, len(lane) - 1)
+        marker = f"arrow-{guide['slug']}-{lane_index}"
+        parts = [
+            f'<svg class="flow-svg" viewBox="0 0 {width} 140" role="img" aria-label="Схема обработки">',
+            f'<defs><marker id="{marker}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs>',
         ]
-    ).lower()
-    badges = [render_badge(component["kind"])]
-    badges.extend(f'<span class="badge">{html.escape(block)}</span>' for block in component["blocks"][:3])
-    return f"""
-<a class="card component-card" href="{component_href(base_url, component)}"
-   data-search="{html.escape(search, quote=True)}"
-   data-kind="{html.escape(template_kind_label(component['kind']))}"
-   data-category="{html.escape(component['category'], quote=True)}">
-  <div class="badges">{''.join(badges)}</div>
-  <h3>{html.escape(component['title'])}</h3>
-  <p>{html.escape(component['summary'])}</p>
-  <div class="card-path">{html.escape(component['relative_path'])}</div>
-</a>
-"""
+        for index, label in enumerate(lane):
+            x, y = 24 + index * (node_width + gap), 24
+            css = "flow-node flow-hmi" if "HMI" in str(label) else "flow-node"
+            lines = [part.strip() for part in str(label).splitlines() if part.strip()]
+            parts.append(f'<rect class="{css}" x="{x:.1f}" y="{y}" width="{node_width}" height="{node_height}" rx="5"/>')
+            start_y = y + 39 - (len(lines) - 1) * 10
+            for line_no, text in enumerate(lines[:3]):
+                class_name = "flow-title" if line_no == 0 else "flow-label"
+                parts.append(f'<text class="{class_name}" x="{x + node_width / 2:.1f}" y="{start_y + line_no * 22}">{esc(text)}</text>')
+            if index < len(lane) - 1:
+                parts.append(f'<line class="flow-arrow" x1="{x + node_width + 6:.1f}" y1="70" x2="{x + node_width + gap - 7:.1f}" y2="70" marker-end="url(#{marker})"/>')
+        parts.append("</svg>")
+        rendered.append('<div class="flow-lane">' + "".join(parts) + "</div>")
+    return '<div class="flow-diagram">' + "".join(rendered) + "</div>" if rendered else ""
 
 
-def render_stats(items: list[tuple[str, str]]) -> str:
-    return '<div class="stats">' + "".join(
-        f'<div class="stat"><span class="stat-value">{html.escape(value)}</span><span class="stat-label">{html.escape(label)}</span></div>'
-        for value, label in items
-    ) + "</div>"
-
-
-def render_parameter_groups(document: dict[str, Any]) -> str:
-    sections: list[str] = []
-    for index, group in enumerate(parameter_groups(document), start=1):
-        keys = group[0]
-        value_rows = group[1:] or [[""] * len(keys)]
-        first_key = next((value for value in keys if value), "")
-        first_value = value_rows[0][0] if value_rows and value_rows[0] else ""
-        title = first_value if first_key.startswith("$") and first_value else f"Группа параметров {index}"
-        header_cells = "".join(f"<th><code>{html.escape(key)}</code></th>" for key in keys)
-        rows: list[str] = []
-        for row in value_rows:
-            padded = [*row, *([""] * max(0, len(keys) - len(row)))]
-            rows.append("<tr>" + "".join(f"<td><code>{html.escape(value)}</code></td>" for value in padded[: len(keys)]) + "</tr>")
-        sections.append(
-            f'<h3>{html.escape(title)}</h3><div class="table-wrap"><table><thead><tr>{header_cells}</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
+def render_parameter_groups(groups: Any) -> str:
+    result = []
+    for group in groups or []:
+        items = group.get("items", [])
+        title = str(group.get("title", ""))
+        if title.startswith("Группа параметров") and items:
+            first = str(items[0].get("key", ""))
+            if first.startswith("Eng"):
+                title = "Подключение двигателя"
+            elif first.startswith("Valve"):
+                title = "Подключение клапана"
+            elif first.startswith("CtrlValve"):
+                title = "Подключение регулирующего клапана"
+            elif first.startswith(("PID", "PIDD", "Sens")):
+                title = "Измерение и регулятор"
+            elif first.startswith("Out"):
+                title = "Подключение аналогового выхода"
+            elif first.startswith("Flt"):
+                match = re.search(r"(\d+)$", first)
+                title = f"Аварийный сигнал {match.group(1)}" if match else "Аварийные сигналы"
+            elif first.startswith("Wrn"):
+                match = re.search(r"(\d+)$", first)
+                title = f"Предупреждение {match.group(1)}" if match else "Предупреждения"
+            else:
+                title = "Подключение и команды"
+        keys = "".join(f'<div class="parameter-key"><code>{esc(item.get("key"))}</code></div>' for item in items)
+        values = "".join(f'<div class="parameter-value"><code>{esc(item.get("example", item.get("default")))}</code></div>' for item in items)
+        details = "".join(
+            f'<div class="parameter-description"><code>{esc(item.get("key"))}</code><p>{esc(item.get("description"))}</p><span>По умолчанию: <code>{esc(item.get("default"))}</code></span></div>'
+            for item in items
         )
-    return "".join(sections)
+        result.append(f'<section class="parameter-group"><h3>{esc(title)}</h3><div class="parameter-strip"><div class="parameter-row">{keys}</div><div class="parameter-row">{values}</div></div><div class="parameter-details">{details}</div></section>')
+    return "".join(result)
 
 
-def render_data_table(document: dict[str, Any]) -> str:
-    header_cells = "".join(f"<th>{html.escape(column)}</th>" for column in DATA_COLUMNS)
-    body_rows: list[str] = []
-    code_columns = {"Type", "Data block", "Tag", "Value", "HMI", "Flt", "Wrn", "Alm", "Trend", "Conf"}
-    for raw_row in document.get("data", {}).get("rows", []):
-        if is_blank_row(raw_row):
-            body_rows.append(f'<tr class="separator-row"><td colspan="{len(DATA_COLUMNS)}"></td></tr>')
-            continue
-        row = [*raw_row, *([""] * max(0, len(DATA_COLUMNS) - len(raw_row)))]
-        cells: list[str] = []
-        for column, value in zip(DATA_COLUMNS, row):
-            value_text = "" if value is None else str(value)
-            rendered = html.escape(value_text)
-            if value_text and column in code_columns:
-                rendered = f"<code>{rendered}</code>"
-            cells.append(f"<td>{rendered}</td>")
-        body_rows.append("<tr>" + "".join(cells) + "</tr>")
-    return f'<div class="table-wrap"><table><thead><tr>{header_cells}</tr></thead><tbody>{"".join(body_rows)}</tbody></table></div>'
+def human_cell(value: Any, field: str) -> str:
+    text = str(value or "")
+    if field == "default":
+        match = re.fullmatch(r'%"" if .+ else "([^"]*)"%', text)
+        if match:
+            text = match.group(1)
+    if field in {"key", "tag", "source"}:
+        text = text.removesuffix('"%')
+        text = re.sub(r"\|([^|]+)\|", r"<\1>", text)
+    return text
 
 
-def render_instances(document: dict[str, Any]) -> str:
-    rows = component_instances(document)
+def render_table(rows: Any, headers: tuple[str, ...], fields: tuple[str, ...], *, empty: str = "Нет отдельных тегов в этой группе.") -> str:
     if not rows:
-        return "<p>Компонент не создаёт экземпляры функциональных блоков.</p>"
-    body = "".join(
-        f"<tr><td><code>{html.escape(name)}</code></td><td><code>{html.escape(block)}</code></td></tr>"
-        for name, block in rows
-    )
-    return f'<div class="table-wrap"><table><thead><tr><th>Экземпляр</th><th>Тип MetaLib</th></tr></thead><tbody>{body}</tbody></table></div>'
+        return f'<p class="empty-note">{esc(empty)}</p>'
+    head = "".join(f"<th>{esc(item)}</th>" for item in headers)
+    body = []
+    for row in rows:
+        cells = []
+        for field in fields:
+            value = human_cell(row.get(field, ""), field)
+            is_code = field in {"key", "tag", "default", "flag", "source"}
+            content = f"<code>{esc(value)}</code>" if is_code and value != "" else esc(value)
+            cells.append(f"<td>{content}</td>")
+        body.append("<tr>" + "".join(cells) + "</tr>")
+    return f'<div class="table-wrap"><table><thead><tr>{head}</tr></thead><tbody>{"".join(body)}</tbody></table></div>'
 
 
-def render_rich_text(value: Any) -> str:
-    return markdown.markdown(str(value or ""), extensions=["fenced_code", "tables"])
+def component_page(guide: dict[str, Any], guides: list[dict[str, Any]], *, config: dict[str, Any], base: str, built_at: str) -> str:
+    source_link = link(base, f"downloads/components/{source_relative(guide)}")
+    application = guide.get("application", {})
+    example = guide.get("example", {})
+    related = [item for item in guides if item["slug"] != guide["slug"] and item.get("category") == guide.get("category")][:3]
+    related_html = "" if not related else '<section><h2>Похожие компоненты</h2><div class="component-grid">' + "".join(card(base, item) for item in related) + "</div></section>"
+    body = f'''
+<nav class="breadcrumbs"><a href="{base}">MetaKit</a><span>/</span><a href="{link(base, 'components/')}">Компоненты</a><span>/</span>{esc(guide['title'])}</nav>
+<header class="document-header">
+  <div class="document-meta">{badge(str(guide['kind']))}<span>{esc(guide['category'])}</span><code>{esc(guide['component'])}</code></div>
+  <h1>{esc(guide['title'])}</h1><p class="lead">{esc(guide['summary'])}</p>
+  <a class="button" href="{source_link}" download>Скачать компонент YAML</a>
+</header>
+<section><h2>Описание</h2><p>{esc(guide['description'])}</p>{render_diagram(guide)}</section>
+<section><h2>Когда применять</h2><div class="usage-grid"><article><h3>Подходит</h3>{list_html(guide.get('use_cases'))}</article><article><h3>Не подходит</h3>{list_html(guide.get('not_for'))}</article></div></section>
+<section id="application"><h2>Применение</h2><p>{esc(application.get('intro'))}</p>{render_parameter_groups(guide.get('parameter_groups'))}<div class="result"><strong>Что получится</strong><p>{esc(application.get('result'))}</p></div></section>
+<section><h2>Пример использования</h2><article class="example"><h3>{esc(example.get('title'))}</h3><p>{esc(example.get('scenario'))}</p><div class="result"><strong>Результат</strong><p>{esc(example.get('result'))}</p></div></article></section>
+<section><h2>Настройки</h2><p>Эти значения создаются в области конфигурации и могут использоваться на HMI для наладки.</p>{render_table(guide.get('settings'), ('Тег настройки', 'По умолчанию', 'Назначение'), ('key', 'default', 'description'))}</section>
+<section><h2>Теги для HMI и сообщения</h2><p>Рабочие значения, состояния и сообщения, которые компонент предлагает вывести оператору.</p>{render_table(guide.get('hmi'), ('Тег', 'HMI', 'Flt', 'Wrn', 'Alm', 'Trend', 'Назначение'), ('tag', 'hmi', 'flt', 'wrn', 'alm', 'trend', 'description'))}</section>
+<section><h2>Дополнительные теги HMI</h2>{render_table(guide.get('optional_hmi'), ('Тег', 'Назначение'), ('tag', 'description'), empty='Дополнительные теги не требуются.')}</section>
+<section><h2>Частые ошибки</h2><div class="note warning">{list_html(guide.get('common_mistakes'))}</div></section>
+{related_html}'''
+    return page(config=config, base=base, title=str(guide["title"]), body=body, active="catalog", built_at=built_at, description=str(guide["summary"]))
 
 
-def render_text_list(items: Any) -> str:
-    if not isinstance(items, list):
-        return ""
-    return '<ul class="prose-list">' + "".join(
-        f"<li>{render_rich_text(item)}</li>" for item in items
-    ) + "</ul>"
+def catalog_page(guides: list[dict[str, Any]], *, config: dict[str, Any], base: str, archive: str, built_at: str) -> str:
+    cards = "".join(card(base, item) for item in guides)
+    body = f'''<nav class="breadcrumbs"><a href="{base}">MetaKit</a><span>/</span>Компоненты</nav>
+<header class="document-header"><p class="overline">Справочник MetaKit</p><h1>Компоненты</h1><p class="lead">Готовые компоненты MetaGen с понятным описанием применения, параметров, настроек и данных для HMI.</p><a class="button" href="{link(base, 'downloads/' + archive)}" download>Скачать MetaKit</a></header>
+<div class="catalog-tools"><input type="search" placeholder="Найти компонент" aria-label="Найти компонент" data-component-search><div class="filter-buttons"><button class="filter active" data-kind-button="">Все</button><button class="filter" data-kind-button="Lib">Lib</button><button class="filter" data-kind-button="Unit">Unit</button><button class="filter" data-kind-button="Sys">Sys</button></div></div>
+<div class="component-grid" data-component-grid>{cards}</div><p class="empty-note" data-empty-state hidden>Ничего не найдено.</p>'''
+    return page(config=config, base=base, title="Компоненты", body=body, active="catalog", built_at=built_at)
 
 
-def render_how_it_works(items: Any) -> str:
-    if not isinstance(items, list):
-        return ""
-    cards: list[str] = []
-    for item in items:
-        if not isinstance(item, dict):
-            continue
-        cards.append(
-            '<article class="explain-card">'
-            f'<h3>{html.escape(str(item.get("title", "")))}</h3>'
-            f'{render_rich_text(item.get("text", ""))}'
-            '</article>'
-        )
-    return '<div class="explain-grid">' + "".join(cards) + "</div>"
+def home_page(guides: list[dict[str, Any]], *, config: dict[str, Any], base: str, archive: str, built_at: str) -> str:
+    counts = {kind: sum(item.get("kind") == kind for item in guides) for kind in KIND_ORDER}
+    featured_names = {"Sensor", "Engine", "PidEngineUnit", "General", "WDMaster"}
+    featured = [item for item in guides if item.get("component") in featured_names]
+    body = f'''<header class="home-header"><p class="overline">MetaGen component kit</p><h1>MetaKit</h1><p class="lead">Документация по стандартным компонентам автоматизации: от отдельного датчика до готового контура управления.</p><div class="header-actions"><a class="button primary" href="{link(base, 'components/')}">Открыть каталог</a><a class="button" href="{link(base, 'downloads/' + archive)}" download>Скачать MetaKit</a></div></header>
+<div class="stats"><div><strong>{len(guides)}</strong><span>компонентов</span></div><div><strong>{counts['Lib']}</strong><span>Lib</span></div><div><strong>{counts['Unit']}</strong><span>Unit</span></div><div><strong>{counts['Sys']}</strong><span>Sys</span></div></div>
+<section class="prose">{markdown_file(ROOT / 'docs/index.md')}</section><section><h2>С чего начать</h2><div class="component-grid">{"".join(card(base, item) for item in featured)}</div></section>'''
+    return page(config=config, base=base, title="Документация", body=body, active="overview", built_at=built_at)
 
 
-def render_quick_start(items: Any) -> str:
-    if not isinstance(items, list):
-        return ""
-    return '<ol class="steps">' + "".join(
-        f'<li><span>{index}</span><div>{render_rich_text(item)}</div></li>'
-        for index, item in enumerate(items, start=1)
-    ) + "</ol>"
-
-
-def render_examples(items: Any) -> str:
-    if not isinstance(items, list):
-        return ""
-    sections: list[str] = []
-    for item in items:
-        if not isinstance(item, dict):
-            continue
-        rows: list[str] = []
-        for raw_row in item.get("parameters", []):
-            if not isinstance(raw_row, list):
-                continue
-            row = [*raw_row, "", ""][:3]
-            rows.append(
-                "<tr>"
-                f"<td><code>{html.escape(str(row[0]))}</code></td>"
-                f"<td><code>{html.escape(str(row[1]))}</code></td>"
-                f"<td>{html.escape(str(row[2]))}</td>"
-                "</tr>"
-            )
-        table = (
-            '<div class="table-wrap example-table"><table><thead><tr>'
-            '<th>Параметр</th><th>Значение</th><th>Почему</th>'
-            f'</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
-        )
-        sections.append(
-            '<article class="example-card">'
-            f'<h3>{html.escape(str(item.get("title", "")))}</h3>'
-            f'<div class="example-scenario">{render_rich_text(item.get("scenario", ""))}</div>'
-            f'{table}'
-            '<div class="example-result"><strong>Результат</strong>'
-            f'{render_rich_text(item.get("result", ""))}</div>'
-            '</article>'
-        )
-    return "".join(sections)
-
-
-def render_parameter_reference(document: dict[str, Any], guide: dict[str, Any]) -> str:
-    descriptions = guide.get("parameters", {})
-    rows: list[str] = []
-    previous_group: int | None = None
-    for key, default, group_index in parameter_defaults(document):
-        if previous_group is not None and group_index != previous_group:
-            rows.append('<tr class="separator-row"><td colspan="4"></td></tr>')
-        previous_group = group_index
-        item = descriptions.get(key, {}) if isinstance(descriptions, dict) else {}
-        description = str(item.get("description", "")) if isinstance(item, dict) else ""
-        example = str(item.get("example", "")) if isinstance(item, dict) else ""
-        rows.append(
-            "<tr>"
-            f"<td><code>{html.escape(key)}</code></td>"
-            f"<td>{html.escape(description)}</td>"
-            f"<td><code>{html.escape(default)}</code></td>"
-            f"<td><code>{html.escape(example)}</code></td>"
-            "</tr>"
-        )
-    return (
-        '<div class="table-wrap parameter-reference"><table><thead><tr>'
-        '<th>Параметр</th><th>Что означает и что вводить</th><th>По умолчанию</th><th>Пример</th>'
-        f'</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
-    )
-
-
-def render_signal_cards(items: Any) -> str:
-    if not isinstance(items, list):
-        return ""
-    rows: list[str] = []
-    for item in items:
-        if not isinstance(item, dict):
-            continue
-        storage = str(item.get("storage", ""))
-        storage_html = f'<span class="signal-storage">{html.escape(storage)}</span>' if storage else ""
-        rows.append(
-            '<article class="signal-card">'
-            f'<div class="signal-heading"><h3>{html.escape(str(item.get("name", "")))}</h3>{storage_html}</div>'
-            f'<code>{html.escape(str(item.get("source", "")))}</code>'
-            f'<p>{html.escape(str(item.get("description", "")))}</p>'
-            '</article>'
-        )
-    return '<div class="signal-grid">' + "".join(rows) + "</div>"
-
-
-def render_diagnostics(items: Any) -> str:
-    if not isinstance(items, list):
-        return ""
-    rows: list[str] = []
-    for item in items:
-        if not isinstance(item, dict):
-            continue
-        rows.append(
-            "<tr>"
-            f'<td><span class="diagnostic-level">{html.escape(str(item.get("level", "")))}</span></td>'
-            f'<td><code>{html.escape(str(item.get("signal", "")))}</code></td>'
-            f'<td>{html.escape(str(item.get("message", "")))}</td>'
-            f'<td>{html.escape(str(item.get("condition", "")))}</td>'
-            f'<td>{html.escape(str(item.get("reset", "")))}</td>'
-            "</tr>"
-        )
-    return (
-        '<div class="table-wrap"><table><thead><tr>'
-        '<th>Уровень</th><th>Источник</th><th>Сообщение</th><th>Когда возникает</th><th>Сброс</th>'
-        f'</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
-    )
-
-
-def render_guided_component_page(
-    component: dict[str, Any],
-    all_components: list[dict[str, Any]],
-    *,
-    config: dict[str, Any],
-    base_url: str,
-    build_timestamp: str,
-) -> str:
-    document = component["document"]
-    guide = component["guide"]
-    download_url = url(base_url, f"downloads/components/{component['relative_path']}")
-    related = [
-        item for item in all_components
-        if item["relative_path"] != component["relative_path"] and item["category"] == component["category"]
-    ][:4]
-    related_html = "".join(render_component_card(item, base_url) for item in related)
-    code = str(document.get("code", {}).get("text", ""))
-    code_id = f"code-{component['slug']}"
-    hmi = guide.get("hmi", {}) if isinstance(guide.get("hmi"), dict) else {}
-    body = f"""
-<div class="breadcrumbs"><a href="{url(base_url)}">MetaKit</a><span>/</span><a href="{url(base_url, 'components/')}">Компоненты</a><span>/</span>{html.escape(component['name'])}</div>
-<section class="hero guide-hero">
-  <div class="eyebrow">{render_badge(component['kind'])} {html.escape(component['category'])} · руководство</div>
-  <h1>{html.escape(component['title'])}</h1>
-  <div class="lead">{render_rich_text(guide.get('intro', component['summary']))}</div>
-  <div class="hero-actions">
-    <a class="button button-primary" href="#quick-start">Начать настройку</a>
-    <a class="button" href="#parameters">Параметры</a>
-    <a class="button" href="{download_url}" download>Скачать YAML</a>
-  </div>
-</section>
-
-<div class="guide-columns">
-  <section class="guide-panel guide-panel-positive">
-    <h2>Когда использовать</h2>
-    {render_text_list(guide.get('use_cases'))}
-  </section>
-  <section class="guide-panel">
-    <h2>Когда выбрать другой компонент</h2>
-    {render_text_list(guide.get('not_for'))}
-  </section>
-</div>
-
-<h2>Как проходит сигнал</h2>
-{render_how_it_works(guide.get('how_it_works'))}
-
-<h2 id="quick-start">Быстрый старт</h2>
-{render_quick_start(guide.get('quick_start'))}
-
-<h2>Примеры использования</h2>
-{render_examples(guide.get('examples'))}
-
-<h2 id="parameters">Параметры компонента</h2>
-<p>Описание показывает не только техническое имя, но и какое значение должен ввести инженер. Значения по умолчанию считываются непосредственно из актуального YAML.</p>
-{render_parameter_reference(document, guide)}
-
-<h2>Что появится на HMI по умолчанию</h2>
-{render_signal_cards(hmi.get('default'))}
-<div class="callout">{html.escape(str(hmi.get('settings_note', '')))}</div>
-
-<h2>Что можно вывести дополнительно</h2>
-<p>Эти выходы существуют в MetaLib, но строки для них не добавлены в Data компонента по умолчанию.</p>
-{render_signal_cards(hmi.get('optional'))}
-
-<h2>Аварии и предупреждения</h2>
-{render_diagnostics(guide.get('diagnostics'))}
-
-<h2>Частые ошибки</h2>
-<div class="warning-panel">{render_text_list(guide.get('common_mistakes'))}</div>
-
-<h2>Для разработчика компонентов</h2>
-<p>Ниже находится точное представление исходного MetaGen-компонента. Для обычной настройки Sensor этот раздел не требуется.</p>
-<details>
-  <summary>Исходная таблица Params</summary>
-  {render_parameter_groups(document)}
-</details>
-<details>
-  <summary>Исходная таблица Data</summary>
-  {render_data_table(document)}
-</details>
-<details>
-  <summary>Экземпляры MetaLib</summary>
-  {render_instances(document)}
-</details>
-<details id="code">
-  <summary>ST-шаблон генерации</summary>
-  <div class="code-shell"><button class="copy-button" type="button" data-copy="{code_id}">Копировать</button><pre><code id="{code_id}">{html.escape(code)}</code></pre></div>
-</details>
-<details>
-  <summary>Сведения об исходном файле</summary>
-  <p><code>{html.escape(component['relative_path'])}</code></p>
-  <p>UUID компонента: <code>{html.escape(str(document['component']['id']))}</code></p>
-</details>
-{f'<h2>Похожие компоненты</h2><div class="cards">{related_html}</div>' if related_html else ''}
-"""
-    return render_page(
-        config=config,
-        base_url=base_url,
-        title=component["title"],
-        body=body,
-        active="catalog",
-        build_timestamp=build_timestamp,
-        description=component["summary"],
-    )
-
-
-def render_component_page(
-    component: dict[str, Any],
-    all_components: list[dict[str, Any]],
-    *,
-    config: dict[str, Any],
-    base_url: str,
-    build_timestamp: str,
-) -> str:
-    if component.get("guide"):
-        return render_guided_component_page(
-            component,
-            all_components,
-            config=config,
-            base_url=base_url,
-            build_timestamp=build_timestamp,
-        )
-    document = component["document"]
-    download_url = url(base_url, f"downloads/components/{component['relative_path']}")
-    block_badges = "".join(f'<span class="badge">{html.escape(block)}</span>' for block in component["blocks"])
-    related = [
-        item for item in all_components
-        if item["relative_path"] != component["relative_path"] and item["category"] == component["category"]
-    ][:4]
-    related_html = "".join(render_component_card(item, base_url) for item in related)
-    code = str(document.get("code", {}).get("text", ""))
-    code_id = f"code-{component['slug']}"
-    body = f"""
-<div class="breadcrumbs"><a href="{url(base_url)}">MetaKit</a><span>/</span><a href="{url(base_url, 'components/')}">Компоненты</a><span>/</span>{html.escape(component['name'])}</div>
-<section class="hero">
-  <div class="eyebrow">{render_badge(component['kind'])} {html.escape(component['category'])}</div>
-  <h1>{html.escape(component['title'])}</h1>
-  <p class="lead">{html.escape(component['summary'])}</p>
-  <div class="badges">{block_badges}</div>
-  <div class="hero-actions">
-    <a class="button button-primary" href="{download_url}" download>Скачать YAML</a>
-    <a class="button" href="#params">Параметры</a>
-    <a class="button" href="#code">ST-шаблон</a>
-  </div>
-</section>
-<div class="callout"><strong>Когда использовать:</strong> {html.escape(component['use_when'])}</div>
-{render_stats([
-    (str(len(parameter_keys(document))), "параметров"),
-    (str(len(non_blank_data_rows(document))), "строк Data"),
-    (str(len(component_instances(document))), "экземпляров"),
-    (template_kind_label(component['kind']), "уровень"),
-])}
-<h2 id="params">Таблица параметров</h2>
-<p>Группы и значения приведены в том же порядке, что и в исходном компоненте MetaGen.</p>
-{render_parameter_groups(document)}
-<h2>Таблица данных</h2>
-<p>Пустые строки сохраняют смысловое разделение настроек и тегов функциональных блоков.</p>
-{render_data_table(document)}
-<h2>Экземпляры</h2>
-{render_instances(document)}
-<h2 id="code">ST-шаблон</h2>
-<details>
-  <summary>Показать исходный шаблон генерации</summary>
-  <div class="code-shell"><button class="copy-button" type="button" data-copy="{code_id}">Копировать</button><pre><code id="{code_id}">{html.escape(code)}</code></pre></div>
-</details>
-<h2>Исходный файл</h2>
-<p><code>{html.escape(component['relative_path'])}</code></p>
-<p>UUID компонента: <code>{html.escape(str(document['component']['id']))}</code></p>
-{f'<h2>Похожие компоненты</h2><div class="cards">{related_html}</div>' if related_html else ''}
-"""
-    return render_page(
-        config=config,
-        base_url=base_url,
-        title=component["title"],
-        body=body,
-        active="catalog",
-        build_timestamp=build_timestamp,
-        description=component["summary"],
-    )
-
-
-def render_catalog_page(
-    components: list[dict[str, Any]],
-    *,
-    config: dict[str, Any],
-    base_url: str,
-    archive_name: str,
-    build_timestamp: str,
-) -> str:
-    categories = sorted({component["category"] for component in components})
-    category_options = "".join(f'<option value="{html.escape(value, quote=True)}">{html.escape(value)}</option>' for value in categories)
-    cards = "".join(render_component_card(component, base_url) for component in components)
-    body = f"""
-<div class="breadcrumbs"><a href="{url(base_url)}">MetaKit</a><span>/</span>Компоненты</div>
-<section class="hero">
-  <div class="eyebrow">Справочник</div>
-  <h1>Каталог компонентов</h1>
-  <p class="lead">Актуальные Lib, Unit и Sys-компоненты MetaKit. Каждая страница построена непосредственно из исходного YAML.</p>
-  <div class="hero-actions"><a class="button button-primary" href="{url(base_url, f'downloads/{archive_name}')}" download>Скачать весь MetaKit</a></div>
-</section>
-<div class="search-panel">
-  <input type="search" placeholder="Компонент, блок или назначение" aria-label="Поиск компонентов" data-component-search>
-  <select aria-label="Тип компонента" data-kind-filter><option value="">Все типы</option><option>Lib</option><option>Unit</option><option>Sys</option></select>
-  <select aria-label="Категория" data-category-filter><option value="">Все категории</option>{category_options}</select>
-</div>
-<div class="cards">{cards}</div>
-<div class="empty-state" data-empty-state>Компоненты по заданным условиям не найдены.</div>
-"""
-    return render_page(
-        config=config,
-        base_url=base_url,
-        title="Каталог компонентов",
-        body=body,
-        active="catalog",
-        build_timestamp=build_timestamp,
-    )
-
-
-def render_home_page(
-    components: list[dict[str, Any]],
-    *,
-    config: dict[str, Any],
-    base_url: str,
-    archive_name: str,
-    build_timestamp: str,
-) -> str:
-    counts = {
-        kind: sum(component["kind"] == kind for component in components)
-        for kind in ("LibTempls", "UnitsTmpls", "SysTmpls")
-    }
-    intro = markdown_html(REPOSITORY_ROOT / "docs" / "index.md", drop_first_heading=True)
-    featured_names = {"Engine", "PidEngineUnit", "General", "WDMaster"}
-    featured = [component for component in components if component["name"] in featured_names]
-    cards = "".join(render_component_card(component, base_url) for component in featured)
-    body = f"""
-<section class="hero">
-  <div class="eyebrow">Компоненты MetaGen</div>
-  <h1>MetaKit</h1>
-  <p class="lead">Стандартные блоки, готовые контуры управления и системные компоненты для предсказуемой генерации PLC-проектов.</p>
-  <div class="hero-actions">
-    <a class="button button-primary" href="{url(base_url, 'components/')}">Открыть каталог</a>
-    <a class="button" href="{url(base_url, f'downloads/{archive_name}')}" download>Скачать MetaKit</a>
-  </div>
-</section>
-{render_stats([
-    (str(len(components)), "компонентов"),
-    (str(counts['LibTempls']), "Lib-шаблона"),
-    (str(counts['UnitsTmpls']), "Unit-компонентов"),
-    (str(counts['SysTmpls']), "Sys-компонента"),
-])}
-{intro}
-<h2>Основные компоненты</h2>
-<div class="cards">{cards}</div>
-"""
-    return render_page(
-        config=config,
-        base_url=base_url,
-        title="Документация",
-        body=body,
-        active="overview",
-        build_timestamp=build_timestamp,
-    )
-
-
-def build_markdown_pages(
-    output: Path,
-    *,
-    config: dict[str, Any],
-    base_url: str,
-    build_timestamp: str,
-) -> None:
+def build_markdown_pages(output: Path, *, config: dict[str, Any], base: str, built_at: str) -> None:
     routes = {
         "docs/concepts/component-types.md": ("concepts/component-types/index.html", "Типы компонентов", "types"),
-        "docs/concepts/params-and-data.md": ("concepts/params-and-data/index.html", "Params и Data", "params"),
-        "docs/guides/custom-unit.md": ("guides/custom-unit/index.html", "Сборка собственного контура", "custom"),
+        "docs/guides/custom-unit.md": ("guides/custom-unit/index.html", "Собственный контур", "custom"),
         "docs/guides/shared-configuration.md": ("guides/shared-configuration/index.html", "Общие настройки", "shared"),
         "docs/guides/watchdog.md": ("guides/watchdog/index.html", "WatchDog", "watchdog"),
         "docs/deployment.md": ("deployment/index.html", "Сборка и развёртывание", "deployment"),
     }
     for source, (target, title, active) in routes.items():
-        body = f'<div class="breadcrumbs"><a href="{url(base_url)}">MetaKit</a><span>/</span>{html.escape(title)}</div>'
-        body += markdown_html(REPOSITORY_ROOT / source)
-        write_text(
-            output / target,
-            render_page(
-                config=config,
-                base_url=base_url,
-                title=title,
-                body=body,
-                active=active,
-                build_timestamp=build_timestamp,
-            ),
-        )
+        content = f'<nav class="breadcrumbs"><a href="{base}">MetaKit</a><span>/</span>{esc(title)}</nav><article class="prose">{markdown_file(ROOT / source)}</article>'
+        write(output / target, page(config=config, base=base, title=title, body=content, active=active, built_at=built_at))
 
 
-def create_archive(output: Path, components: list[dict[str, Any]], archive_name: str, timestamp: str) -> None:
-    archive_path = output / "downloads" / archive_name
-    archive_path.parent.mkdir(parents=True, exist_ok=True)
+def create_archive(output: Path, guides: list[dict[str, Any]], filename: str, timestamp: str) -> None:
+    target = output / "downloads" / filename
+    target.parent.mkdir(parents=True, exist_ok=True)
     stamp = datetime.strptime(timestamp, "%Y%m%d_%H%M%S")
     zip_stamp = (stamp.year, stamp.month, stamp.day, stamp.hour, stamp.minute, stamp.second)
-    with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-        directories: set[str] = set()
-        for component in components:
-            path = component["source"].path
-            relative = component["relative_path"]
-            parent = Path(relative).parent
-            for directory in [parent, *parent.parents]:
-                value = directory.as_posix().strip(".")
-                if value:
-                    directories.add(value.rstrip("/") + "/")
-        for directory in sorted(directories):
-            info = zipfile.ZipInfo(directory, date_time=zip_stamp)
-            info.external_attr = 0o40755 << 16
-            archive.writestr(info, b"")
-        for component in components:
-            info = zipfile.ZipInfo(component["relative_path"], date_time=zip_stamp)
+    with zipfile.ZipFile(target, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+        for guide in guides:
+            source = ROOT / str(guide["source"])
+            info = zipfile.ZipInfo(source_relative(guide), zip_stamp)
             info.external_attr = 0o100644 << 16
             info.compress_type = zipfile.ZIP_DEFLATED
-            archive.writestr(info, component["source"].path.read_bytes())
+            archive.writestr(info, source.read_bytes())
 
 
 def main() -> int:
-    args = parse_args()
-    base_url = normalize_base_url(args.base_url)
-    timestamp = args.timestamp or datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    options = parse_args()
+    base = normalize_base(options.base_url)
+    timestamp = options.timestamp or datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     if not re.fullmatch(r"\d{8}_\d{6}", timestamp):
         print("--timestamp must match YYYYMMDD_HHMMSS", file=sys.stderr)
         return 2
     try:
-        datetime.strptime(timestamp, "%Y%m%d_%H%M%S")
+        parsed = datetime.strptime(timestamp, "%Y%m%d_%H%M%S")
     except ValueError as error:
         print(f"Invalid --timestamp: {error}", file=sys.stderr)
         return 2
-
-    config = load_config()
-    catalog = load_catalog()
-    sources = discover_components()
-    output = (REPOSITORY_ROOT / args.output).resolve() if not Path(args.output).is_absolute() else Path(args.output).resolve()
+    config = load_yaml(ROOT / "metakit.yaml")
+    guides = load_guides()
+    output = Path(options.output)
+    output = output.resolve() if output.is_absolute() else (ROOT / output).resolve()
     clean_output(output)
-
-    components: list[dict[str, Any]] = []
-    for source in sources:
-        item = catalog[source.relative_path]
-        components.append(
-            {
-                "source": source,
-                "document": source.document,
-                "relative_path": source.relative_path,
-                "name": source.name,
-                "slug": source.slug,
-                "kind": source.template_kind,
-                "title": str(item["title"]),
-                "category": str(item["category"]),
-                "summary": str(item["summary"]),
-                "use_when": str(item["use_when"]),
-                "blocks": unique_blocks(source.document),
-                "guide": load_component_guide(source.slug),
-            }
-        )
-    components.sort(key=lambda item: (KIND_ORDER.get(item["kind"], 99), item["category"], item["title"]))
-
-    archive_name = f"{config.get('archive_prefix', 'MetaKit')}_{timestamp}.zip"
-    build_timestamp = datetime.strptime(timestamp, "%Y%m%d_%H%M%S").replace(tzinfo=timezone.utc).isoformat().replace("+00:00", "Z")
-
-    shutil.copytree(REPOSITORY_ROOT / "docs" / "assets", output / "assets")
-    for component in components:
-        target = output / "downloads" / "components" / component["relative_path"]
+    shutil.copytree(ROOT / "docs/assets", output / "assets")
+    for guide in guides:
+        source = ROOT / str(guide["source"])
+        target = output / "downloads/components" / source_relative(guide)
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(component["source"].path, target)
-
-    create_archive(output, components, archive_name, timestamp)
-    build_markdown_pages(output, config=config, base_url=base_url, build_timestamp=build_timestamp)
-
-    write_text(
-        output / "index.html",
-        render_home_page(
-            components,
-            config=config,
-            base_url=base_url,
-            archive_name=archive_name,
-            build_timestamp=build_timestamp,
-        ),
-    )
-    write_text(
-        output / "components" / "index.html",
-        render_catalog_page(
-            components,
-            config=config,
-            base_url=base_url,
-            archive_name=archive_name,
-            build_timestamp=build_timestamp,
-        ),
-    )
-    for component in components:
-        write_text(
-            output / "components" / component["slug"] / "index.html",
-            render_component_page(
-                component,
-                components,
-                config=config,
-                base_url=base_url,
-                build_timestamp=build_timestamp,
-            ),
-        )
-
-    catalog_payload = {
-        "name": config.get("name", "MetaKit"),
-        "version": config.get("version", "current"),
-        "built_at": build_timestamp,
-        "base_url": base_url,
-        "archive": f"downloads/{archive_name}",
-        "components": [
-            {
-                key: component[key]
-                for key in ("name", "slug", "kind", "title", "category", "summary", "use_when", "blocks", "relative_path")
-            }
-            for component in components
-        ],
-    }
-    write_text(output / "catalog.json", json.dumps(catalog_payload, ensure_ascii=False, indent=2) + "\n")
+        shutil.copy2(source, target)
+    archive = f"{config.get('archive_prefix', 'MetaKit')}_{timestamp}.zip"
+    create_archive(output, guides, archive, timestamp)
+    built_at = parsed.replace(tzinfo=timezone.utc).isoformat().replace("+00:00", "Z")
+    build_markdown_pages(output, config=config, base=base, built_at=built_at)
+    write(output / "index.html", home_page(guides, config=config, base=base, archive=archive, built_at=built_at))
+    write(output / "components/index.html", catalog_page(guides, config=config, base=base, archive=archive, built_at=built_at))
+    for guide in guides:
+        write(output / f"components/{guide['slug']}/index.html", component_page(guide, guides, config=config, base=base, built_at=built_at))
     manifest = {
-        "schema": 1,
+        "schema": 2,
         "name": config.get("name", "MetaKit"),
         "version": config.get("version", "current"),
-        "built_at": build_timestamp,
-        "base_url": base_url,
-        "component_count": len(components),
-        "archive": archive_name,
+        "built_at": built_at,
+        "base_url": base,
+        "component_count": len(guides),
+        "archive": archive,
+        "components": [{"component": item["component"], "slug": item["slug"], "kind": item["kind"], "source": item["source"]} for item in guides],
     }
-    write_text(output / "manifest.json", json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
-
-    print(f"Built {len(components)} component pages in {output}")
-    print(f"Archive: {archive_name}")
+    write(output / "manifest.json", json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    print(f"Built {len(guides)} component pages in {output}")
+    print(f"Archive: {archive}")
     return 0
 
 

@@ -1,0 +1,951 @@
+component: PiddValveUnit
+slug: piddvalveunit
+source: yaml/UnitsTmpls/PiddValveUnit.yaml
+kind: Unit
+title: Клапан с импульсным PID
+category: Готовые контуры
+summary: Готовый контур CValve и CPIDD с CascadeUnit, авариями и предупреждениями.
+description: Готовый контур CValve и CPIDD с CascadeUnit, авариями и предупреждениями. Unit объединяет регулятор, клапан,
+  родительское разрешение, контроль датчика и сообщения в готовый контур.
+use_cases:
+- Клапан регулирует параметр дискретными командами открытия и закрытия.
+- CPIDD сравнивает температуру с уставкой и управляет дискретным клапаном командами Открыть и Закрыть.
+not_for:
+- Если состав или связи блоков должны существенно отличаться, соберите собственный компонент из Lib-шаблонов.
+diagram:
+  lanes:
+  - - PV + PVErr
+    - CPIDD
+    - CValve
+    - Open / Close
+    - 'HMI управления
+
+      режим / команды'
+  - - Состояние и защиты
+    - Аварии / предупреждения
+    - 'HMI сообщений
+
+      Flt / Wrn'
+application:
+  intro: CPIDD сравнивает температуру с уставкой и управляет дискретным клапаном командами Открыть и Закрыть. Ниже показаны
+    параметры в том же формате ключ/значение, который используется в MetaPlatform.
+  result: Unit объединяет регулятор, клапан, родительское разрешение, контроль датчика и сообщения в готовый контур.
+parameter_groups:
+- title: Основные параметры
+  items:
+  - key: Id
+    default: _ID_
+    example: V101
+    description: Уникальный идентификатор всего компонента. Используется как префикс экземпляров и тегов.
+  - key: Comment
+    default: Комментарий
+    example: Температурный контур с трёхточечным клапаном
+    description: Понятное человеку название компонента. Попадает в комментарии тегов и тексты HMI.
+  - key: Parent
+    default: CabinetController_Inst
+    example: CabinetController_Inst
+    description: Родительский CabinetController или CascadeUnit, от которого компонент получает общее разрешение, режим и
+      команды.
+  - key: StartCmd
+    default: 'false'
+    example: 'false'
+    description: Дополнительное условие запуска компонента помимо команды родителя.
+- title: Элемент каскада
+  items:
+  - key: $CasUnit
+    default: Элемент каскада
+    example: Элемент каскада
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: Power
+    default: '0.0'
+    example: '0.0'
+    description: Текущая мощность элемента, передаваемая в CascadeUnit для контроля и статистики.
+- title: Регулятор
+  items:
+  - key: $PIDD
+    default: Регулятор
+    example: Регулятор
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: PIDDConf
+    default: ''
+    example: ''
+    description: Необязательный общий префикс настроек. Пустое значение создаёт индивидуальные настройки по Id компонента.
+  - key: PIDDConfComment
+    default: ''
+    example: ''
+    description: Общий комментарий для совместно используемых настроек. Оставьте пустым при индивидуальной конфигурации.
+- title: Группа параметров 4
+  items:
+  - key: SensId
+    default: _ID_
+    example: V101
+    description: Уникальный идентификатор датчика и префикс создаваемых тегов.
+- title: Клапан
+  items:
+  - key: $Valve
+    default: Клапан
+    example: Клапан
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: ValveConf
+    default: ''
+    example: ''
+    description: Необязательный общий префикс настроек. Пустое значение создаёт индивидуальные настройки по Id компонента.
+  - key: ValveConfComment
+    default: ''
+    example: ''
+    description: Общий комментарий для совместно используемых настроек. Оставьте пустым при индивидуальной конфигурации.
+- title: Группа параметров 6
+  items:
+  - key: ValveLocal
+    default: 'false'
+    example: 'false'
+    description: Признак местного режима управления исполнительным механизмом.
+  - key: ValveRemote
+    default: 'true'
+    example: 'true'
+    description: Признак дистанционного режима управления исполнительным механизмом.
+  - key: ValveStateOpen
+    default: _DI_
+    example: DI_VALVESTATEOPEN
+    description: Дискретный сигнал концевика полностью открытого положения.
+  - key: ValveStateClose
+    default: _DI_
+    example: DI_VALVESTATECLOSE
+    description: Дискретный сигнал концевика полностью закрытого положения.
+  - key: ValveOpenOut
+    default: _DO_OPEN_
+    example: DO_VALVEOPENOUT
+    description: Физический дискретный выход открытия клапана.
+  - key: ValveCloseOut
+    default: _DO_CLOSE_
+    example: DO_VALVECLOSEOUT
+    description: Физический дискретный выход закрытия клапана.
+- title: Аварии
+  items:
+  - key: $Flts
+    default: Аварии
+    example: Аварии
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: FltComment
+    default: аварии
+    example: аварии
+    description: Понятное человеку название блока или группы, используемое в комментариях и HMI.
+- title: Группа параметров 8
+  items:
+  - key: FltId1
+    default: _ID_
+    example: V101
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: FltComment1
+    default: авария
+    example: авария
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: FltIn1
+    default: _DI_
+    example: DI_FLTIN1
+    description: Булево выражение контролируемой причины.
+  - key: FltEnable1
+    default: 'true'
+    example: 'true'
+    description: Разрешение обработки конкретного сигнала.
+  - key: FltAutoReset1
+    default: 'false'
+    example: 'false'
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 9
+  items:
+  - key: FltId2
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: FltComment2
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: FltIn2
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: FltEnable2
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: FltAutoReset2
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 10
+  items:
+  - key: FltId3
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: FltComment3
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: FltIn3
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: FltEnable3
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: FltAutoReset3
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 11
+  items:
+  - key: FltId4
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: FltComment4
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: FltIn4
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: FltEnable4
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: FltAutoReset4
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 12
+  items:
+  - key: FltId5
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: FltComment5
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: FltIn5
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: FltEnable5
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: FltAutoReset5
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 13
+  items:
+  - key: FltId6
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: FltComment6
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: FltIn6
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: FltEnable6
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: FltAutoReset6
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 14
+  items:
+  - key: FltId7
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: FltComment7
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: FltIn7
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: FltEnable7
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: FltAutoReset7
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 15
+  items:
+  - key: FltId8
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: FltComment8
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: FltIn8
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: FltEnable8
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: FltAutoReset8
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Предупреждения
+  items:
+  - key: $Wrns
+    default: Предупреждения
+    example: Предупреждения
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: WrnComment
+    default: предупреждения
+    example: предупреждения
+    description: Понятное человеку название блока или группы, используемое в комментариях и HMI.
+- title: Группа параметров 17
+  items:
+  - key: WrnId1
+    default: _ID_
+    example: V101
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: WrnComment1
+    default: предупреждение
+    example: предупреждение
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: WrnIn1
+    default: _DI_
+    example: DI_WRNIN1
+    description: Булево выражение контролируемой причины.
+  - key: WrnEnable1
+    default: 'true'
+    example: 'true'
+    description: Разрешение обработки конкретного сигнала.
+  - key: WrnAutoReset1
+    default: 'true'
+    example: 'true'
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 18
+  items:
+  - key: WrnId2
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: WrnComment2
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: WrnIn2
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: WrnEnable2
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: WrnAutoReset2
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 19
+  items:
+  - key: WrnId3
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: WrnComment3
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: WrnIn3
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: WrnEnable3
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: WrnAutoReset3
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 20
+  items:
+  - key: WrnId4
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: WrnComment4
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: WrnIn4
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: WrnEnable4
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: WrnAutoReset4
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 21
+  items:
+  - key: WrnId5
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: WrnComment5
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: WrnIn5
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: WrnEnable5
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: WrnAutoReset5
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 22
+  items:
+  - key: WrnId6
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: WrnComment6
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: WrnIn6
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: WrnEnable6
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: WrnAutoReset6
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 23
+  items:
+  - key: WrnId7
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: WrnComment7
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: WrnIn7
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: WrnEnable7
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: WrnAutoReset7
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+- title: Группа параметров 24
+  items:
+  - key: WrnId8
+    default: ''
+    example: ''
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся.
+  - key: WrnComment8
+    default: ''
+    example: ''
+    description: Текст причины, который увидит оператор в списке сообщений.
+  - key: WrnIn8
+    default: ''
+    example: ''
+    description: Булево выражение контролируемой причины.
+  - key: WrnEnable8
+    default: ''
+    example: ''
+    description: Разрешение обработки конкретного сигнала.
+  - key: WrnAutoReset8
+    default: ''
+    example: ''
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины.
+example:
+  title: Температурный контур с трёхточечным клапаном
+  scenario: CPIDD сравнивает температуру с уставкой и управляет дискретным клапаном командами Открыть и Закрыть.
+  result: Unit объединяет регулятор, клапан, родительское разрешение, контроль датчика и сообщения в готовый контур.
+settings:
+- key: …_SgnlsFltr_|FltId1|_bBypass"%
+  default: '%"" if "|FltId1|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId1|_diDelay"%
+  default: '%"" if "|FltId1|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId2|_bBypass"%
+  default: '%"" if "|FltId2|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId2|_diDelay"%
+  default: '%"" if "|FltId2|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId3|_bBypass"%
+  default: '%"" if "|FltId3|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId3|_diDelay"%
+  default: '%"" if "|FltId3|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId4|_bBypass"%
+  default: '%"" if "|FltId4|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId4|_diDelay"%
+  default: '%"" if "|FltId4|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId5|_bBypass"%
+  default: '%"" if "|FltId5|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId5|_diDelay"%
+  default: '%"" if "|FltId5|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId6|_bBypass"%
+  default: '%"" if "|FltId6|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId6|_diDelay"%
+  default: '%"" if "|FltId6|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId7|_bBypass"%
+  default: '%"" if "|FltId7|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId7|_diDelay"%
+  default: '%"" if "|FltId7|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId8|_bBypass"%
+  default: '%"" if "|FltId8|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId8|_diDelay"%
+  default: '%"" if "|FltId8|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId1|_bBypass"%
+  default: '%"" if "|WrnId1|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId1|_diDelay"%
+  default: '%"" if "|WrnId1|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId2|_bBypass"%
+  default: '%"" if "|WrnId2|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId2|_diDelay"%
+  default: '%"" if "|WrnId2|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId3|_bBypass"%
+  default: '%"" if "|WrnId3|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId3|_diDelay"%
+  default: '%"" if "|WrnId3|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId4|_bBypass"%
+  default: '%"" if "|WrnId4|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId4|_diDelay"%
+  default: '%"" if "|WrnId4|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId5|_bBypass"%
+  default: '%"" if "|WrnId5|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId5|_diDelay"%
+  default: '%"" if "|WrnId5|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId6|_bBypass"%
+  default: '%"" if "|WrnId6|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId6|_diDelay"%
+  default: '%"" if "|WrnId6|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId7|_bBypass"%
+  default: '%"" if "|WrnId7|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId7|_diDelay"%
+  default: '%"" if "|WrnId7|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId8|_bBypass"%
+  default: '%"" if "|WrnId8|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId8|_diDelay"%
+  default: '%"" if "|WrnId8|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_PIDD_fSP
+  default: '0.0'
+  description: Уставка
+- key: …_PIDD_fDB
+  default: '0.0'
+  description: Зона нечувствительности
+- key: …_PIDD_fSR
+  default: '3.0'
+  description: Время дискретизации
+- key: …_PIDD_fKp
+  default: '1.0'
+  description: Kp
+- key: …_PIDD_fTi
+  default: '0.0'
+  description: Ti
+- key: …_PIDD_fTd
+  default: '0.0'
+  description: Td
+- key: …_Valve_bNO
+  default: 'false'
+  description: Нормально-открытый
+- key: …_Valve_bEnableFaultCtrl
+  default: 'false'
+  description: Закрытие/открытие при аварии
+- key: …_Valve_bEnableCheckState
+  default: 'true'
+  description: Контроль крайних положений
+- key: …_Valve_diChangeStateDelay
+  default: '1'
+  description: Задержка смены состояния
+- key: …_Valve_diFullTime
+  default: '1'
+  description: Время полного хода
+- key: …_Valve_bFullTimeCtrlBypass
+  default: 'true'
+  description: Шунт контроля полного хода
+hmi:
+- tag: '|Id|_Flts_SgnlsFltr_Inst.out_bQ'
+  description: Срабатывание
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Flts_SgnlsFltr_Inst.out_bBypass'
+  description: Шунт включен
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '%"" if "|FltId1|"=="" else "|Id|_Flts_SgnlsFltr_Inst"%.%"" if "|FltId1|"=="" else "out_Signal1_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|FltId2|"=="" else "|Id|_Flts_SgnlsFltr_Inst"%.%"" if "|FltId2|"=="" else "out_Signal2_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|FltId3|"=="" else "|Id|_Flts_SgnlsFltr_Inst"%.%"" if "|FltId3|"=="" else "out_Signal3_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|FltId4|"=="" else "|Id|_Flts_SgnlsFltr_Inst"%.%"" if "|FltId4|"=="" else "out_Signal4_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|FltId5|"=="" else "|Id|_Flts_SgnlsFltr_Inst"%.%"" if "|FltId5|"=="" else "out_Signal5_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|FltId6|"=="" else "|Id|_Flts_SgnlsFltr_Inst"%.%"" if "|FltId6|"=="" else "out_Signal6_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|FltId7|"=="" else "|Id|_Flts_SgnlsFltr_Inst"%.%"" if "|FltId7|"=="" else "out_Signal7_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|FltId8|"=="" else "|Id|_Flts_SgnlsFltr_Inst"%.%"" if "|FltId8|"=="" else "out_Signal8_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '|Id|_Wrns_SgnlsFltr_Inst.out_bQ'
+  description: Срабатывание
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Wrns_SgnlsFltr_Inst.out_bBypass'
+  description: Шунт включен
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '%"" if "|WrnId1|"=="" else "|Id|_Wrns_SgnlsFltr_Inst"%.%"" if "|WrnId1|"=="" else "out_Signal1_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|WrnId2|"=="" else "|Id|_Wrns_SgnlsFltr_Inst"%.%"" if "|WrnId2|"=="" else "out_Signal2_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|WrnId3|"=="" else "|Id|_Wrns_SgnlsFltr_Inst"%.%"" if "|WrnId3|"=="" else "out_Signal3_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|WrnId4|"=="" else "|Id|_Wrns_SgnlsFltr_Inst"%.%"" if "|WrnId4|"=="" else "out_Signal4_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|WrnId5|"=="" else "|Id|_Wrns_SgnlsFltr_Inst"%.%"" if "|WrnId5|"=="" else "out_Signal5_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|WrnId6|"=="" else "|Id|_Wrns_SgnlsFltr_Inst"%.%"" if "|WrnId6|"=="" else "out_Signal6_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|WrnId7|"=="" else "|Id|_Wrns_SgnlsFltr_Inst"%.%"" if "|WrnId7|"=="" else "out_Signal7_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '%"" if "|WrnId8|"=="" else "|Id|_Wrns_SgnlsFltr_Inst"%.%"" if "|WrnId8|"=="" else "out_Signal8_bQ"%'
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: '|Id|_CascadeUnit_Inst.out_bEnable'
+  description: Разрешение
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_CascadeUnit_Inst.out_bPowerControl'
+  description: Наличие напряжения
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_CascadeUnit_Inst.out_bEmergencyStop'
+  description: Экстренный останов
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_CascadeUnit_Inst.out_bMode'
+  description: Автоматический режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_CascadeUnit_Inst.out_iState'
+  description: Состояние
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_CascadeUnit_Inst.out_bState'
+  description: Работа
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_CascadeUnit_Inst.out_bFault'
+  description: Авария
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_CascadeUnit_Inst.out_bStart'
+  description: Команда пуска
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_CascadeUnit_Inst.out_diWorktime'
+  description: Наработка
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_CascadeUnit_Inst.out_fPower'
+  description: Мощность
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: Да
+- tag: '|Id|_CascadeUnit_Inst.inout_bFaultReset'
+  description: Сброс аварии
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_CascadeUnit_Inst.inout_bWorktimeReset'
+  description: Сброс времени наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.out_iMode'
+  description: Режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.out_iState'
+  description: Состояние
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.out_bOpenFault'
+  description: Авария открытия
+  hmi: —
+  flt: Да
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.out_bCloseFault'
+  description: Авария закрытия
+  hmi: —
+  flt: Да
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.out_bFault'
+  description: Авария
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.out_bEnableAutoControl'
+  description: Разрешено управление в автоматическом режиме
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.out_bBlocked'
+  description: Управление заблокировано
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.out_diWorktime'
+  description: Время наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.inout_iRemoteMode'
+  description: Ручной/автоматический режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.inout_bOpen'
+  description: Открытие
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.inout_bClose'
+  description: Закрытие
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.inout_bFaultReset'
+  description: Сброс аварии
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: '|Id|_Valve_Inst.inout_bWorktimeReset'
+  description: Сброс времени наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+optional_hmi: []
+common_mistakes:
+- Оставить служебные значения _ID_, _DI_, _DO_ или _AO_ вместо реальных тегов проекта.
+- Не проверить классы сообщений и доступность настроек на HMI после генерации проекта.

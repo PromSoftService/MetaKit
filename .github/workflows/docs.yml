@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements-docs.txt
 
-      - name: Validate MetaKit
+      - name: Validate documentation sources
         run: python tools/validate_metakit.py
 
       - name: Build documentation

@@ -1,0 +1,190 @@
+component: SensLim
+slug: senslim
+source: yaml/SysTmpls/SensLim.yaml
+kind: Sys
+title: Границы датчика
+category: Системные компоненты
+summary: Формирует аварии и предупреждения по границам LL, L, H и HH выбранного датчика.
+description: Формирует аварии и предупреждения по границам LL, L, H и HH выбранного датчика. При аварийной границе соответствующее
+  предупредительное сообщение снимается, чтобы оператор видел наиболее важное состояние.
+use_cases:
+- Техническое задание требует сообщений по предельным значениям датчика.
+- Для датчика нужно сформировать аварии LL/HH и предупреждения L/H с независимыми задержками и возможностью отключить ненужные
+  границы.
+not_for:
+- Sys-компонент предназначен для уровня проекта; не импортируйте его повторно для каждого механизма.
+diagram:
+  lanes:
+  - - FV датчика
+    - 'LL / HH
+
+      аварийные границы'
+    - 'HMI аварий
+
+      Flt'
+  - - FV датчика
+    - 'L / H
+
+      предупредительные границы'
+    - 'HMI предупреждений
+
+      Wrn'
+  - - Ошибка датчика
+    - 'SensLim
+
+      диагностика'
+    - 'HMI предупреждений
+
+      Wrn'
+application:
+  intro: Для датчика нужно сформировать аварии LL/HH и предупреждения L/H с независимыми задержками и возможностью отключить
+    ненужные границы. Ниже показаны параметры в том же формате ключ/значение, который используется в MetaPlatform.
+  result: При аварийной границе соответствующее предупредительное сообщение снимается, чтобы оператор видел наиболее важное
+    состояние.
+parameter_groups:
+- title: Пределы датчика
+  items:
+  - key: $Limit
+    default: Пределы датчика
+    example: Пределы датчика
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+- title: Группа параметров 2
+  items:
+  - key: SensId
+    default: _ID_
+    example: SENSLIM
+    description: Уникальный идентификатор датчика и префикс создаваемых тегов.
+  - key: Comment
+    default: датчик
+    example: датчик
+    description: Понятное человеку название компонента. Попадает в комментарии тегов и тексты HMI.
+  - key: SensErrFlt
+    default: 'true'
+    example: 'true'
+    description: Выбирает класс сообщения, формируемого при ошибке датчика.
+  - key: SensErrWrn
+    default: 'false'
+    example: 'false'
+    description: Выбирает класс сообщения, формируемого при ошибке датчика.
+  - key: HHEnable
+    default: 'true'
+    example: 'true'
+    description: Разрешение соответствующей технологической границы. FALSE полностью отключает её сообщение.
+  - key: HEnable
+    default: 'true'
+    example: 'true'
+    description: Разрешение соответствующей технологической границы. FALSE полностью отключает её сообщение.
+  - key: LEnable
+    default: 'true'
+    example: 'true'
+    description: Разрешение соответствующей технологической границы. FALSE полностью отключает её сообщение.
+  - key: LLEnable
+    default: 'true'
+    example: 'true'
+    description: Разрешение соответствующей технологической границы. FALSE полностью отключает её сообщение.
+  - key: FltAutoReset
+    default: 'false'
+    example: 'false'
+    description: Автоматический сброс всех аварий после исчезновения причин.
+  - key: WrnAutoReset
+    default: 'true'
+    example: 'true'
+    description: Автоматический сброс всех предупреждений после исчезновения причин.
+example:
+  title: Предельные значения давления
+  scenario: Для датчика нужно сформировать аварии LL/HH и предупреждения L/H с независимыми задержками и возможностью отключить
+    ненужные границы.
+  result: При аварийной границе соответствующее предупредительное сообщение снимается, чтобы оператор видел наиболее важное
+    состояние.
+settings:
+- key: …_SensLim_fHH
+  default: '0.0'
+  description: Верхняя аварийная граница
+- key: …_SensLim_fH
+  default: '0.0'
+  description: Верхняя предупредительная граница
+- key: …_SensLim_fL
+  default: '0.0'
+  description: Нижняя предупредительная граница
+- key: …_SensLim_fLL
+  default: '0.0'
+  description: Нижняя аварийная граница
+- key: …_SensLim_Flt_diDelay
+  default: '1'
+  description: Аварийные границы. Задержка срабатывания
+- key: …_SensLim_Wrn_diDelay
+  default: '1'
+  description: Предупредительные границы. Задержка срабатывания
+- key: …_SensLim_HH_bBypass
+  default: 'true'
+  description: Верхняя аварийная граница. Шунт
+- key: …_SensLim_H_bBypass
+  default: 'true'
+  description: Верхняя предупредительная граница. Шунт
+- key: …_SensLim_L_bBypass
+  default: 'true'
+  description: Нижняя предупредительная граница. Шунт
+- key: …_SensLim_LL_bBypass
+  default: 'true'
+  description: Нижняя аварийная граница. Шунт
+hmi:
+- tag: Flts.out_Signal1_bQ
+  description: Верхняя аварийная граница
+  hmi: Да
+  flt: Да
+  wrn: —
+  alm: —
+  trend: —
+- tag: Flts.out_Signal2_bQ
+  description: Нижняя аварийная граница
+  hmi: Да
+  flt: Да
+  wrn: —
+  alm: —
+  trend: —
+- tag: Flts.out_Signal3_bQ
+  description: Ошибка датчика
+  hmi: Да
+  flt: Да
+  wrn: —
+  alm: —
+  trend: —
+- tag: Flts.out_bQ
+  description: Авария
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Wrns.out_Signal1_bQ
+  description: Верхняя предупредительная граница
+  hmi: Да
+  flt: —
+  wrn: Да
+  alm: —
+  trend: —
+- tag: Wrns.out_Signal2_bQ
+  description: Нижняя предупредительная граница
+  hmi: Да
+  flt: —
+  wrn: Да
+  alm: —
+  trend: —
+- tag: Wrns.out_Signal3_bQ
+  description: Ошибка датчика
+  hmi: Да
+  flt: —
+  wrn: Да
+  alm: —
+  trend: —
+- tag: Wrns.out_bQ
+  description: Предупреждение
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+optional_hmi: []
+common_mistakes:
+- Оставить служебные значения _ID_, _DI_, _DO_ или _AO_ вместо реальных тегов проекта.
+- Не проверить классы сообщений и доступность настроек на HMI после генерации проекта.

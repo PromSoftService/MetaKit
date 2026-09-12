@@ -1,0 +1,598 @@
+component: EngineUnit
+slug: engineunit
+source: yaml/UnitsTmpls/engineunit.yaml
+kind: Unit
+title: Двигатель
+category: Готовые контуры
+summary: Готовый контур CEngine с CascadeUnit, авариями и предупреждениями.
+description: Готовый контур CEngine с CascadeUnit, авариями и предупреждениями. CascadeUnit передаёт родительские разрешения
+  в CEngine и возвращает наверх готовность, состояние, аварию и наработку.
+use_cases:
+- Требуется стандартный двигатель без собственного регулятора.
+- Команда запуска приходит от внешнего алгоритма или каскада, а Unit должен обеспечить стандартные режимы, защиты и сообщения.
+not_for:
+- Если состав или связи блоков должны существенно отличаться, соберите собственный компонент из Lib-шаблонов.
+diagram:
+  lanes:
+  - - Parent + StartCmd
+    - CascadeUnit
+    - CEngine
+    - Дискретный выход
+    - 'HMI управления
+
+      режим / команды'
+  - - Состояние и защиты
+    - Аварии / предупреждения
+    - 'HMI сообщений
+
+      Flt / Wrn'
+application:
+  intro: Команда запуска приходит от внешнего алгоритма или каскада, а Unit должен обеспечить стандартные режимы, защиты и
+    сообщения. Ниже показаны параметры в том же формате ключ/значение, который используется в MetaPlatform.
+  result: CascadeUnit передаёт родительские разрешения в CEngine и возвращает наверх готовность, состояние, аварию и наработку.
+parameter_groups:
+- title: Основные параметры
+  items:
+  - key: Id
+    default: _ID_
+    example: P101
+    description: Уникальный идентификатор всего компонента. Используется как префикс экземпляров и тегов.
+  - key: Comment
+    default: Комментарий
+    example: Насос без собственного регулятора
+    description: Понятное человеку название компонента. Попадает в комментарии тегов и тексты HMI.
+  - key: Parent
+    default: CabinetController_Inst
+    example: CabinetController_Inst
+    description: Родительский CabinetController или CascadeUnit, от которого компонент получает общее разрешение, режим и
+      команды.
+  - key: StartCmd
+    default: 'false'
+    example: 'false'
+    description: Дополнительное условие запуска компонента помимо команды родителя.
+  - key: EStopExtra
+    default: 'false'
+    example: 'false'
+    description: Дополнительное условие экстренного останова всего Unit, например защита от сухого хода.
+- title: Элемент каскада
+  items:
+  - key: $CasUnit
+    default: Элемент каскада
+    example: Элемент каскада
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: Power
+    default: '0.0'
+    example: '0.0'
+    description: Текущая мощность элемента, передаваемая в CascadeUnit для контроля и статистики.
+- title: Двигатель
+  items:
+  - key: $Eng
+    default: Двигатель
+    example: Двигатель
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: EngConf
+    default: ''
+    example: ''
+    description: Необязательный общий префикс настроек. Пустое значение создаёт индивидуальные настройки по Id компонента.
+  - key: EngConfComment
+    default: ''
+    example: ''
+    description: Общий комментарий для совместно используемых настроек. Оставьте пустым при индивидуальной конфигурации.
+- title: Группа параметров 4
+  items:
+  - key: EngLocal
+    default: 'false'
+    example: 'false'
+    description: Признак местного режима управления исполнительным механизмом.
+  - key: EngLocalControlByPLC
+    default: 'false'
+    example: 'false'
+    description: TRUE означает, что в местном режиме команда формируется ПЛК; FALSE — ПЛК только отслеживает состояние.
+  - key: EngRemote
+    default: 'true'
+    example: 'true'
+    description: Признак дистанционного режима управления исполнительным механизмом.
+  - key: EngState
+    default: 'false'
+    example: 'false'
+    description: Сигнал подтверждения фактического состояния исполнительного механизма.
+  - key: EngStartOut
+    default: _DO_
+    example: DO_ENGSTARTOUT
+    description: Физический дискретный выход пуска двигателя.
+- title: Аварии
+  items:
+  - key: $Flts
+    default: Аварии
+    example: Аварии
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: FltComment
+    default: аварии
+    example: аварии
+    description: Понятное человеку название блока или группы, используемое в комментариях и HMI.
+- title: Строки 1–8
+  items:
+  - key: FltId1…FltId8
+    default: _ID_
+    example: P101
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся. Одинаково применяется к строкам
+      1–8.
+  - key: FltComment1…FltComment8
+    default: авария
+    example: авария
+    description: Текст причины, который увидит оператор в списке сообщений. Одинаково применяется к строкам 1–8.
+  - key: FltIn1…FltIn8
+    default: _DI_
+    example: DI_FLTIN1
+    description: Булево выражение контролируемой причины. Одинаково применяется к строкам 1–8.
+  - key: FltEnable1…FltEnable8
+    default: 'true'
+    example: 'true'
+    description: Разрешение обработки конкретного сигнала. Одинаково применяется к строкам 1–8.
+  - key: FltAutoReset1…FltAutoReset8
+    default: 'false'
+    example: 'false'
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины. Одинаково применяется к строкам 1–8.
+- title: Предупреждения
+  items:
+  - key: $Wrns
+    default: Предупреждения
+    example: Предупреждения
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: WrnComment
+    default: предупреждения
+    example: предупреждения
+    description: Понятное человеку название блока или группы, используемое в комментариях и HMI.
+- title: Строки 1–8
+  items:
+  - key: WrnId1…WrnId8
+    default: _ID_
+    example: P101
+    description: Короткий идентификатор сигнала. Если оставить пустым, эта строка не создаётся. Одинаково применяется к строкам
+      1–8.
+  - key: WrnComment1…WrnComment8
+    default: предупреждение
+    example: предупреждение
+    description: Текст причины, который увидит оператор в списке сообщений. Одинаково применяется к строкам 1–8.
+  - key: WrnIn1…WrnIn8
+    default: _DI_
+    example: DI_WRNIN1
+    description: Булево выражение контролируемой причины. Одинаково применяется к строкам 1–8.
+  - key: WrnEnable1…WrnEnable8
+    default: 'true'
+    example: 'true'
+    description: Разрешение обработки конкретного сигнала. Одинаково применяется к строкам 1–8.
+  - key: WrnAutoReset1…WrnAutoReset8
+    default: 'true'
+    example: 'true'
+    description: Автоматически снять зафиксированный сигнал после исчезновения причины. Одинаково применяется к строкам 1–8.
+example:
+  title: Насос без собственного регулятора
+  scenario: Команда запуска приходит от внешнего алгоритма или каскада, а Unit должен обеспечить стандартные режимы, защиты
+    и сообщения.
+  result: CascadeUnit передаёт родительские разрешения в CEngine и возвращает наверх готовность, состояние, аварию и наработку.
+settings:
+- key: …_SgnlsFltr_|FltId1|_bBypass"%
+  default: '%"" if "|FltId1|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId1|_diDelay"%
+  default: '%"" if "|FltId1|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId2|_bBypass"%
+  default: '%"" if "|FltId2|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId2|_diDelay"%
+  default: '%"" if "|FltId2|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId3|_bBypass"%
+  default: '%"" if "|FltId3|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId3|_diDelay"%
+  default: '%"" if "|FltId3|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId4|_bBypass"%
+  default: '%"" if "|FltId4|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId4|_diDelay"%
+  default: '%"" if "|FltId4|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId5|_bBypass"%
+  default: '%"" if "|FltId5|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId5|_diDelay"%
+  default: '%"" if "|FltId5|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId6|_bBypass"%
+  default: '%"" if "|FltId6|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId6|_diDelay"%
+  default: '%"" if "|FltId6|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId7|_bBypass"%
+  default: '%"" if "|FltId7|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId7|_diDelay"%
+  default: '%"" if "|FltId7|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId8|_bBypass"%
+  default: '%"" if "|FltId8|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|FltId8|_diDelay"%
+  default: '%"" if "|FltId8|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId1|_bBypass"%
+  default: '%"" if "|WrnId1|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId1|_diDelay"%
+  default: '%"" if "|WrnId1|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId2|_bBypass"%
+  default: '%"" if "|WrnId2|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId2|_diDelay"%
+  default: '%"" if "|WrnId2|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId3|_bBypass"%
+  default: '%"" if "|WrnId3|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId3|_diDelay"%
+  default: '%"" if "|WrnId3|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId4|_bBypass"%
+  default: '%"" if "|WrnId4|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId4|_diDelay"%
+  default: '%"" if "|WrnId4|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId5|_bBypass"%
+  default: '%"" if "|WrnId5|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId5|_diDelay"%
+  default: '%"" if "|WrnId5|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId6|_bBypass"%
+  default: '%"" if "|WrnId6|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId6|_diDelay"%
+  default: '%"" if "|WrnId6|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId7|_bBypass"%
+  default: '%"" if "|WrnId7|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId7|_diDelay"%
+  default: '%"" if "|WrnId7|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId8|_bBypass"%
+  default: '%"" if "|WrnId8|"=="" else "false"%'
+  description: Настройка функционального блока
+- key: …_SgnlsFltr_|WrnId8|_diDelay"%
+  default: '%"" if "|WrnId8|"=="" else "0"%'
+  description: Настройка функционального блока
+- key: …_Engine_diStateControlTime
+  default: '1'
+  description: Время пуска
+- key: …_Engine_diStateConfirmTime
+  default: '3'
+  description: Время подтверждения состояния
+- key: …_Engine_diStartDelayTime
+  default: '1'
+  description: Задержка пуска
+- key: …_Engine_diStopDelayTime
+  default: '1'
+  description: Задержка останова
+- key: …_Engine_bStateControlBypass
+  default: 'true'
+  description: Отключение контроля состояния
+hmi:
+- tag: SgnlsFltr.out_bQ
+  description: Срабатывание
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: SgnlsFltr.out_bQ
+  description: Срабатывание
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: SgnlsFltr.out_bBypass
+  description: Шунт включен
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: SgnlsFltr.out_bBypass
+  description: Шунт включен
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: SgnlsFltr.%"" if "|FltId1|"=="" else "out_Signal1_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|FltId2|"=="" else "out_Signal2_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|FltId3|"=="" else "out_Signal3_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|FltId4|"=="" else "out_Signal4_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|FltId5|"=="" else "out_Signal5_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|FltId6|"=="" else "out_Signal6_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|FltId7|"=="" else "out_Signal7_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|FltId8|"=="" else "out_Signal8_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|WrnId1|"=="" else "out_Signal1_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|WrnId2|"=="" else "out_Signal2_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|WrnId3|"=="" else "out_Signal3_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|WrnId4|"=="" else "out_Signal4_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|WrnId5|"=="" else "out_Signal5_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|WrnId6|"=="" else "out_Signal6_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|WrnId7|"=="" else "out_Signal7_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: SgnlsFltr.%"" if "|WrnId8|"=="" else "out_Signal8_bQ"%
+  description: Настройка функционального блока
+  hmi: По условию
+  flt: По условию
+  wrn: По условию
+  alm: По условию
+  trend: —
+- tag: CascadeUnit.out_bEnable
+  description: Разрешение
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_bPowerControl
+  description: Наличие напряжения
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_bEmergencyStop
+  description: Экстренный останов
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_bMode
+  description: Автоматический режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_iState
+  description: Состояние
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_bState
+  description: Работа
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_bFault
+  description: Авария
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_bStart
+  description: Команда пуска
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_diWorktime
+  description: Наработка
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.out_fPower
+  description: Мощность
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: Да
+- tag: CascadeUnit.inout_bFaultReset
+  description: Сброс аварии
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: CascadeUnit.inout_bWorktimeReset
+  description: Сброс времени наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_iMode
+  description: Режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_bStateFault
+  description: Авария. Время пуска
+  hmi: —
+  flt: Да
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_bFault
+  description: Общая авария
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_bState
+  description: Работа
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_bEnableAutoControl
+  description: Разрешено управление в автоматическом режиме
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_bBlocked
+  description: Управление заблокировано
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_diWorktime
+  description: Время наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.inout_iRemoteMode
+  description: Ручной/автоматический режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.inout_bStart
+  description: Пуск
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.inout_bStop
+  description: Стоп
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.inout_bFaultReset
+  description: Сброс аварии
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.inout_bWorktimeReset
+  description: Сброс времени наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+optional_hmi: []
+common_mistakes:
+- Оставить служебные значения _ID_, _DI_, _DO_ или _AO_ вместо реальных тегов проекта.
+- Не проверить классы сообщений и доступность настроек на HMI после генерации проекта.

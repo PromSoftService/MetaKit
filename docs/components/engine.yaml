@@ -1,0 +1,221 @@
+component: Engine
+slug: engine
+source: yaml/LibTempls/Engine/engine.yaml
+kind: Lib
+title: Двигатель
+category: Исполнительные механизмы
+summary: Индивидуальный шаблон CEngine с режимами, командами, контролем состояния, авариями и наработкой.
+description: Индивидуальный шаблон CEngine с режимами, командами, контролем состояния, авариями и наработкой. CEngine управляет
+  пуском, контролирует состояние, блокировки и внешние защиты, ведёт наработку и формирует аварию при неподтверждённом запуске.
+use_cases:
+- Собирается пользовательский контур с двигателем либо нужен CEngine без готового Unit.
+- Насос запускается автоматически от внешнего алгоритма, вручную с HMI или местно. Контакт пускателя подтверждает фактическую
+  работу.
+not_for:
+- Если нужен полностью готовый технологический контур с CascadeUnit, авариями и HMI — выберите подходящий Unit-компонент.
+diagram:
+  lanes:
+  - - 'Команды
+
+      Auto / Manual / Local'
+    - 'CEngine
+
+      режимы и блокировки'
+    - 'Пускатель
+
+      out_bStart'
+  - - 'Состояние двигателя
+
+      in_bState'
+    - 'Контроль пуска
+
+      и наработка'
+    - 'HMI двигателя
+
+      режим / работа'
+  - - 'Внешняя защита
+
+      и E-Stop'
+    - 'CEngine
+
+      out_bFault'
+    - 'HMI аварий
+
+      Flt'
+application:
+  intro: Насос запускается автоматически от внешнего алгоритма, вручную с HMI или местно. Контакт пускателя подтверждает фактическую
+    работу. Ниже показаны параметры в том же формате ключ/значение, который используется в MetaPlatform.
+  result: CEngine управляет пуском, контролирует состояние, блокировки и внешние защиты, ведёт наработку и формирует аварию
+    при неподтверждённом запуске.
+parameter_groups:
+- title: Двигатель
+  items:
+  - key: $Eng
+    default: Двигатель
+    example: Двигатель
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: EngId
+    default: _ID_
+    example: P101
+    description: Уникальный идентификатор блока и префикс создаваемых тегов.
+  - key: EngComment
+    default: Комментарий
+    example: Насос циркуляционный
+    description: Понятное человеку название блока или группы, используемое в комментариях и HMI.
+  - key: EngStartCmd
+    default: 'false'
+    example: 'false'
+    description: Внешняя команда запуска соответствующего механизма.
+  - key: EngStopCmd
+    default: 'false'
+    example: 'false'
+    description: Внешняя команда останова соответствующего механизма.
+  - key: EngEStopExtra
+    default: 'false'
+    example: 'false'
+    description: Дополнительное условие экстренного останова исполнительного механизма.
+  - key: EngConf
+    default: ''
+    example: ''
+    description: Необязательный общий префикс настроек. Пустое значение создаёт индивидуальные настройки по Id компонента.
+  - key: EngConfComment
+    default: ''
+    example: ''
+    description: Общий комментарий для совместно используемых настроек. Оставьте пустым при индивидуальной конфигурации.
+- title: Группа параметров 2
+  items:
+  - key: EngLocal
+    default: 'false'
+    example: 'false'
+    description: Признак местного режима управления исполнительным механизмом.
+  - key: EngLocalControlByPLC
+    default: 'false'
+    example: 'false'
+    description: TRUE означает, что в местном режиме команда формируется ПЛК; FALSE — ПЛК только отслеживает состояние.
+  - key: EngRemote
+    default: 'true'
+    example: DI_P101_REMOTE
+    description: Признак дистанционного режима управления исполнительным механизмом.
+  - key: EngExtFault
+    default: 'false'
+    example: 'false'
+    description: Внешняя авария или защитное условие, запрещающее работу механизма.
+  - key: EngState
+    default: 'false'
+    example: DI_P101_STATE
+    description: Сигнал подтверждения фактического состояния исполнительного механизма.
+  - key: EngStartOut
+    default: _DO_
+    example: DO_P101_START
+    description: Физический дискретный выход пуска двигателя.
+example:
+  title: Циркуляционный насос
+  scenario: Насос запускается автоматически от внешнего алгоритма, вручную с HMI или местно. Контакт пускателя подтверждает
+    фактическую работу.
+  result: CEngine управляет пуском, контролирует состояние, блокировки и внешние защиты, ведёт наработку и формирует аварию
+    при неподтверждённом запуске.
+settings:
+- key: …_Engine_diStateControlTime
+  default: '1'
+  description: Время пуска
+- key: …_Engine_diStateConfirmTime
+  default: '3'
+  description: Время подтверждения состояния
+- key: …_Engine_diStartDelayTime
+  default: '1'
+  description: Задержка пуска
+- key: …_Engine_diStopDelayTime
+  default: '1'
+  description: Задержка останова
+- key: …_Engine_bStateControlBypass
+  default: 'false'
+  description: Отключение контроля состояния
+hmi:
+- tag: Engine.out_iMode
+  description: Режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_bStateFault
+  description: Авария. Время пуска
+  hmi: —
+  flt: Да
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_bFault
+  description: Общая авария
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_bBlocked
+  description: Управление заблокировано
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_bState
+  description: Работа
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_bEnableAutoControl
+  description: Разрешено управление в автоматическом режиме
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.out_diWorktime
+  description: Время наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.inout_iRemoteMode
+  description: Ручной/автоматический режим
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.inout_bStart
+  description: Пуск
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.inout_bStop
+  description: Стоп
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.inout_bFaultReset
+  description: Сброс аварии
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: Engine.inout_bWorktimeReset
+  description: Сброс времени наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+optional_hmi: []
+common_mistakes:
+- Оставить служебные значения _ID_, _DI_, _DO_ или _AO_ вместо реальных тегов проекта.
+- Не проверить классы сообщений и доступность настроек на HMI после генерации проекта.

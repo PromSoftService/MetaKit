@@ -1,0 +1,190 @@
+component: VfdGroupPidCascade
+slug: vfdgrouppidcascade
+source: yaml/UnitsTmpls/vfdgrouppidcascade.yaml
+kind: Unit
+title: Каскад двигателей с общим PID
+category: Готовые контуры
+summary: Универсальный каскад и общий CPID для группы частотно-регулируемых двигателей.
+description: Универсальный каскад и общий CPID для группы частотно-регулируемых двигателей. При ошибке PV каскад отключается.
+  Количество агрегатов, условия подключения и настройки PID доступны оператору.
+use_cases:
+- Количество работающих двигателей выбирается каскадом, а их общее задание формирует один PID.
+- Каскад выбирает количество работающих насосов, а один PID формирует общее задание скорости для всех включённых частотных
+  приводов.
+not_for:
+- Если состав или связи блоков должны существенно отличаться, соберите собственный компонент из Lib-шаблонов.
+diagram:
+  lanes:
+  - - CasPV + CasPVErr
+    - CCascade
+    - Общий CPID
+    - Двигатели группы
+    - 'HMI управления
+
+      режим / команды'
+  - - Состояние и защиты
+    - Аварии / предупреждения
+    - 'HMI сообщений
+
+      Flt / Wrn'
+application:
+  intro: Каскад выбирает количество работающих насосов, а один PID формирует общее задание скорости для всех включённых частотных
+    приводов. Ниже показаны параметры в том же формате ключ/значение, который используется в MetaPlatform.
+  result: При ошибке PV каскад отключается. Количество агрегатов, условия подключения и настройки PID доступны оператору.
+parameter_groups:
+- title: Основные параметры
+  items:
+  - key: Id
+    default: _ID_
+    example: PGR101
+    description: Уникальный идентификатор всего компонента. Используется как префикс экземпляров и тегов.
+  - key: Comment
+    default: Комментарий
+    example: Группа насосов с общим регулированием давления
+    description: Понятное человеку название компонента. Попадает в комментарии тегов и тексты HMI.
+  - key: Parent
+    default: CabinetController_Inst
+    example: CabinetController_Inst
+    description: Родительский CabinetController или CascadeUnit, от которого компонент получает общее разрешение, режим и
+      команды.
+  - key: CasPV
+    default: '0.0'
+    example: '0.0'
+    description: Технологический параметр каскада. Можно передать датчик, вычисленное значение или константу 0.0.
+  - key: CasPVErr
+    default: 'false'
+    example: 'false'
+    description: Объединённый признак недостоверности CasPV. При TRUE каскад отключается.
+  - key: Enable
+    default: 'true'
+    example: 'true'
+    description: Общее разрешение работы компонента. FALSE полностью отключает алгоритм.
+- title: Каскад
+  items:
+  - key: $Cas
+    default: Каскад
+    example: Каскад
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: CasConf
+    default: ''
+    example: ''
+    description: Необязательный общий префикс настроек. Пустое значение создаёт индивидуальные настройки по Id компонента.
+  - key: CasConfComment
+    default: ''
+    example: ''
+    description: Общий комментарий для совместно используемых настроек. Оставьте пустым при индивидуальной конфигурации.
+- title: Группа параметров 3
+  items:
+  - key: UnitId1…UnitId16
+    default: _ID_
+    example: PGR101
+    description: Id подключаемого элемента каскада. Пустая ячейка означает, что соответствующая позиция не используется. Доступно
+      16 позиций.
+- title: Регулятор
+  items:
+  - key: $PID
+    default: Регулятор
+    example: Регулятор
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+example:
+  title: Группа насосов с общим регулированием давления
+  scenario: Каскад выбирает количество работающих насосов, а один PID формирует общее задание скорости для всех включённых
+    частотных приводов.
+  result: При ошибке PV каскад отключается. Количество агрегатов, условия подключения и настройки PID доступны оператору.
+settings:
+- key: …_Cascade_iWorkCount
+  default: '1'
+  description: Минимальное количество агрегатов в работе
+- key: …_Cascade_iMaxWorkCount
+  default: '1'
+  description: Максимальное количество агрегатов в работе
+- key: …_Cascade_fSP
+  default: '0.0'
+  description: Уставка
+- key: …_Cascade_fHys
+  default: '0.0'
+  description: Гистерезис
+- key: …_Cascade_diConnectionDelay
+  default: '1'
+  description: Задержка подключения
+- key: …_Cascade_diDisconnectionDelay
+  default: '1'
+  description: Задержка отключения
+- key: …_Cascade_bPowerControlEnable
+  default: 'false'
+  description: Включение контроля мощности
+- key: …_Cascade_fPowerLoLimit
+  default: '0.0'
+  description: Нижний предел мощности
+- key: …_Cascade_fPowerHiLimit
+  default: '0.0'
+  description: Верхний предел мощности
+- key: …_Cascade_diSwitchPeriod
+  default: '36'
+  description: Период смены
+- key: …_PID_fSP
+  default: '0.0'
+  description: Уставка
+- key: …_PID_fDB
+  default: '0.0'
+  description: Зона нечувствительности
+- key: …_PID_fSR
+  default: '3.0'
+  description: Время дискретизации
+- key: …_PID_fKp
+  default: '1.0'
+  description: Kp
+- key: …_PID_fTi
+  default: '0.0'
+  description: Ti
+- key: …_PID_fTd
+  default: '0.0'
+  description: Td
+- key: …_PID_fYMin
+  default: '0.0'
+  description: Минимум выхода
+- key: …_PID_fYMax
+  default: '100.0'
+  description: Максимум выхода
+- key: …_PID_fYLoLimit
+  default: '0.0'
+  description: Нижнее ограничение
+- key: …_PID_fYHiLimit
+  default: '100.0'
+  description: Верхнее ограничение
+- key: …_PID_fOffValue
+  default: '0.0'
+  description: Выход при отключении
+hmi:
+- tag: PID.out_fY
+  description: Управляющий сигнал
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: PID.out_fYS
+  description: Накопленный управляющий сигнал
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: PID.inout_bYManual
+  description: Ручной режим выхода
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: PID.inout_fYManual
+  description: Ручное значение выхода
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+optional_hmi: []
+common_mistakes:
+- Оставить служебные значения _ID_, _DI_, _DO_ или _AO_ вместо реальных тегов проекта.
+- Не проверить классы сообщений и доступность настроек на HMI после генерации проекта.

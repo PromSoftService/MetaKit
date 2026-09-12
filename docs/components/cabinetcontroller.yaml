@@ -1,0 +1,157 @@
+component: CabinetController
+slug: cabinetcontroller
+source: yaml/LibTempls/Cabinet/cabinetcontroller.yaml
+kind: Lib
+title: Контроллер шкафа управления
+category: Инфраструктура проекта
+summary: Шаблон единственного общепроектного экземпляра CCabinetController.
+description: Шаблон единственного общепроектного экземпляра CCabinetController. Компонент формирует единые признаки работы
+  шкафа, питания и аварийного останова для всех подчинённых механизмов.
+use_cases:
+- Добавляется в проект для формирования общих команд, режимов, сброса аварий и контроля питания.
+- Кнопки Пуск, Стоп и Аварийный останов подключены к дискретным входам, а реле контроля фаз формирует признак наличия питания.
+not_for:
+- Если нужен полностью готовый технологический контур с CascadeUnit, авариями и HMI — выберите подходящий Unit-компонент.
+diagram:
+  lanes:
+  - - Пуск / Стоп / E-Stop
+    - 'CCabinetController
+
+      состояние шкафа'
+    - 'HMI шкафа
+
+      работа / питание'
+  - - Сброс аварий
+    - Импульс сброса
+    - Подчинённые Units
+application:
+  intro: Кнопки Пуск, Стоп и Аварийный останов подключены к дискретным входам, а реле контроля фаз формирует признак наличия
+    питания. Ниже показаны параметры в том же формате ключ/значение, который используется в MetaPlatform.
+  result: Компонент формирует единые признаки работы шкафа, питания и аварийного останова для всех подчинённых механизмов.
+parameter_groups:
+- title: Контроллер шкафа управления
+  items:
+  - key: $CabCtl
+    default: Контроллер шкафа управления
+    example: Контроллер шкафа управления
+    description: Человеческое обозначение функционального блока, используемое в комментариях и сообщениях.
+  - key: CabCtlStart
+    default: _DI_
+    example: DI_CABCTLSTART
+    description: Значение передаётся в одноимённую часть функционального блока; изменяйте его в соответствии с алгоритмом
+      проекта.
+  - key: CabCtlStop
+    default: _DI_
+    example: DI_CABCTLSTOP
+    description: Значение передаётся в одноимённую часть функционального блока; изменяйте его в соответствии с алгоритмом
+      проекта.
+  - key: CabCtlEStop
+    default: _DI_
+    example: DI_CABCTLESTOP
+    description: Значение передаётся в одноимённую часть функционального блока; изменяйте его в соответствии с алгоритмом
+      проекта.
+  - key: CabCtlPowerOk
+    default: _DI_
+    example: DI_CABCTLPOWEROK
+    description: Значение передаётся в одноимённую часть функционального блока; изменяйте его в соответствии с алгоритмом
+      проекта.
+  - key: CabCtlBlock
+    default: 'false'
+    example: 'false'
+    description: Значение передаётся в одноимённую часть функционального блока; изменяйте его в соответствии с алгоритмом
+      проекта.
+  - key: CabCtlFaultReset
+    default: _DI_
+    example: DI_CABCTLFAULTRESET
+    description: Значение передаётся в одноимённую часть функционального блока; изменяйте его в соответствии с алгоритмом
+      проекта.
+example:
+  title: Шкаф насосной станции
+  scenario: Кнопки Пуск, Стоп и Аварийный останов подключены к дискретным входам, а реле контроля фаз формирует признак наличия
+    питания.
+  result: Компонент формирует единые признаки работы шкафа, питания и аварийного останова для всех подчинённых механизмов.
+settings:
+- key: …_diPowerControlFilter
+  default: '3'
+  description: Фильтр отсутствия напряжения, с
+- key: …_diFaultResetPulse
+  default: '1'
+  description: Длительность импульса сброса аварий, с
+- key: …_bStartOnTrig
+  default: 'true'
+  description: Пуск по фронту
+hmi:
+- tag: in_bBlock
+  description: Блокировка
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: out_bPowerControl
+  description: Наличие напряжения
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: out_bWorking
+  description: Работа
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: out_bWorkAndPower
+  description: Работа + Наличие напряжения
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: out_bEmergencyStop
+  description: Экстренный останов
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: inout_bStart
+  description: Пуск
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: inout_bStop
+  description: Стоп
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: inout_bEmergencyStop
+  description: Экстренный останов
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: inout_bFaultReset
+  description: Сброс аварии
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+- tag: inout_bWorktimeReset
+  description: Сброс времени наработки
+  hmi: Да
+  flt: —
+  wrn: —
+  alm: —
+  trend: —
+optional_hmi: []
+common_mistakes:
+- Оставить служебные значения _ID_, _DI_, _DO_ или _AO_ вместо реальных тегов проекта.
+- Не проверить классы сообщений и доступность настроек на HMI после генерации проекта.
