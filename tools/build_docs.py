@@ -184,8 +184,12 @@ def render_diagram(guide: dict[str, Any]) -> str:
 
 def render_parameter_groups(groups: Any) -> str:
     result = []
+    group_index = 0
     for group in groups or []:
-        items = group.get("items", [])
+        items = [item for item in group.get("items", []) if not str(item.get("key", "")).startswith("$")]
+        if not items:
+            continue
+        group_index += 1
         title = str(group.get("title", ""))
         if title.startswith("Группа параметров") and items:
             first = str(items[0].get("key", ""))
@@ -207,13 +211,16 @@ def render_parameter_groups(groups: Any) -> str:
                 title = f"Предупреждение {match.group(1)}" if match else "Предупреждения"
             else:
                 title = "Подключение и команды"
-        keys = "".join(f'<div class="parameter-key"><code>{esc(item.get("key"))}</code></div>' for item in items)
-        values = "".join(f'<div class="parameter-value"><code>{esc(item.get("example", item.get("default")))}</code></div>' for item in items)
+        if not re.match(r"^\d+\.\s", title):
+            title = f"{group_index}. {title}"
+        keys = "".join(f'<th><code>{esc(item.get("key"))}</code></th>' for item in items)
+        values = "".join(f'<td><code>{esc(item.get("example", item.get("default")))}</code></td>' for item in items)
         details = "".join(
-            f'<div class="parameter-description"><code>{esc(item.get("key"))}</code><p>{esc(item.get("description"))}</p><span>По умолчанию: <code>{esc(item.get("default"))}</code></span></div>'
+            f'<div class="parameter-description"><code>{esc(item.get("key"))}</code><p>{esc(item.get("description"))}</p></div>'
             for item in items
         )
-        result.append(f'<section class="parameter-group"><h3>{esc(title)}</h3><div class="parameter-strip"><div class="parameter-row">{keys}</div><div class="parameter-row">{values}</div></div><div class="parameter-details">{details}</div></section>')
+        intro = f'<p class="parameter-intro">{esc(group.get("intro"))}</p>' if group.get("intro") else ""
+        result.append(f'<section class="parameter-group"><h3>{esc(title)}</h3>{intro}<div class="parameter-strip"><table class="parameter-table"><thead><tr>{keys}</tr></thead><tbody><tr>{values}</tr></tbody></table></div><div class="parameter-details">{details}</div></section>')
     return "".join(result)
 
 

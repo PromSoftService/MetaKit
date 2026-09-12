@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import zipfile
 from html.parser import HTMLParser
@@ -85,6 +86,15 @@ def main() -> int:
         for forbidden in ("Исходная таблица", "ST-шаблон", "Экземпляры MetaLib"):
             if forbidden in text:
                 errors.append(f"components/{item['slug']}: technical section leaked: {forbidden}")
+        for table_match in re.finditer(r'<table class="parameter-table">(.*?)</table>', text, re.DOTALL):
+            table_text = table_match.group(1)
+            header_count = table_text.count("<th>")
+            value_count = table_text.count("<td>")
+            if header_count != value_count:
+                errors.append(
+                    f"components/{item['slug']}: parameter table columns differ: "
+                    f"{header_count} headers, {value_count} values"
+                )
         relative = str(item["source"]).removeprefix("yaml/")
         download = output / "downloads/components" / relative
         source = Path(__file__).resolve().parents[1] / str(item["source"])

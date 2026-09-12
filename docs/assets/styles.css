@@ -49,7 +49,7 @@ h3 { margin: 1.6rem 0 .65rem; font-size: 1.08rem; }
 .sidebar-title { margin: 1.1rem .65rem .4rem; color: var(--muted); font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .sidebar-link { display: block; padding: .42rem .65rem; border-radius: 4px; color: var(--muted); font-size: .9rem; }
 .sidebar-link:hover, .sidebar-link.active { background: var(--surface-2); color: var(--text); text-decoration: none; }
-.content { width: 100%; max-width: 1260px; padding: 2.6rem clamp(1.25rem, 4vw, 4rem) 5rem; }
+.content { width: 100%; max-width: 1120px; padding: 2.6rem clamp(1.25rem, 4vw, 4rem) 5rem; }
 .footer { margin-top: 5rem; padding-top: 1.2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .78rem; }
 .breadcrumbs { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.6rem; color: var(--muted); font-size: .83rem; }
 
@@ -109,16 +109,18 @@ h3 { margin: 1.6rem 0 .65rem; font-size: 1.08rem; }
 .flow-arrow { stroke: var(--line-strong); stroke-width: 1.5; }
 .flow-svg marker path { fill: var(--line-strong); }
 
-.parameter-group { margin: 1.8rem 0 2.6rem; }
-.parameter-strip { max-width: 100%; overflow-x: auto; border: 1px solid var(--line-strong); border-right: 0; }
-.parameter-row { display: grid; grid-auto-columns: minmax(145px, 1fr); grid-auto-flow: column; width: max-content; min-width: 100%; }
-.parameter-key, .parameter-value { min-height: 42px; padding: .58rem .7rem; border-right: 1px solid var(--line-strong); white-space: nowrap; }
-.parameter-key { background: var(--surface-2); font-weight: 700; text-align: center; }
-.parameter-value { border-top: 1px solid var(--line-strong); background: var(--bg); }
-.parameter-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem 1.5rem; margin-top: 1rem; }
-.parameter-description { padding-left: .75rem; border-left: 2px solid var(--line); }
-.parameter-description p { margin: .35rem 0 .2rem; }
-.parameter-description span { color: var(--muted); font-size: .78rem; }
+.parameter-group { margin: 1.8rem 0 3rem; }
+.parameter-group h3 { margin-bottom: .55rem; font-size: 1.18rem; }
+.parameter-intro { margin: 0 0 .9rem; color: var(--muted); }
+.parameter-strip { max-width: 100%; overflow-x: auto; border: 1px solid var(--line-strong); }
+.parameter-table { width: max-content; min-width: 100%; table-layout: fixed; }
+.parameter-table th, .parameter-table td { min-width: 160px; padding: .62rem .72rem; text-align: center; white-space: nowrap; }
+.parameter-table th { border-bottom: 2px solid var(--accent); background: var(--surface-2); color: var(--text); font-size: .76rem; }
+.parameter-table td { background: var(--bg); }
+.parameter-details { margin-top: 1rem; border-top: 1px solid var(--line); }
+.parameter-description { display: grid; grid-template-columns: 175px minmax(0, 1fr); gap: 1rem; padding: .72rem .65rem; border-bottom: 1px solid var(--line); }
+.parameter-description > code { color: var(--accent); }
+.parameter-description p { margin: 0; }
 
 .table-wrap { max-width: 100%; overflow-x: auto; border: 1px solid var(--line); }
 table { width: 100%; border-collapse: collapse; font-size: .88rem; }
@@ -137,7 +139,8 @@ tbody tr:nth-child(even) { background: var(--surface); }
   .sidebar.open { transform: translateX(0); }
   .nav-button { display: inline-flex; padding: .4rem .65rem; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--text); }
   .content { padding-top: 1.7rem; }
-  .usage-grid, .parameter-details { grid-template-columns: 1fr; }
+  .usage-grid { grid-template-columns: 1fr; }
+  .parameter-description { grid-template-columns: 145px minmax(0, 1fr); }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .stats div:nth-child(2) { border-right: 0; }
   .stats div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
@@ -148,4 +151,5 @@ tbody tr:nth-child(even) { background: var(--surface); }
   .topbar { padding: 0 16px; }
   .content { padding-left: 1rem; padding-right: 1rem; }
   .component-grid { grid-template-columns: 1fr; }
+  .parameter-description { grid-template-columns: 1fr; gap: .25rem; }
 }

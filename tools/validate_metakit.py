@@ -14,6 +14,13 @@ REQUIRED = (
     "parameter_groups", "example", "settings", "hmi", "optional_hmi", "common_mistakes",
 )
 
+FORBIDDEN_EDITORIAL_FRAGMENTS = (
+    "Группа параметров",
+    "Настройка функционального блока",
+    "Значение передаётся в одноимённую",
+    '%"" if',
+)
+
 
 def load(path: Path) -> dict[str, Any]:
     document = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -39,6 +46,10 @@ def main() -> int:
     counts = {"Lib": 0, "Unit": 0, "Sys": 0}
     for path, guide in guides:
         relative = path.relative_to(ROOT)
+        source_text = path.read_text(encoding="utf-8")
+        for fragment in FORBIDDEN_EDITORIAL_FRAGMENTS:
+            if fragment in source_text:
+                errors.append(f"{relative}: в пользовательском тексте осталось техническое описание {fragment!r}")
         for key in REQUIRED:
             if key not in guide or guide[key] is None or guide[key] == "":
                 errors.append(f"{relative}: пустое поле {key}")
@@ -74,6 +85,8 @@ def main() -> int:
                 if not isinstance(group, dict) or not group.get("title") or not group.get("items"):
                     errors.append(f"{relative}: некорректная группа параметров {index}")
                     continue
+                if not group.get("intro"):
+                    errors.append(f"{relative}: у группы параметров {index} нет пояснения перед таблицей")
                 for item_index, item in enumerate(group["items"], 1):
                     if not isinstance(item, dict) or not item.get("key") or not item.get("description"):
                         errors.append(f"{relative}: некорректный параметр {index}.{item_index}")
