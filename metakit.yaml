@@ -1,0 +1,10 @@
+name: MetaKit
+version: '2026.09'
+title: Документация MetaKit
+description: Компоненты MetaGen для построения PLC-проектов на основе MetaLib
+default_base_url: /docs/
+archive_prefix: MetaKit
+component_roots:
+  - LibTempls
+  - UnitsTmpls
+  - SysTmpls

@@ -1,0 +1,51 @@
+name: MetaKit documentation
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-docs.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements-docs.txt
+
+      - name: Validate MetaKit
+        run: python tools/validate_metakit.py
+
+      - name: Build documentation
+        shell: bash
+        run: |
+          BUILD_TIMESTAMP="$(date -u -d "$(git show -s --format=%cI)" +%Y%m%d_%H%M%S)"
+          python tools/build_docs.py \
+            --output dist/docs \
+            --base-url /docs/ \
+            --timestamp "$BUILD_TIMESTAMP"
+
+      - name: Verify static output
+        run: python tools/check_docs.py dist/docs --base-url /docs/
+
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: metakit-docs
+          path: dist/docs
+          if-no-files-found: error
+          retention-days: 30
